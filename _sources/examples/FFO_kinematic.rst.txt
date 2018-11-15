@@ -1,0 +1,32 @@
+
+Scenario III: kinematic finite-fault optimization
+-------------------------------------------------
+
+#clone
+beat clone LaquilaJointPonlyUPDATE_wide LaquilaJointPonlyUPDATE_wide_kin --mode=ffo --datatypes=geodetic,seismic
+
+#import results
+beat import LaquilaJointPonlyUPDATE_wide_kin --results=LaquilaJointPonlyUPDATE_wide --mode=ffo --datatypes=geodetic,seismic
+beat import LaquilaJointPonlyUPDATE_wide_kin --results=LaquilaJointPonlyUPDATE_wide --mode=geometry --datatypes=geodetic,seismic
+
+#check data and filter settings
+beat check LaquilaJointPonlyUPDATE_wide_kin --what=traces
+
+#discretize fault
+beat build_gfs LaquilaJointPonlyUPDATE_wide_kin --datatypes=seismic --mode=ffo
+
+#update parameter priors and prerqus for GFs
+duration priors
+
+duration_sampling
+starttime_sampling
+nucleation_priors
+
+#calculate GFs and check store
+beat build_gfs LaquilaJointPonlyUPDATE_wide_kin --datatypes=seismic --mode=ffo --execute --force
+
+beat check LaquilaJointPonlyUPDATE_wide_kin --what=library --mode=ffo
+
+beat sample LaquilaJointPonlyUPDATE_wide_kin --mode=ffo
+
+-
