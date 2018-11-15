@@ -145,7 +145,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inlist</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">inlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
@@ -239,7 +239,7 @@
 <span class="sd">            values are :class:`theano.tensor.Tensor`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inlist</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">inlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
@@ -321,7 +321,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fixed_values</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">FreeRV</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
                 <span class="n">inlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
@@ -425,7 +425,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inlist</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">inlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
@@ -460,7 +460,7 @@
             <span class="n">arrival_times</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_times</span><span class="p">)</span> <span class="o">+</span> \
                 <span class="n">mpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;time_shift&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">arrival_times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_times</span>
+            <span class="n">arrival_times</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_times</span><span class="p">)</span>
 
         <span class="n">source_points</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">split_point</span><span class="p">(</span><span class="n">mpoint</span><span class="p">)</span>
 
@@ -486,8 +486,10 @@
         <span class="k">return</span> <span class="p">[(</span><span class="n">nrow</span><span class="p">,</span> <span class="n">ncol</span><span class="p">),</span> <span class="p">(</span><span class="n">nrow</span><span class="p">,)]</span></div>
 
 
-<span class="k">class</span> <span class="nc">SeisDataChopper</span><span class="p">(</span><span class="n">theano</span><span class="o">.</span><span class="n">Op</span><span class="p">):</span>
-
+<div class="viewcode-block" id="SeisDataChopper"><a class="viewcode-back" href="../api.html#theanof.SeisDataChopper">[docs]</a><span class="k">class</span> <span class="nc">SeisDataChopper</span><span class="p">(</span><span class="n">theano</span><span class="o">.</span><span class="n">Op</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deprecated!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__props__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sample_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;traces&#39;</span><span class="p">,</span> <span class="s1">&#39;arrival_taper&#39;</span><span class="p">,</span> <span class="s1">&#39;filterer&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">traces</span><span class="p">,</span> <span class="n">arrival_taper</span><span class="p">,</span> <span class="n">filterer</span><span class="p">):</span>
@@ -517,7 +519,7 @@
     <span class="k">def</span> <span class="nf">infer_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
         <span class="n">nrow</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="p">)</span>
         <span class="n">ncol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_taper</span><span class="o">.</span><span class="n">nsamples</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">nrow</span><span class="p">,</span> <span class="n">ncol</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">nrow</span><span class="p">,</span> <span class="n">ncol</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="Sweeper"><a class="viewcode-back" href="../api.html#theanof.Sweeper">[docs]</a><span class="k">class</span> <span class="nc">Sweeper</span><span class="p">(</span><span class="n">theano</span><span class="o">.</span><span class="n">Op</span><span class="p">):</span>
@@ -620,7 +622,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

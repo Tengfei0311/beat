@@ -78,6 +78,7 @@
             
   <h1>Source code for parallel</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">reduction</span>
 <span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">getLogger</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
@@ -85,6 +86,8 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">count</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">num</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">)</span>
@@ -92,6 +95,18 @@
 <span class="c1"># for sharing memory across processes</span>
 <span class="n">_shared_memory</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
 <span class="n">_tobememshared</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
+
+
+<span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="bp">cls</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">getbuffer</span><span class="p">()</span>
+
+
+<span class="c1"># monkey patch pickling in multiprocessing</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">hexversion</span> <span class="o">&lt;</span> <span class="mh">0x30600F0</span><span class="p">:</span>
+    <span class="n">reduction</span><span class="o">.</span><span class="n">ForkingPickler</span><span class="o">.</span><span class="n">dumps</span> <span class="o">=</span> <span class="n">dumps</span>
 
 
 <div class="viewcode-block" id="get_process_id"><a class="viewcode-back" href="../api.html#parallel.get_process_id">[docs]</a><span class="k">def</span> <span class="nf">get_process_id</span><span class="p">():</span>
@@ -325,7 +340,7 @@
             <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
             <span class="c1"># reset process counter for tqdm progressbar</span>
-            <span class="n">multiprocessing</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_current_process</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+            <span class="n">multiprocessing</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_process_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="memshare"><a class="viewcode-back" href="../api.html#parallel.memshare">[docs]</a><span class="k">def</span> <span class="nf">memshare</span><span class="p">(</span><span class="n">parameternames</span><span class="p">):</span>
@@ -391,17 +406,19 @@
         <span class="n">size</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">size</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">original</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Allocating </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Allocating </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">ctypes</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">RawArray</span><span class="p">(</span>
-            <span class="s1">&#39;f&#39;</span> <span class="k">if</span> <span class="n">original</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">num</span><span class="o">.</span><span class="n">float32</span> <span class="k">else</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">original</span><span class="p">)</span>
-        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">ctypes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">original</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
-        <span class="n">wrapped</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+            <span class="s1">&#39;f&#39;</span> <span class="k">if</span> <span class="n">original</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">num</span><span class="o">.</span><span class="n">float32</span> <span class="k">else</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 
-        <span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">_shared_memory</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">ctypes</span></div>
+        <span class="n">ctypes_numarr</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">ctypeslib</span><span class="o">.</span><span class="n">as_array</span><span class="p">(</span><span class="n">ctypes</span><span class="p">)</span>
+        <span class="n">ctypes_numarr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">original</span>
+
+        <span class="c1"># remove large object from Shared to get through pickle size limitation</span>
+        <span class="n">param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">))]),</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">_shared_memory</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctypes_numarr</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="borrow_memory"><a class="viewcode-back" href="../api.html#parallel.borrow_memory">[docs]</a><span class="k">def</span> <span class="nf">borrow_memory</span><span class="p">(</span><span class="n">shared_param</span><span class="p">,</span> <span class="n">memshared_instance</span><span class="p">):</span>
+<div class="viewcode-block" id="borrow_memory"><a class="viewcode-back" href="../api.html#parallel.borrow_memory">[docs]</a><span class="k">def</span> <span class="nf">borrow_memory</span><span class="p">(</span><span class="n">shared_param</span><span class="p">,</span> <span class="n">memshared_instance</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Spawn different processes with the shared memory</span>
 <span class="sd">    of your theano model&#39;s variables.</span>
@@ -413,6 +430,8 @@
 <span class="sd">        shared memory should be used instead.</span>
 <span class="sd">    memshared_instance : :class:`multiprocessing.RawArray`</span>
 <span class="sd">        the memory shared across processes (e.g.from `memshare_sparams`)</span>
+<span class="sd">    shape : tuple</span>
+<span class="sd">        of shape of shared instance</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -445,8 +464,7 @@
 
 <span class="sd">        # acquire your dataset (either through some smart shared memory</span>
 <span class="sd">        # or by reloading it for each process)</span>
-<span class="sd">        dataset, dataset_labels = acquire_dataset()</span>
-
+<span class="sd">        # dataset, dataset_labels = acquire_dataset()</span>
 <span class="sd">        # then run your model forward in this process</span>
 <span class="sd">        epochs = 20</span>
 <span class="sd">        for epoch in range(epochs):</span>
@@ -455,8 +473,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">shared_param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">param_value</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">memshared_instance</span><span class="p">)</span>
-    <span class="n">param_value</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shared_param</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">param_value</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">memshared_instance</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">shared_param</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">param_value</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
@@ -471,8 +488,8 @@
 <span class="sd">        of :class:`theano.tensor.sharedvar.TensorSharedVariable`</span>
 <span class="sd">        the Theano shared variable where</span>
 <span class="sd">        shared memory should be used instead.</span>
-<span class="sd">    memshared_instance : list</span>
-<span class="sd">        of :class:`multiprocessing.RawArray`</span>
+<span class="sd">    memshared_instances : dict of tuples</span>
+<span class="sd">        of :class:`multiprocessing.RawArray` and their shapes</span>
 <span class="sd">        the memory shared across processes (e.g.from `memshare_sparams`)</span>
 
 <span class="sd">    Notes</span>
@@ -480,9 +497,8 @@
 <span class="sd">    Same as `borrow_memory` but for lists of shared memories and</span>
 <span class="sd">    theano variables. See `borrow_memory`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">shared_param</span><span class="p">,</span> <span class="n">memshared_instance</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-            <span class="n">shared_params</span><span class="p">,</span> <span class="n">memshared_instances</span><span class="p">):</span>
-        <span class="n">borrow_memory</span><span class="p">(</span><span class="n">shared_param</span><span class="p">,</span> <span class="n">memshared_instance</span><span class="p">)</span></div>
+    <span class="k">for</span> <span class="n">sparam</span> <span class="ow">in</span> <span class="n">shared_params</span><span class="p">:</span>
+        <span class="n">borrow_memory</span><span class="p">(</span><span class="n">sparam</span><span class="p">,</span> <span class="o">*</span><span class="n">memshared_instances</span><span class="p">[</span><span class="n">sparam</span><span class="o">.</span><span class="n">name</span><span class="p">])</span></div>
 </pre></div>
 
           </div>
@@ -498,7 +514,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

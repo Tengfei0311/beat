@@ -120,10 +120,10 @@ estimate source parameters of dislocations in the Earth’s crust.</p>
 <li class="toctree-l3"><a class="reference internal" href="installation.html#pymc3">pymc3</a></li>
 <li class="toctree-l3"><a class="reference internal" href="installation.html#pyrocko">Pyrocko</a></li>
 <li class="toctree-l3"><a class="reference internal" href="installation.html#openmpi">OpenMPI</a></li>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#pyproj">Pyproj</a></li>
 <li class="toctree-l3"><a class="reference internal" href="installation.html#beat">BEAT</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#greens-functions">Greens Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
@@ -131,26 +131,35 @@ estimate source parameters of dislocations in the Earth’s crust.</p>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#general">General</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#initialise-a-new-modeling-project">Initialise a new Modeling Project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#import-data">Import Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#geodetic-data">geodetic data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="getting_started.html#seismic-data">seismic data</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#how-to-update-the-configuration-files">How to update the configuration files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#how-to-setup-a-custom-greens-function-store">How to setup a Custom Greens Function Store</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#how-to-setup-a-finite-fault-optimization">How to setup a Finite Fault Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#sample">sample</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Scenarios</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#regional-full-moment-tensor">Regional Full Moment Tensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#clone-project">Clone project</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#calculate-greens-functions">Calculate Greens Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#data-windowing-and-optimization-setup">Data windowing and optimization setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#sample-the-solution-space">Sample the solution space</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#restarting-sampling">Restarting sampling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#summarize-the-results">Summarize the results</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#plotting">Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#seismic-noise-estimation">Seismic noise estimation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/FullMT_regional.html">Scenario 0: Regional Full Moment Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#clone-project">Clone project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#calculate-greens-functions">Calculate Greens Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#data-windowing-and-optimization-setup">Data windowing and optimization setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#sample-the-solution-space">Sample the solution space</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#restarting-sampling">Restarting sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#summarize-the-results">Summarize the results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#seismic-noise-estimation">Seismic noise estimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/FullMT_regional.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Rectangular.html">Scenario I: Rectangular source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/Rectangular.html#clone-project">Clone project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Rectangular.html#calculate-greens-functions">Calculate Greens Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Rectangular.html#optimization-setup">Optimization setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Rectangular.html#sample-the-solution-space">Sample the solution space</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Rectangular.html#summarize-and-plotting">Summarize and plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/Rectangular.html#references">References</a></li>
 </ul>
 </li>
 </ul>
@@ -164,16 +173,16 @@ estimate source parameters of dislocations in the Earth’s crust.</p>
 <li class="toctree-l3"><a class="reference internal" href="api.html#module-sampler.pt"><code class="docutils literal"><span class="pre">pt</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-ffi">The <code class="docutils literal"><span class="pre">ffi</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#the-ffi-module">The <code class="docutils literal"><span class="pre">ffi</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-parallel">The <code class="docutils literal"><span class="pre">parallel</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-backend">The <code class="docutils literal"><span class="pre">backend</span></code> Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#file-format">File format</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-models">The <code class="docutils literal"><span class="pre">models</span></code> Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#module-models.problems"><code class="docutils literal"><span class="pre">problems</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#module-models.seismic"><code class="docutils literal"><span class="pre">seismic</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#module-models.geodetic"><code class="docutils literal"><span class="pre">geodetic</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#the-models-module">The <code class="docutils literal"><span class="pre">models</span></code> Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#problems"><code class="docutils literal"><span class="pre">problems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#seismic"><code class="docutils literal"><span class="pre">seismic</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#geodetic"><code class="docutils literal"><span class="pre">geodetic</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-psgrn">The <code class="docutils literal"><span class="pre">psgrn</span></code> Module</a></li>
@@ -185,7 +194,7 @@ estimate source parameters of dislocations in the Earth’s crust.</p>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-covariance">The <code class="docutils literal"><span class="pre">covariance</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-theanof">The <code class="docutils literal"><span class="pre">theanof</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-utility">The <code class="docutils literal"><span class="pre">utility</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-plotting">The <code class="docutils literal"><span class="pre">plotting</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#the-plotting-module">The <code class="docutils literal"><span class="pre">plotting</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-inputf">The <code class="docutils literal"><span class="pre">inputf</span></code> Module</a></li>
 </ul>
 </li>
@@ -216,7 +225,7 @@ estimate source parameters of dislocations in the Earth’s crust.</p>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 

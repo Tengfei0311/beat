@@ -268,9 +268,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : :class:`SeismicGFLibraryConfig`</span>
+<span class="sd">    config : :class:`GeodeticGFLibraryConfig`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">SeismicGFLibraryConfig</span><span class="p">()):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">GeodeticGFLibraryConfig</span><span class="p">()):</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">GeodeticGFLibrary</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 
@@ -523,12 +523,10 @@
 <span class="sd">            index to target</span>
 <span class="sd">        patchidx : int</span>
 <span class="sd">            index to patch (source) that is used to produce the synthetics</span>
-<span class="sd">        durationidxs : list or :class:`numpy.NdArray`</span>
-<span class="sd">            of indexes to the respective duration of the STFs that have been</span>
-<span class="sd">            used to create the synthetics</span>
-<span class="sd">        starttimeidxs : list or :class:`numpy.NdArray`</span>
-<span class="sd">            of indexes to the respective duration of the STFs that have been</span>
-<span class="sd">            used to create the synthetics</span>
+<span class="sd">        durations : list or :class:`numpy.NdArray`</span>
+<span class="sd">            of the STFs that have been used to create the synthetics</span>
+<span class="sd">        starttimes : list or :class:`numpy.NdArray`</span>
+<span class="sd">            of the STFs that have been used to create the synthetics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -621,7 +619,7 @@
 
 <div class="viewcode-block" id="SeismicGFLibrary.idxs2starttimes"><a class="viewcode-back" href="../api.html#ffi.SeismicGFLibrary.idxs2starttimes">[docs]</a>    <span class="k">def</span> <span class="nf">idxs2starttimes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idxs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Map index to durations [s]</span>
+<span class="sd">        Map index to starttimes [s]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">idxs</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">starttime_sampling</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">starttime_min</span></div>
 
@@ -675,7 +673,7 @@
                 <span class="p">(</span><span class="n">slips</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">slips</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SeismicGFLibrary.stack_all"><a class="viewcode-back" href="../api.html#ffi.SeismicGFLibrary.stack_all">[docs]</a>    <span class="k">def</span> <span class="nf">stack_all</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">durations</span><span class="p">,</span> <span class="n">starttimes</span><span class="p">,</span> <span class="n">slips</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">durations</span><span class="p">,</span> <span class="n">starttimes</span><span class="p">,</span> <span class="n">slips</span><span class="p">,</span> <span class="n">targetidxs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest_neighbor&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stack all patches for all targets at once.</span>
@@ -690,6 +688,11 @@
 <span class="sd">        option : tensor.batched_dot(sd.dimshuffle((1,0,2)), u).sum(axis=0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">if</span> <span class="n">targetidxs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ntargets</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ntargets</span> <span class="o">=</span> <span class="n">targetidxs</span><span class="o">.</span><span class="n">size</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_mode_init</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">)</span>
 
         <span class="n">durationidxs</span><span class="p">,</span> <span class="n">rt_factors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">durations2idxs</span><span class="p">(</span>
@@ -701,28 +704,31 @@
 
             <span class="n">nslips</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">cd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack_switch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">][</span>
-                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
-                <span class="n">durationidxs</span><span class="p">,</span> <span class="n">starttimeidxs</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span>
+                <span class="n">targetidxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
+                <span class="n">durationidxs</span><span class="p">,</span> <span class="n">starttimeidxs</span><span class="p">,</span> <span class="p">:]</span>
+
+            <span class="n">cd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span>
+
             <span class="n">cslips</span> <span class="o">=</span> <span class="n">slips</span>
 
         <span class="k">elif</span> <span class="n">interpolation</span> <span class="o">==</span> <span class="s1">&#39;multilinear&#39;</span><span class="p">:</span>
 
             <span class="n">nslips</span> <span class="o">=</span> <span class="mi">4</span>
             <span class="n">d_st_ceil_rt_ceil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack_switch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">][</span>
-                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
+                <span class="n">targetidxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
                 <span class="n">durationidxs</span><span class="p">,</span> <span class="n">starttimeidxs</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span>
             <span class="n">d_st_floor_rt_ceil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack_switch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">][</span>
-                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
+                <span class="n">targetidxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
                 <span class="n">durationidxs</span><span class="p">,</span> <span class="n">starttimeidxs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span>
             <span class="n">d_st_ceil_rt_floor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack_switch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">][</span>
-                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
+                <span class="n">targetidxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
                 <span class="n">durationidxs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">starttimeidxs</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span>
             <span class="n">d_st_floor_rt_floor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stack_switch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">][</span>
-                <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
+                <span class="n">targetidxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sw_patchidxs</span><span class="p">,</span>
                 <span class="n">durationidxs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">starttimeidxs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ntargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">))</span>
 
@@ -737,7 +743,6 @@
             <span class="n">cslips</span> <span class="o">=</span> <span class="n">backends</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">]</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">s_st_ceil_rt_ceil</span><span class="p">,</span> <span class="n">s_st_floor_rt_ceil</span><span class="p">,</span>
                  <span class="n">s_st_ceil_rt_floor</span><span class="p">,</span> <span class="n">s_st_floor_rt_floor</span><span class="p">])</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
                 <span class="s1">&#39;Interpolation scheme </span><span class="si">%s</span><span class="s1"> not implemented!&#39;</span> <span class="o">%</span> <span class="n">interpolation</span><span class="p">)</span>
@@ -749,7 +754,7 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">==</span> <span class="s1">&#39;numpy&#39;</span><span class="p">:</span>
             <span class="n">u2d</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span>
                 <span class="n">cslips</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span> <span class="o">*</span> <span class="n">nslips</span><span class="p">))</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsamples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npatches</span> <span class="o">*</span> <span class="n">nslips</span> <span class="o">*</span> <span class="n">ntargets</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijk-&gt;ik&#39;</span><span class="p">,</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">u2d</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SeismicGFLibrary.get_traces"><a class="viewcode-back" href="../api.html#ffi.SeismicGFLibrary.get_traces">[docs]</a>    <span class="k">def</span> <span class="nf">get_traces</span><span class="p">(</span>
@@ -1475,7 +1480,8 @@
 
 
 <div class="viewcode-block" id="seis_construct_gf_linear"><a class="viewcode-back" href="../api.html#ffi.seis_construct_gf_linear">[docs]</a><span class="k">def</span> <span class="nf">seis_construct_gf_linear</span><span class="p">(</span>
-        <span class="n">engine</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span> <span class="n">durations_prior</span><span class="p">,</span> <span class="n">velocities_prior</span><span class="p">,</span>
+        <span class="n">engine</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span>
+        <span class="n">durations_prior</span><span class="p">,</span> <span class="n">velocities_prior</span><span class="p">,</span> <span class="n">nucleation_time_prior</span><span class="p">,</span>
         <span class="n">varnames</span><span class="p">,</span> <span class="n">wavemap</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">nworkers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">starttime_sampling</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">duration_sampling</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
         <span class="n">sample_rate</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">outdirectory</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1496,12 +1502,14 @@
 <span class="sd">        complex fault-geometry</span>
 <span class="sd">    durations_prior : :class:`heart.Parameter`</span>
 <span class="sd">        prior of durations of the STF for each patch to convolve</span>
-<span class="sd">    duration_sampling : float</span>
-<span class="sd">        incremental step size for precalculation of duration GFs</span>
 <span class="sd">    velocities_prior : :class:`heart.Parameter`</span>
 <span class="sd">        rupture velocity of earthquake prior</span>
+<span class="sd">    nucleation_time_prior : :class:`heart.Parameter`</span>
+<span class="sd">        prior of nucleation time of the event</span>
 <span class="sd">    starttime_sampling : float</span>
 <span class="sd">        incremental step size for precalculation of startime GFs</span>
+<span class="sd">    duration_sampling : float</span>
+<span class="sd">        incremental step size for precalculation of duration GFs</span>
 <span class="sd">    sample_rate : float</span>
 <span class="sd">        sample rate of synthetic traces to produce,</span>
 <span class="sd">        related to non-linear GF store</span>
@@ -1518,7 +1526,12 @@
         <span class="n">nuc_dip_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nuc_strike_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">starttimeidxs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-        <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">start_times</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">starttime_sampling</span><span class="p">)))</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span>
+            <span class="n">start_times</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="n">nucleation_time_prior</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">/</span>
+            <span class="n">starttime_sampling</span><span class="p">)),</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span>
+            <span class="n">start_times</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">nucleation_time_prior</span><span class="o">.</span><span class="n">upper</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span>
+            <span class="n">starttime_sampling</span><span class="p">)))</span>
     <span class="n">starttimes</span> <span class="o">=</span> <span class="n">starttimeidxs</span> <span class="o">*</span> <span class="n">starttime_sampling</span>
 
     <span class="n">ndurations</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">error_not_whole</span><span class="p">((</span>
@@ -1702,7 +1715,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

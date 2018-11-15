@@ -91,7 +91,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">pyrocko.guts</span> <span class="k">import</span> <span class="n">Object</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Dict</span>
-<span class="kn">from</span> <span class="nn">pyrocko.guts</span> <span class="k">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">dump</span><span class="p">,</span> <span class="n">StringChoice</span>
+<span class="kn">from</span> <span class="nn">pyrocko.guts</span> <span class="k">import</span> <span class="n">load</span><span class="p">,</span> <span class="n">dump</span><span class="p">,</span> <span class="n">StringChoice</span><span class="p">,</span> <span class="n">ArgumentError</span>
 <span class="kn">from</span> <span class="nn">pyrocko.cake</span> <span class="k">import</span> <span class="n">load_model</span>
 
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">trace</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">util</span><span class="p">,</span> <span class="n">gf</span>
@@ -113,9 +113,13 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">)</span>
 
+<span class="n">ffo_mode_str</span> <span class="o">=</span> <span class="s1">&#39;ffo&#39;</span>
+<span class="n">geometry_mode_str</span> <span class="o">=</span> <span class="s1">&#39;geometry&#39;</span>
+
+<span class="n">initialization_modes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="s1">&#39;lsq&#39;</span><span class="p">]</span>
+
 <span class="n">block_vars</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;bl_azimuth&#39;</span><span class="p">,</span> <span class="s1">&#39;bl_amplitude&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;nucleation_strike&#39;</span><span class="p">,</span> <span class="s1">&#39;nucleation_dip&#39;</span><span class="p">,</span> <span class="s1">&#39;nucleation_time&#39;</span><span class="p">]</span>
+    <span class="s1">&#39;bl_azimuth&#39;</span><span class="p">,</span> <span class="s1">&#39;bl_amplitude&#39;</span><span class="p">]</span>
 <span class="n">seis_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">]</span>
 
 <span class="n">source_names</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
@@ -158,7 +162,8 @@
     <span class="s1">&#39;locking_depth&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">block_vars</span>
 
 <span class="n">static_dist_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uparr&#39;</span><span class="p">,</span> <span class="s1">&#39;uperp&#39;</span><span class="p">]</span>
-<span class="n">hypo_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nucleation_strike&#39;</span><span class="p">,</span> <span class="s1">&#39;nucleation_dip&#39;</span><span class="p">,</span> <span class="s1">&#39;nucleation_time&#39;</span><span class="p">]</span>
+
+<span class="n">hypo_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nucleation_strike&#39;</span><span class="p">,</span> <span class="s1">&#39;nucleation_dip&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">]</span>
 <span class="n">partial_kinematic_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;durations&#39;</span><span class="p">,</span> <span class="s1">&#39;velocities&#39;</span><span class="p">]</span>
 <span class="n">voronoi_locations</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;voronoi_strike&#39;</span><span class="p">,</span> <span class="s1">&#39;voronoi_dip&#39;</span><span class="p">]</span>
 
@@ -173,13 +178,13 @@
     <span class="s1">&#39;geodetic&#39;</span><span class="p">:</span> <span class="n">source_catalog</span><span class="p">,</span>
     <span class="s1">&#39;seismic&#39;</span><span class="p">:</span> <span class="n">source_catalog</span><span class="p">}</span>
 
-<span class="n">ffi_catalog</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">ffo_catalog</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;geodetic&#39;</span><span class="p">:</span> <span class="n">static_dist_vars</span><span class="p">,</span>
     <span class="s1">&#39;seismic&#39;</span><span class="p">:</span> <span class="n">kinematic_dist_vars</span><span class="p">}</span>
 
 <span class="n">modes_catalog</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([</span>
-    <span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">,</span> <span class="n">geometry_catalog</span><span class="p">],</span>
-    <span class="p">[</span><span class="s1">&#39;ffi&#39;</span><span class="p">,</span> <span class="n">ffi_catalog</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">geometry_mode_str</span><span class="p">,</span> <span class="n">geometry_catalog</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">ffo_mode_str</span><span class="p">,</span> <span class="n">ffo_catalog</span><span class="p">],</span>
     <span class="p">[</span><span class="s1">&#39;interseismic&#39;</span><span class="p">,</span> <span class="n">interseismic_catalog</span><span class="p">]])</span>
 
 <span class="n">hyper_name_laplacian</span> <span class="o">=</span> <span class="s1">&#39;h_laplacian&#39;</span>
@@ -205,6 +210,8 @@
     <span class="n">length</span><span class="o">=</span><span class="p">(</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">30.</span><span class="p">),</span>
     <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span>
     <span class="n">slip</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">8.</span><span class="p">),</span>
+    <span class="n">nucleation_x</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
+    <span class="n">nucleation_y</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
 
     <span class="n">magnitude</span><span class="o">=</span><span class="p">(</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">),</span>
     <span class="n">mnn</span><span class="o">=</span><span class="n">mdiag</span><span class="p">,</span>
@@ -223,7 +230,7 @@
     <span class="n">volume_change</span><span class="o">=</span><span class="p">(</span><span class="mf">1e8</span><span class="p">,</span> <span class="mf">1e10</span><span class="p">),</span>
     <span class="n">diameter</span><span class="o">=</span><span class="p">(</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span>
     <span class="n">mix</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="n">time</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">),</span>
+    <span class="n">time</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">),</span>
     <span class="n">time_shift</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">),</span>
 
     <span class="n">delta_time</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span>
@@ -238,7 +245,6 @@
     <span class="n">uperp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">4.</span><span class="p">),</span>
     <span class="n">nucleation_strike</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span>
     <span class="n">nucleation_dip</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">),</span>
-    <span class="n">nucleation_time</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">),</span>
     <span class="n">velocities</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">),</span>
 
     <span class="n">azimuth</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">),</span>
@@ -248,14 +254,15 @@
     <span class="n">locking_depth</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span>
 
     <span class="n">hypers</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span>
-    <span class="n">ramp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">))</span>
+    <span class="n">ramp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">),</span>
+    <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">))</span>
 
 <span class="n">default_seis_std</span> <span class="o">=</span> <span class="mf">1.e-6</span>
 <span class="n">default_geo_std</span> <span class="o">=</span> <span class="mf">1.e-3</span>
 
 <span class="n">default_decimation_factors</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;geodetic&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-    <span class="s1">&#39;seismic&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span>
+    <span class="s1">&#39;geodetic&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s1">&#39;seismic&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 
 <span class="n">seismic_data_name</span> <span class="o">=</span> <span class="s1">&#39;seismic_data.pkl&#39;</span>
 <span class="n">geodetic_data_name</span> <span class="o">=</span> <span class="s1">&#39;geodetic_data.pkl&#39;</span>
@@ -404,23 +411,34 @@
     <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">RectangularSource</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Geometry of the reference source(s) to fix&#39;</span><span class="p">)</span>
-    <span class="n">patch_width</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch width [km] to divide reference sources&#39;</span><span class="p">)</span>
-    <span class="n">patch_length</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch length [km] to divide reference sources&#39;</span><span class="p">)</span>
-    <span class="n">extension_width</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">patch_widths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of Patch width [km] to divide reference sources. Each value&#39;</span>
+             <span class="s1">&#39; is applied following the list-order to the respective reference&#39;</span>
+             <span class="s1">&#39; source&#39;</span><span class="p">)</span>
+    <span class="n">patch_lengths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch length [km] to divide reference sources Each value&#39;</span>
+             <span class="s1">&#39; is applied following the list-order to the respective reference&#39;</span>
+             <span class="s1">&#39; source&#39;</span><span class="p">)</span>
+    <span class="n">extension_widths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">],</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Extend reference sources by this factor in each&#39;</span>
              <span class="s1">&#39; dip-direction. 0.1 means extension of the fault by 10</span><span class="si">% i</span><span class="s1">n each&#39;</span>
              <span class="s1">&#39; direction, i.e. 20</span><span class="si">% i</span><span class="s1">n total. If patches would intersect with&#39;</span>
-             <span class="s1">&#39; the free surface they are constrained to end at the surface.&#39;</span><span class="p">)</span>
-    <span class="n">extension_length</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+             <span class="s1">&#39; the free surface they are constrained to end at the surface.&#39;</span>
+             <span class="s1">&#39; Each value is applied following the list-order to the&#39;</span>
+             <span class="s1">&#39; respective reference source.&#39;</span><span class="p">)</span>
+    <span class="n">extension_lengths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">],</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Extend reference sources by this factor in each&#39;</span>
              <span class="s1">&#39; strike-direction. 0.1 means extension of the fault by 10</span><span class="si">% i</span><span class="s1">n&#39;</span>
-             <span class="s1">&#39; each direction, i.e. 20</span><span class="si">% i</span><span class="s1">n total.&#39;</span><span class="p">)</span>
+             <span class="s1">&#39; each direction, i.e. 20</span><span class="si">% i</span><span class="s1">n total. Each value is applied &#39;</span>
+             <span class="s1">&#39; following the list-order to the respective reference source.&#39;</span><span class="p">)</span>
     <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sample rate for the Greens Functions.&#39;</span><span class="p">)</span></div>
@@ -459,10 +477,13 @@
     <span class="n">include</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag to include waveform into optimization.&#39;</span><span class="p">)</span>
+    <span class="n">preprocess_data</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag to filter input data.&#39;</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="s1">&#39;any_P&#39;</span><span class="p">)</span>
     <span class="n">blacklist</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="n">String</span><span class="o">.</span><span class="n">D</span><span class="p">()],</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Station name for stations to be thrown out.&#39;</span><span class="p">)</span>
     <span class="n">channels</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">])</span>
     <span class="n">filterer</span> <span class="o">=</span> <span class="n">Filter</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">Filter</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
@@ -505,7 +526,36 @@
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, optimize for time shift for each station.&#39;</span><span class="p">)</span>
     <span class="n">waveforms</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">WaveformFitConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">WaveformFitConfig</span><span class="o">.</span><span class="n">D</span><span class="p">()))</span>
+    <span class="n">dataset_specific_residual_noise_estimation</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, for EACH DATASET specific hyperparameter estimation.&#39;</span>
+             <span class="s1">&#39;n_hypers = nstations * nchannels.&#39;</span>
+             <span class="s1">&#39;If false one hyperparameter for each DATATYPE and &#39;</span>
+             <span class="s1">&#39;displacement COMPONENT.&#39;</span><span class="p">)</span>
     <span class="n">gf_config</span> <span class="o">=</span> <span class="n">GFConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">SeismicGFConfig</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">waveforms</span> <span class="o">=</span> <span class="s1">&#39;waveforms&#39;</span>
+        <span class="n">wavenames</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;wavenames&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;any_P&#39;</span><span class="p">])</span>
+        <span class="n">wavemaps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">waveforms</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">wavename</span> <span class="ow">in</span> <span class="n">wavenames</span><span class="p">:</span>
+                <span class="n">wavemaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WaveformFitConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">wavename</span><span class="p">))</span>
+
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">waveforms</span><span class="p">]</span> <span class="o">=</span> <span class="n">wavemaps</span>
+
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="n">geometry_mode_str</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">geometry_mode_str</span><span class="p">:</span>
+            <span class="n">gf_config</span> <span class="o">=</span> <span class="n">SeismicGFConfig</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
+            <span class="n">gf_config</span> <span class="o">=</span> <span class="n">SeismicLinearGFConfig</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;gf_config&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;gf_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gf_config</span>
+
+        <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_waveform_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">wc</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">wc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">]</span>
@@ -513,7 +563,8 @@
     <span class="k">def</span> <span class="nf">get_unique_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cl</span> <span class="o">=</span> <span class="p">[</span><span class="n">wc</span><span class="o">.</span><span class="n">channels</span> <span class="k">for</span> <span class="n">wc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">]</span>
         <span class="n">uc</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="nb">map</span><span class="p">(</span><span class="n">uc</span><span class="o">.</span><span class="n">extend</span><span class="p">,</span> <span class="n">cl</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cl</span><span class="p">:</span>
+            <span class="n">uc</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">uc</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">get_hypernames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -532,7 +583,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="SeismicConfig.init_waveforms"><a class="viewcode-back" href="../api.html#config.SeismicConfig.init_waveforms">[docs]</a>    <span class="k">def</span> <span class="nf">init_waveforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavenames</span><span class="p">):</span>
+<div class="viewcode-block" id="SeismicConfig.init_waveforms"><a class="viewcode-back" href="../api.html#config.SeismicConfig.init_waveforms">[docs]</a>    <span class="k">def</span> <span class="nf">init_waveforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavenames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;any_P&#39;</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise waveform configurations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -549,7 +600,6 @@
     <span class="n">names</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Data prefix filenames here ...&#39;</span><span class="p">])</span>
     <span class="n">blacklist</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
-        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;GPS station name or scene name to be thrown out.&#39;</span><span class="p">)</span>
     <span class="n">types</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
@@ -568,14 +618,36 @@
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag for inverting for additional plane parameters on each&#39;</span>
              <span class="s1">&#39; SAR datatype&#39;</span><span class="p">)</span>
+    <span class="n">dataset_specific_residual_noise_estimation</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, for EACH DATASET specific hyperparameter estimation.&#39;</span>
+             <span class="s1">&#39;For geodetic data: n_hypers = nimages (SAR) or &#39;</span>
+             <span class="s1">&#39;nstations * ncomponents (GPS).&#39;</span>
+             <span class="s1">&#39;If false one hyperparameter for each DATATYPE and &#39;</span>
+             <span class="s1">&#39;displacement COMPONENT.&#39;</span><span class="p">)</span>
     <span class="n">gf_config</span> <span class="o">=</span> <span class="n">GFConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">GeodeticGFConfig</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="n">geometry_mode_str</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">geometry_mode_str</span><span class="p">:</span>
+            <span class="n">gf_config</span> <span class="o">=</span> <span class="n">GeodeticGFConfig</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
+            <span class="n">gf_config</span> <span class="o">=</span> <span class="n">GeodeticLinearGFConfig</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;gf_config&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;gf_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gf_config</span>
+
+        <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_hypernames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">typ</span><span class="p">))</span> <span class="k">for</span> <span class="n">typ</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">get_hierarchical_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_plane</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_ramp&#39;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_ramp&#39;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_offset&#39;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span></div>
 
@@ -587,12 +659,22 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="FFIConfig"><a class="viewcode-back" href="../api.html#config.FFIConfig">[docs]</a><span class="k">class</span> <span class="nc">FFIConfig</span><span class="p">(</span><span class="n">ModeConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="FFOConfig"><a class="viewcode-back" href="../api.html#config.FFOConfig">[docs]</a><span class="k">class</span> <span class="nc">FFOConfig</span><span class="p">(</span><span class="n">ModeConfig</span><span class="p">):</span>
 
     <span class="n">regularization</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
         <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;laplacian&#39;</span><span class="p">,</span> <span class="s1">&#39;trans-dimensional&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag for regularization in distributed slip-optimization.&#39;</span><span class="p">)</span></div>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag for regularization in distributed slip-optimization.&#39;</span><span class="p">)</span>
+    <span class="n">npatches</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of patches on full fault. Should not be edited manually!&#39;</span>
+             <span class="s1">&#39; Please edit indirectly through patch_widths and patch_lengths&#39;</span>
+             <span class="s1">&#39; parameters!&#39;</span><span class="p">)</span>
+    <span class="n">initialization</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">initialization_modes</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Initialization of chain starting points, default: random&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProblemConfig"><a class="viewcode-back" href="../api.html#config.ProblemConfig">[docs]</a><span class="k">class</span> <span class="nc">ProblemConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -600,10 +682,10 @@
 <span class="sd">    Config for optimization problem to setup.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mode</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">,</span> <span class="s1">&#39;ffi&#39;</span><span class="p">,</span> <span class="s1">&#39;interseismic&#39;</span><span class="p">],</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Problem to solve: &quot;geometry&quot;, &quot;ffi&quot;,&#39;</span>
-             <span class="s1">&#39; &quot;interseismic&quot;&#39;</span><span class="p">,)</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="n">geometry_mode_str</span><span class="p">,</span> <span class="n">ffo_mode_str</span><span class="p">,</span> <span class="s1">&#39;interseismic&#39;</span><span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">geometry_mode_str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Problem to solve: &quot;</span><span class="si">%s</span><span class="s1">&quot;, &quot;</span><span class="si">%s</span><span class="s1">&quot;,&#39;</span>
+             <span class="s1">&#39; &quot;interseismic&quot;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">geometry_mode_str</span><span class="p">,</span> <span class="n">ffo_mode_str</span><span class="p">))</span>
     <span class="n">mode_config</span> <span class="o">=</span> <span class="n">ModeConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Global optimization mode specific parameters.&#39;</span><span class="p">)</span>
@@ -626,14 +708,6 @@
         <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of Sub-sources to solve for&#39;</span><span class="p">)</span>
     <span class="n">datatypes</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;geodetic&#39;</span><span class="p">])</span>
-    <span class="n">dataset_specific_residual_noise_estimation</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, for EACH DATASET specific hyperparameter estimation.&#39;</span>
-             <span class="s1">&#39;For seismic data: n_hypers = nstations * nchannels.&#39;</span>
-             <span class="s1">&#39;For geodetic data: n_hypers = nimages (SAR) or &#39;</span>
-             <span class="s1">&#39;nstations * ncomponents (GPS).&#39;</span>
-             <span class="s1">&#39;If false one hyperparameter for each DATATYPE and &#39;</span>
-             <span class="s1">&#39;displacement COMPONENT.&#39;</span><span class="p">)</span>
     <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">OrderedDict</span><span class="p">(),</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Hyperparameters to estimate the noise in different&#39;</span>
@@ -655,9 +729,9 @@
         <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">omode</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">mode</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="n">omode</span> <span class="o">==</span> <span class="s1">&#39;ffi&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">omode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">mode_config</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-                    <span class="n">kwargs</span><span class="p">[</span><span class="n">mode_config</span><span class="p">]</span> <span class="o">=</span> <span class="n">FFIConfig</span><span class="p">()</span>
+                    <span class="n">kwargs</span><span class="p">[</span><span class="n">mode_config</span><span class="p">]</span> <span class="o">=</span> <span class="n">FFOConfig</span><span class="p">()</span>
 
         <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -698,16 +772,17 @@
                         <span class="n">nvars</span><span class="p">,</span>
                         <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">lower</span> <span class="o">+</span> <span class="p">(</span><span class="n">upper</span> <span class="o">/</span> <span class="mf">5.</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="ProblemConfig.set_vars"><a class="viewcode-back" href="../api.html#config.ProblemConfig.set_vars">[docs]</a>    <span class="k">def</span> <span class="nf">set_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="ProblemConfig.set_vars"><a class="viewcode-back" href="../api.html#config.ProblemConfig.set_vars">[docs]</a>    <span class="k">def</span> <span class="nf">set_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds_dict</span><span class="p">,</span> <span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;priors&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set variable bounds to given bounds.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">variable</span><span class="p">,</span> <span class="n">bounds</span> <span class="ow">in</span> <span class="n">bounds_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
+            <span class="n">upd_dict</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">variable</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">upd_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">param</span> <span class="o">=</span> <span class="n">upd_dict</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
                 <span class="n">param</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="n">param</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">param</span><span class="o">.</span><span class="n">testvalue</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bounds</span><span class="p">))</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">testvalue</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s1">&#39;Prior for variable </span><span class="si">%s</span><span class="s1"> does not exist!&#39;</span>
@@ -726,7 +801,7 @@
         <span class="n">variables</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datatypes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">datatype</span> <span class="ow">in</span> <span class="n">vars_catalog</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;geometry&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">geometry_mode_str</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_type</span> <span class="ow">in</span> <span class="n">vars_catalog</span><span class="p">[</span><span class="n">datatype</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                         <span class="n">source</span> <span class="o">=</span> <span class="n">vars_catalog</span><span class="p">[</span><span class="n">datatype</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">source_type</span><span class="p">]</span>
                         <span class="n">svars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -768,10 +843,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a list of slip variable names defined in the ProblemConfig.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;ffi&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">static_dist_vars</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;geometry&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">geometry_mode_str</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;slip&#39;</span><span class="p">,</span> <span class="s1">&#39;magnitude&#39;</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
@@ -795,7 +870,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if priors and their test values do not contradict!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">param</span><span class="o">.</span><span class="n">validate_bounds</span><span class="p">()</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;All parameter-priors ok!&#39;</span><span class="p">)</span></div>
@@ -805,7 +880,7 @@
 <span class="sd">        Check if hyperparameters and their test values do not contradict!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">hp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">hp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">hp</span><span class="o">.</span><span class="n">validate_bounds</span><span class="p">()</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;All hyper-parameters ok!&#39;</span><span class="p">)</span>
@@ -818,7 +893,7 @@
 <span class="sd">        Check if hierarchicals and their test values do not contradict!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">hp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">hp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">hp</span><span class="o">.</span><span class="n">validate_bounds</span><span class="p">()</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;All hierarchical-parameters ok!&#39;</span><span class="p">)</span>
@@ -832,7 +907,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">test_point</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">varname</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">test_point</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">testvalue</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">get_parameter_shape</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="n">var</span><span class="o">.</span><span class="n">dimension</span><span class="p">:</span>
+                <span class="n">test_point</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">testvalue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">test_point</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">testvalue</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">varname</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">test_point</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">testvalue</span>
@@ -841,6 +920,21 @@
             <span class="n">test_point</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">testvalue</span>
 
         <span class="k">return</span> <span class="n">test_point</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">get_parameter_shape</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">pc</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hypo_vars</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode_config</span><span class="o">.</span><span class="n">npatches</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">dimension</span>
+
+    <span class="k">elif</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">geometry_mode_str</span><span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">dimension</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Mode not implemeneted: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">shape</span>
 
 
 <div class="viewcode-block" id="SamplerParameters"><a class="viewcode-back" href="../api.html#config.SamplerParameters">[docs]</a><span class="k">class</span> <span class="nc">SamplerParameters</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -889,6 +983,10 @@
     <span class="n">n_chains_posterior</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of chains that sample from the posterior at beat=1.&#39;</span><span class="p">)</span>
+    <span class="n">resample</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If &quot;true&quot; the testvalue of the priors is taken as seed for&#39;</span>
+             <span class="s1">&#39; all Markov Chains.&#39;</span><span class="p">)</span>
     <span class="n">thin</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Thinning parameter of the sampled trace. Every &quot;thin&quot;th sample&#39;</span>
@@ -946,8 +1044,7 @@
              <span class="s1">&#39;alternatives need to be implemented&#39;</span><span class="p">)</span>
 
     <span class="n">update_covariances</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Update model prediction covariance matrixes in transition &#39;</span>
              <span class="s1">&#39;stages.&#39;</span><span class="p">)</span></div>
 
@@ -1002,7 +1099,10 @@
     <span class="n">component</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;uparr&#39;</span><span class="p">)</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
     <span class="n">datatype</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;undefined&#39;</span><span class="p">)</span>
-    <span class="n">crust_ind</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+    <span class="n">crust_ind</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">RectangularSource</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Geometry of the reference source(s) to fix&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GeodeticGFLibraryConfig"><a class="viewcode-back" href="../api.html#config.GeodeticGFLibraryConfig">[docs]</a><span class="k">class</span> <span class="nc">GeodeticGFLibraryConfig</span><span class="p">(</span><span class="n">GFLibaryConfig</span><span class="p">):</span>
@@ -1022,6 +1122,11 @@
     <span class="n">starttime_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
     <span class="n">duration_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
     <span class="n">dimensions</span> <span class="o">=</span> <span class="n">Tuple</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
+
+
+<span class="n">datatype_catalog</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;geodetic&#39;</span><span class="p">:</span> <span class="n">GeodeticConfig</span><span class="p">,</span>
+    <span class="s1">&#39;seismic&#39;</span><span class="p">:</span> <span class="n">SeismicConfig</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="BEATconfig"><a class="viewcode-back" href="../api.html#config.BEATconfig">[docs]</a><span class="k">class</span> <span class="nc">BEATconfig</span><span class="p">(</span><span class="n">Object</span><span class="p">,</span> <span class="n">Cloneable</span><span class="p">):</span>
@@ -1058,7 +1163,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seismic_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">hypernames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seismic_config</span><span class="o">.</span><span class="n">get_hypernames</span><span class="p">())</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;ffi&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">mode_config</span><span class="o">.</span><span class="n">regularization</span> <span class="o">==</span> <span class="s1">&#39;laplacian&#39;</span><span class="p">:</span>
                 <span class="n">hypernames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hyper_name_laplacian</span><span class="p">)</span>
 
@@ -1109,8 +1214,13 @@
                 <span class="n">shp</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="n">defaultb_name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">shp</span> <span class="o">=</span> <span class="mi">2</span>
-                <span class="n">defaultb_name</span> <span class="o">=</span> <span class="s1">&#39;ramp&#39;</span>
+                <span class="n">rampparname</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">rampparname</span> <span class="o">==</span> <span class="s1">&#39;ramp&#39;</span><span class="p">:</span>
+                    <span class="n">shp</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">shp</span> <span class="o">=</span> <span class="mi">1</span>
+
+                <span class="n">defaultb_name</span> <span class="o">=</span> <span class="n">rampparname</span>
 
             <span class="n">hierarchicals</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
@@ -1128,12 +1238,18 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Number of hierarchicals! </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n_hierarchicals</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">init_reference_sources</span><span class="p">(</span><span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span> <span class="n">source_type</span><span class="p">,</span> <span class="n">stf_type</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">init_reference_sources</span><span class="p">(</span>
+        <span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span> <span class="n">source_type</span><span class="p">,</span> <span class="n">stf_type</span><span class="p">,</span> <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">reference_sources</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sources</span><span class="p">):</span>
-        <span class="c1">#rf = source_catalog[source_type](stf=stf_catalog[stf_type]()) maybe future if several meshtypes</span>
-        <span class="n">rf</span> <span class="o">=</span> <span class="n">RectangularSource</span><span class="p">(</span><span class="n">stf</span><span class="o">=</span><span class="n">stf_catalog</span><span class="p">[</span><span class="n">stf_type</span><span class="p">]())</span>
-        <span class="n">utility</span><span class="o">.</span><span class="n">update_source</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="o">**</span><span class="n">source_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="c1"># rf = source_catalog[source_type](stf=stf_catalog[stf_type]())</span>
+        <span class="c1"># maybe future if several meshtypes</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RectangularSource</span><span class="p">(</span><span class="n">stf</span><span class="o">=</span><span class="n">stf_catalog</span><span class="p">[</span><span class="n">stf_type</span><span class="p">](</span><span class="n">anchor</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">utility</span><span class="o">.</span><span class="n">update_source</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">input_depth</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">source_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">rf</span><span class="o">.</span><span class="n">nucleation_x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rf</span><span class="o">.</span><span class="n">nucleation_y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">ref_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ref_time</span><span class="p">)</span>
         <span class="n">reference_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">reference_sources</span>
@@ -1163,8 +1279,8 @@
 <span class="sd">        type of optimization problem: &#39;Geometry&#39; / &#39;Static&#39;/ &#39;Kinematic&#39;</span>
 <span class="sd">    n_sources : int</span>
 <span class="sd">        number of sources to solve for / discretize depending on mode parameter</span>
-<span class="sd">    waveforms : list</span>
-<span class="sd">        of strings of waveforms to include into the misfit function and</span>
+<span class="sd">    wavenames : list</span>
+<span class="sd">        of strings of wavenames to include into the misfit function and</span>
 <span class="sd">        GF calculation</span>
 <span class="sd">    sampler : str</span>
 <span class="sd">        Optimization algorithm to use to sample the solution space</span>
@@ -1185,7 +1301,7 @@
     <span class="n">c</span> <span class="o">=</span> <span class="n">BEATconfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">project_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">main_path</span><span class="p">),</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;geometry&#39;</span> <span class="ow">or</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;interseismic&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">geometry_mode_str</span> <span class="ow">or</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;interseismic&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;interseismic&#39;</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">search_catalog</span><span class="p">(</span>
                 <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">min_magnitude</span><span class="o">=</span><span class="n">min_magnitude</span><span class="p">)</span>
@@ -1217,8 +1333,7 @@
             <span class="n">c</span><span class="o">.</span><span class="n">geodetic_config</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="s1">&#39;seismic&#39;</span> <span class="ow">in</span> <span class="n">datatypes</span><span class="p">:</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span> <span class="o">=</span> <span class="n">SeismicConfig</span><span class="p">()</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span><span class="o">.</span><span class="n">init_waveforms</span><span class="p">(</span><span class="n">waveforms</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span> <span class="o">=</span> <span class="n">SeismicConfig</span><span class="p">(</span><span class="n">wavenames</span><span class="o">=</span><span class="n">waveforms</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">individual_gfs</span><span class="p">:</span>
                 <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">reference_location</span> <span class="o">=</span> \
@@ -1236,82 +1351,83 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;ffi&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">ffo_mode_str</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="n">source_type</span> <span class="o">!=</span> <span class="s1">&#39;RectangularSource&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Static distributed slip is so far only supported&#39;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Distributed slip is so far only supported&#39;</span>
                             <span class="s1">&#39; for RectangularSource(s)&#39;</span><span class="p">)</span>
 
-        <span class="n">gmc</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="s1">&#39;geometry&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">gmc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Taking information from geometry_config ...&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">source_type</span> <span class="o">!=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;Specified reference source: &quot;</span><span class="si">%s</span><span class="s1">&quot; differs from the&#39;</span>
-                    <span class="s1">&#39; source that has been used previously in&#39;</span>
-                    <span class="s1">&#39; &quot;geometry&quot; mode: &quot;</span><span class="si">%s</span><span class="s1">&quot;!&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                        <span class="n">source_type</span><span class="p">,</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">))</span>
-
-            <span class="n">n_sources</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">n_sources</span>
-            <span class="n">point</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">testvalue</span>
-                     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
-            <span class="n">point</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">adjust_point_units</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
-            <span class="n">source_points</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">split_point</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
-
-            <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">init_reference_sources</span><span class="p">(</span>
-                <span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span>
-                <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">,</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">stf_type</span><span class="p">)</span>
-
-            <span class="n">c</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">date</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">event</span>
-
-            <span class="k">if</span> <span class="s1">&#39;geodetic&#39;</span> <span class="ow">in</span> <span class="n">datatypes</span><span class="p">:</span>
-                <span class="n">gc</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">geodetic_config</span>
-                <span class="k">if</span> <span class="n">gc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s1">&#39;Asked for &quot;geodetic&quot; datatype but geometry config &#39;</span>
-                        <span class="s1">&#39;has no such datatype! Initialising default &quot;geodetic&quot;&#39;</span>
-                        <span class="s1">&#39; linear config!&#39;</span><span class="p">)</span>
-                    <span class="n">gc</span> <span class="o">=</span> <span class="n">GeodeticConfig</span><span class="p">()</span>
-                    <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">GeodeticLinearGFConfig</span><span class="p">()</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">GeodeticLinearGFConfig</span><span class="p">(</span>
-                        <span class="n">earth_model_name</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">earth_model_name</span><span class="p">,</span>
-                        <span class="n">store_superdir</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">store_superdir</span><span class="p">,</span>
-                        <span class="n">n_variations</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">,</span>
-                        <span class="n">reference_sources</span><span class="o">=</span><span class="n">reference_sources</span><span class="p">,</span>
-                        <span class="n">sample_rate</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-
-                <span class="n">c</span><span class="o">.</span><span class="n">geodetic_config</span> <span class="o">=</span> <span class="n">gc</span>
-                <span class="n">c</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">gf_config</span> <span class="o">=</span> <span class="n">lgf_config</span>
-
-            <span class="k">elif</span> <span class="s1">&#39;seismic&#39;</span> <span class="ow">in</span> <span class="n">datatypes</span><span class="p">:</span>
-                <span class="n">sc</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">seismic_config</span>
-                <span class="k">if</span> <span class="n">sc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s1">&#39;Asked for &quot;seismic&quot; datatype but geometry config &#39;</span>
-                        <span class="s1">&#39;has no such datatype! Initialising default &quot;seismic&quot;&#39;</span>
-                        <span class="s1">&#39; linear config!&#39;</span><span class="p">)</span>
-                    <span class="n">sc</span> <span class="o">=</span> <span class="n">SeismicConfig</span><span class="p">()</span>
-                    <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">SeismicLinearGFConfig</span><span class="p">()</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">SeismicLinearGFConfig</span><span class="p">(</span>
-                        <span class="n">earth_model_name</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">earth_model_name</span><span class="p">,</span>
-                        <span class="n">sample_rate</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span>
-                        <span class="n">reference_location</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">reference_location</span><span class="p">,</span>
-                        <span class="n">store_superdir</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">store_superdir</span><span class="p">,</span>
-                        <span class="n">n_variations</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">,</span>
-                        <span class="n">reference_sources</span><span class="o">=</span><span class="n">reference_sources</span><span class="p">)</span>
-                <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span> <span class="o">=</span> <span class="n">sc</span>
-                <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span><span class="o">.</span><span class="n">gf_config</span> <span class="o">=</span> <span class="n">lgf_config</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Found no geometry setup, ...&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">gmc</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">geometry_mode_str</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
                 <span class="s1">&#39;No geometry configuration file existing! Please initialise&#39;</span>
-                <span class="s1">&#39; a &quot;geometry&quot; configuration (&quot;beat init command&quot;), update&#39;</span>
+                <span class="s1">&#39; a &quot;</span><span class="si">%s</span><span class="s1">&quot; configuration (&quot;beat init command&quot;), update&#39;</span>
                 <span class="s1">&#39; the Greens Function information and create GreensFunction&#39;</span>
-                <span class="s1">&#39; stores for the non-linear problem.&#39;</span><span class="p">)</span>
+                <span class="s1">&#39; stores for the non-linear problem.&#39;</span> <span class="o">%</span> <span class="n">geometry_mode_str</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Taking information from geometry_config ...&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">source_type</span> <span class="o">!=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Specified reference source: &quot;</span><span class="si">%s</span><span class="s1">&quot; differs from the&#39;</span>
+                <span class="s1">&#39; source that has been used previously in&#39;</span>
+                <span class="s1">&#39; &quot;geometry&quot; mode: &quot;</span><span class="si">%s</span><span class="s1">&quot;!&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">source_type</span><span class="p">,</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">))</span>
+
+        <span class="n">n_sources</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">n_sources</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">testvalue</span>
+                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">adjust_point_units</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+        <span class="n">source_points</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">split_point</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+
+        <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">init_reference_sources</span><span class="p">(</span>
+            <span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">,</span>
+            <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">stf_type</span><span class="p">,</span> <span class="n">ref_time</span><span class="o">=</span><span class="n">gmc</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">date</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">event</span>
+
+        <span class="k">if</span> <span class="s1">&#39;geodetic&#39;</span> <span class="ow">in</span> <span class="n">datatypes</span><span class="p">:</span>
+            <span class="n">gc</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">geodetic_config</span>
+            <span class="k">if</span> <span class="n">gc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">&#39;Asked for &quot;geodetic&quot; datatype but </span><span class="si">%s</span><span class="s1"> config &#39;</span>
+                    <span class="s1">&#39;has no such datatype! Initialising default &quot;geodetic&quot;&#39;</span>
+                    <span class="s1">&#39; linear config!&#39;</span> <span class="o">%</span> <span class="n">geometry_mode_str</span><span class="p">)</span>
+                <span class="n">gc</span> <span class="o">=</span> <span class="n">GeodeticConfig</span><span class="p">()</span>
+                <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">GeodeticLinearGFConfig</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Initialising geodetic config&#39;</span><span class="p">)</span>
+                <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">GeodeticLinearGFConfig</span><span class="p">(</span>
+                    <span class="n">earth_model_name</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">earth_model_name</span><span class="p">,</span>
+                    <span class="n">store_superdir</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">store_superdir</span><span class="p">,</span>
+                    <span class="n">n_variations</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">,</span>
+                    <span class="n">reference_sources</span><span class="o">=</span><span class="n">reference_sources</span><span class="p">,</span>
+                    <span class="n">sample_rate</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+
+            <span class="n">c</span><span class="o">.</span><span class="n">geodetic_config</span> <span class="o">=</span> <span class="n">gc</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">gf_config</span> <span class="o">=</span> <span class="n">lgf_config</span>
+
+        <span class="k">if</span> <span class="s1">&#39;seismic&#39;</span> <span class="ow">in</span> <span class="n">datatypes</span><span class="p">:</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">seismic_config</span>
+            <span class="k">if</span> <span class="n">sc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">&#39;Asked for &quot;seismic&quot; datatype but </span><span class="si">%s</span><span class="s1"> config &#39;</span>
+                    <span class="s1">&#39;has no such datatype! Initialising default &quot;seismic&quot;&#39;</span>
+                    <span class="s1">&#39; linear config!&#39;</span> <span class="o">%</span> <span class="n">geometry_mode_str</span><span class="p">)</span>
+                <span class="n">sc</span> <span class="o">=</span> <span class="n">SeismicConfig</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+                <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">SeismicLinearGFConfig</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Initialising seismic config&#39;</span><span class="p">)</span>
+                <span class="n">lgf_config</span> <span class="o">=</span> <span class="n">SeismicLinearGFConfig</span><span class="p">(</span>
+                    <span class="n">earth_model_name</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">earth_model_name</span><span class="p">,</span>
+                    <span class="n">sample_rate</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span>
+                    <span class="n">reference_location</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">reference_location</span><span class="p">,</span>
+                    <span class="n">store_superdir</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">store_superdir</span><span class="p">,</span>
+                    <span class="n">n_variations</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">,</span>
+                    <span class="n">reference_sources</span><span class="o">=</span><span class="n">reference_sources</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span> <span class="o">=</span> <span class="n">sc</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">seismic_config</span><span class="o">.</span><span class="n">gf_config</span> <span class="o">=</span> <span class="n">lgf_config</span>
 
     <span class="n">c</span><span class="o">.</span><span class="n">problem_config</span> <span class="o">=</span> <span class="n">ProblemConfig</span><span class="p">(</span>
         <span class="n">n_sources</span><span class="o">=</span><span class="n">n_sources</span><span class="p">,</span> <span class="n">datatypes</span><span class="o">=</span><span class="n">datatypes</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
@@ -1351,6 +1467,18 @@
     <span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">conf_out</span><span class="p">)</span></div>
 
 
+<span class="k">class</span> <span class="nc">ConfigNeedsUpdatingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;Configuration file has to be updated! </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+              <span class="s1">&#39; Please run &quot;beat update &lt;project_dir --parameters=structure&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errmess</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errmess</span> <span class="o">=</span> <span class="n">errmess</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errmess</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="load_config"><a class="viewcode-back" href="../api.html#config.load_config">[docs]</a><span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load configuration file.</span>
@@ -1378,9 +1506,12 @@
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Cannot load config, file </span><span class="si">%s</span><span class="s1">&#39;</span>
                       <span class="s1">&#39; does not exist!&#39;</span> <span class="o">%</span> <span class="n">config_fn</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ArgumentError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigNeedsUpdatingError</span><span class="p">()</span>
 
     <span class="n">config</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">validate_priors</span><span class="p">()</span>
-
+    <span class="n">config</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">validate_hypers</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">validate_hierarchicals</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">config</span></div>
 </pre></div>
 
@@ -1397,7 +1528,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

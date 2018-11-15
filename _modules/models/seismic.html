@@ -260,7 +260,8 @@
     <span class="k">def</span> <span class="nf">get_unique_stations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">sl</span> <span class="o">=</span> <span class="p">[</span><span class="n">wmap</span><span class="o">.</span><span class="n">stations</span> <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">]</span>
         <span class="n">us</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="nb">map</span><span class="p">(</span><span class="n">us</span><span class="o">.</span><span class="n">extend</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sl</span><span class="p">:</span>
+            <span class="n">us</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">us</span><span class="p">))</span>
 
     <span class="nd">@property</span>
@@ -297,7 +298,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_targets</span> <span class="o">=</span> <span class="n">ts</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_targets</span>
 
-    <span class="k">def</span> <span class="nf">assemble_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">assemble_results</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">,</span>
+            <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;stacked_traces&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assemble seismic traces for given point in solution space.</span>
 
@@ -316,13 +319,13 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Assembling seismic waveforms ...&#39;</span><span class="p">)</span>
 
         <span class="n">syn_proc_traces</span><span class="p">,</span> <span class="n">obs_proc_traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_synthetics</span><span class="p">(</span>
-            <span class="n">point</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;stacked_traces&#39;</span><span class="p">,</span>
+            <span class="n">point</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="n">outmode</span><span class="p">,</span>
             <span class="n">chop_bounds</span><span class="o">=</span><span class="n">chop_bounds</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;wmap&#39;</span><span class="p">)</span>
 
         <span class="c1"># will yield exactly the same as previous call needs wmap.prepare data</span>
         <span class="c1"># to be aware of taper_tolerance_factor</span>
         <span class="n">syn_filt_traces</span><span class="p">,</span> <span class="n">obs_filt_traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_synthetics</span><span class="p">(</span>
-            <span class="n">point</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;stacked_traces&#39;</span><span class="p">,</span> <span class="n">taper_tolerance_factor</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+            <span class="n">point</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="n">outmode</span><span class="p">,</span> <span class="n">taper_tolerance_factor</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
             <span class="n">chop_bounds</span><span class="o">=</span><span class="n">chop_bounds</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;wmap&#39;</span><span class="p">)</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -342,10 +345,8 @@
                     <span class="p">(</span><span class="n">obs_filt_traces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span> <span class="o">-</span>
                         <span class="n">syn_filt_traces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()))</span>
 
-                <span class="c1"># TODO fix here for right arrival time</span>
                 <span class="n">taper</span> <span class="o">=</span> <span class="n">at</span><span class="o">.</span><span class="n">get_pyrocko_taper</span><span class="p">(</span>
-                    <span class="nb">float</span><span class="p">(</span><span class="n">obs_tr</span><span class="o">.</span><span class="n">tmin</span> <span class="o">+</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">at</span><span class="o">.</span><span class="n">a</span><span class="p">)))</span>
-                <span class="c1"># -------------------------------------</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">obs_tr</span><span class="o">.</span><span class="n">tmin</span> <span class="o">-</span> <span class="n">at</span><span class="o">.</span><span class="n">a</span><span class="p">))</span>
 
                 <span class="n">wmap_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heart</span><span class="o">.</span><span class="n">SeismicResult</span><span class="p">(</span>
                     <span class="n">processed_obs</span><span class="o">=</span><span class="n">obs_tr</span><span class="p">,</span>
@@ -433,9 +434,9 @@
                 <span class="n">tpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">hyper</span><span class="p">)</span>
 
         <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">source_params</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">+</span> <span class="n">source</span><span class="o">.</span><span class="n">stf</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">source_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">stf</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">tpoint</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">tpoint</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source_params</span><span class="p">:</span>
                 <span class="n">tpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
 
@@ -498,7 +499,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s1">&#39;Preparing data of &quot;</span><span class="si">%s</span><span class="s1">&quot; for optimization&#39;</span> <span class="o">%</span> <span class="n">wmap</span><span class="o">.</span><span class="n">_mapid</span><span class="p">)</span>
             <span class="n">wmap</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span>
-                <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">engine</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
+                <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s1">&#39;Initializing synthesizer for &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">wmap</span><span class="o">.</span><span class="n">_mapid</span><span class="p">)</span>
@@ -559,7 +560,7 @@
         <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
             <span class="n">wc</span> <span class="o">=</span> <span class="n">wmap</span><span class="o">.</span><span class="n">config</span>
             <span class="n">wmap</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span>
-                <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span>
                 <span class="n">engine</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">,</span>
                 <span class="n">outmode</span><span class="o">=</span><span class="n">outmode</span><span class="p">,</span>
                 <span class="n">chop_bounds</span><span class="o">=</span><span class="n">chop_bounds</span><span class="p">)</span>
@@ -705,11 +706,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">sweep_implementation</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">choppers</span><span class="p">[</span><span class="n">wmap</span><span class="o">.</span><span class="n">_mapid</span><span class="p">]</span> <span class="o">=</span> <span class="n">theanof</span><span class="o">.</span><span class="n">SeisDataChopper</span><span class="p">(</span>
-                    <span class="n">sample_rate</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span>
-                    <span class="n">traces</span><span class="o">=</span><span class="n">wmap</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span>
-                    <span class="n">arrival_taper</span><span class="o">=</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">arrival_taper</span><span class="p">,</span>
-                    <span class="n">filterer</span><span class="o">=</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">filterer</span><span class="p">)</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Preparing data of &quot;</span><span class="si">%s</span><span class="s1">&quot; for optimization&#39;</span> <span class="o">%</span> <span class="n">wmap</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">wmap</span><span class="o">.</span><span class="n">prepare_data</span><span class="p">(</span>
+                    <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SeismicDistributerComposite.load_fault_geometry"><a class="viewcode-back" href="../../api.html#models.seismic.SeismicDistributerComposite.load_fault_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">load_fault_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -805,11 +806,29 @@
             <span class="n">positions_strike</span><span class="o">=</span><span class="n">nuc_strike</span><span class="p">,</span>
             <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;theano&#39;</span><span class="p">)</span>
 
-        <span class="n">starttimes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweeper</span><span class="p">(</span>
+        <span class="n">starttimes0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sweeper</span><span class="p">(</span>
             <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">input_rvs</span><span class="p">[</span><span class="s1">&#39;velocities&#39;</span><span class="p">]),</span> <span class="n">nuc_dip_idx</span><span class="p">,</span> <span class="n">nuc_strike_idx</span><span class="p">)</span>
 
+        <span class="n">starttimes0</span> <span class="o">+=</span> <span class="n">input_rvs</span><span class="p">[</span><span class="s1">&#39;nucleation_time&#39;</span><span class="p">]</span>
         <span class="n">wlogpts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
+            <span class="c1"># station corrections</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="s1">&#39;Station corrections not fully implemented! for ffi!&#39;</span><span class="p">)</span>
+                <span class="n">starttimes</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">tt</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">starttimes0</span><span class="p">,</span> <span class="n">wmap</span><span class="o">.</span><span class="n">n_t</span><span class="p">)</span> <span class="o">+</span>
+                    <span class="n">tt</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">correction_name</span><span class="p">][</span>
+                        <span class="n">wmap</span><span class="o">.</span><span class="n">station_correction_idxs</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fault</span><span class="o">.</span><span class="n">npatches</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                            <span class="n">wmap</span><span class="o">.</span><span class="n">n_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault</span><span class="o">.</span><span class="n">npatches</span><span class="p">)</span>
+
+                <span class="n">targetidxs</span> <span class="o">=</span> <span class="n">shared</span><span class="p">(</span>
+                    <span class="n">num</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">n_t</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">starttimes</span> <span class="o">=</span> <span class="n">starttimes0</span>
+                <span class="n">targetidxs</span> <span class="o">=</span> <span class="n">shared</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">index_tricks</span><span class="o">.</span><span class="n">s_</span><span class="p">[:],</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stacking </span><span class="si">%s</span><span class="s1"> phase ...&#39;</span> <span class="o">%</span> <span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="n">synthetics</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">n_t</span><span class="p">,</span> <span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">arrival_taper</span><span class="o">.</span><span class="n">nsamples</span><span class="p">(</span>
@@ -821,29 +840,13 @@
                 <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gflibrary_key</span><span class="p">(</span>
                     <span class="n">crust_ind</span><span class="o">=</span><span class="n">ref_idx</span><span class="p">,</span> <span class="n">wavename</span><span class="o">=</span><span class="n">wmap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
                 <span class="n">synthetics</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">stack_all</span><span class="p">(</span>
+                    <span class="n">targetidxs</span><span class="o">=</span><span class="n">targetidxs</span><span class="p">,</span>
                     <span class="n">starttimes</span><span class="o">=</span><span class="n">starttimes</span><span class="p">,</span>
                     <span class="n">durations</span><span class="o">=</span><span class="n">input_rvs</span><span class="p">[</span><span class="s1">&#39;durations&#39;</span><span class="p">],</span>
                     <span class="n">slips</span><span class="o">=</span><span class="n">input_rvs</span><span class="p">[</span><span class="n">var</span><span class="p">],</span>
                     <span class="n">interpolation</span><span class="o">=</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">interpolation</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Get hypocenter location ...&#39;</span><span class="p">)</span>
-            <span class="n">patchidx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault</span><span class="o">.</span><span class="n">spatchmap</span><span class="p">(</span>
-                <span class="mi">0</span><span class="p">,</span> <span class="n">dipidx</span><span class="o">=</span><span class="n">nuc_dip_idx</span><span class="p">,</span> <span class="n">strikeidx</span><span class="o">=</span><span class="n">nuc_strike_idx</span><span class="p">)</span>
-
-            <span class="c1"># cut data according to wavemaps</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cut data accordingly&#39;</span><span class="p">)</span>
-
-            <span class="n">tmins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">get_all_tmins</span><span class="p">(</span>
-                <span class="n">patchidx</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="n">input_rvs</span><span class="p">[</span><span class="s1">&#39;nucleation_time&#39;</span><span class="p">]</span>
-
-            <span class="c1"># add station corrections</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">tmins</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">correction_name</span><span class="p">][</span><span class="n">wmap</span><span class="o">.</span><span class="n">station_correction_idxs</span><span class="p">]</span>
-
-            <span class="n">data_traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choppers</span><span class="p">[</span><span class="n">wmap</span><span class="o">.</span><span class="n">_mapid</span><span class="p">](</span><span class="n">tmins</span><span class="p">)</span>
-
-            <span class="n">residuals</span> <span class="o">=</span> <span class="n">data_traces</span> <span class="o">-</span> <span class="n">synthetics</span>
+            <span class="n">residuals</span> <span class="o">=</span> <span class="n">wmap</span><span class="o">.</span><span class="n">shared_data_array</span> <span class="o">-</span> <span class="n">synthetics</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Calculating likelihoods ...&#39;</span><span class="p">)</span>
             <span class="n">logpts</span> <span class="o">=</span> <span class="n">multivariate_normal_chol</span><span class="p">(</span>
@@ -876,7 +879,7 @@
         <span class="n">order</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;order&#39;</span><span class="p">,</span> <span class="s1">&#39;list&#39;</span><span class="p">)</span>
 
         <span class="n">ref_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">reference_model_idx</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_gfs</span><span class="p">(</span>
                 <span class="n">crust_inds</span><span class="o">=</span><span class="p">[</span><span class="n">ref_idx</span><span class="p">],</span>
                 <span class="n">make_shared</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -985,7 +988,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
 

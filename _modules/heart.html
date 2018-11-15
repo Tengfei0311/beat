@@ -96,7 +96,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">num</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">linalg</span>
 
-<span class="kn">from</span> <span class="nn">pyrocko.guts</span> <span class="k">import</span> <span class="n">Object</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">pyrocko.guts</span> <span class="k">import</span> <span class="p">(</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Object</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">StringChoice</span><span class="p">,</span>
+                          <span class="n">Float</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">pyrocko.guts_array</span> <span class="k">import</span> <span class="n">Array</span>
 
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">crust2x2</span><span class="p">,</span> <span class="n">gf</span><span class="p">,</span> <span class="n">cake</span><span class="p">,</span> <span class="n">orthodrome</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">util</span>
@@ -188,13 +189,36 @@
         <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_slog_pdet</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">covs_supported</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;pred_g&#39;</span><span class="p">,</span> <span class="s1">&#39;pred_v&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Covariance.check_matrix_init"><a class="viewcode-back" href="../api.html#heart.Covariance.check_matrix_init">[docs]</a>    <span class="k">def</span> <span class="nf">check_matrix_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cov_mat_str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if matrix is initialised and if not set with zeros of size data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cov_mat_str</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">covs_supported</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s1">&#39;Covariance term </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="n">cov_mat_str</span><span class="p">)</span>
+
+        <span class="n">cov_mat</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cov_mat_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cov_mat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cov_mat</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cov_mat</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cov_mat</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+                <span class="n">cov_mat</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> covariances defined but size &#39;</span>
+                    <span class="s1">&#39;inconsistent!&#39;</span> <span class="o">%</span> <span class="n">cov_mat_str</span><span class="p">)</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cov_mat_str</span><span class="p">,</span> <span class="n">cov_mat</span><span class="p">)</span></div>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">p_total</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred_g</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pred_g</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pred_v</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_matrix_init</span><span class="p">(</span><span class="s1">&#39;pred_g&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_matrix_init</span><span class="p">(</span><span class="s1">&#39;pred_v&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred_g</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred_v</span>
 
@@ -282,6 +306,19 @@
                 <span class="n">help</span><span class="o">=</span><span class="s1">&#39;start of fading out; [s] w.r.t. phase arrival&#39;</span><span class="p">)</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">55.</span><span class="p">,</span>
                 <span class="n">help</span><span class="o">=</span><span class="s1">&#39;end of fading out; [s] w.r.t phase arrival&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ArrivalTaper.check_sample_rate_consistency"><a class="viewcode-back" href="../api.html#heart.ArrivalTaper.check_sample_rate_consistency">[docs]</a>    <span class="k">def</span> <span class="nf">check_sample_rate_consistency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if taper durations are consistent with GF sample rate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">chop_b</span> <span class="ow">in</span> <span class="p">([</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]):</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">(</span><span class="n">chop_b</span><span class="p">)</span>
+            <span class="n">ratio</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="n">deltat</span>
+            <span class="n">utility</span><span class="o">.</span><span class="n">error_not_whole</span><span class="p">(</span>
+                <span class="n">ratio</span><span class="p">,</span>
+                <span class="n">errstr</span><span class="o">=</span><span class="s1">&#39;Taper duration </span><span class="si">%g</span><span class="s1"> of </span><span class="si">%s</span><span class="s1"> is inconsistent with&#39;</span>
+                       <span class="s1">&#39; sampling rate of </span><span class="si">%g</span><span class="s1">! Please adjust Taper values!&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                           <span class="n">duration</span><span class="p">,</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">chop_b</span><span class="p">),</span> <span class="n">deltat</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]):</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -426,6 +463,8 @@
     <span class="n">length</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">7000.</span><span class="p">),</span>
     <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">500.</span><span class="p">),</span>
     <span class="n">slip</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">150.</span><span class="p">),</span>
+    <span class="n">nucleation_x</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
+    <span class="n">nucleation_y</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
     <span class="n">magnitude</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">),</span>
 
     <span class="n">time</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">300.</span><span class="p">,</span> <span class="mf">300.</span><span class="p">),</span>
@@ -439,11 +478,10 @@
     <span class="n">peak_ratio</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
 
     <span class="n">durations</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">600.</span><span class="p">),</span>
-    <span class="n">uparr</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">150.</span><span class="p">),</span>
+    <span class="n">uparr</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">150.</span><span class="p">),</span>
     <span class="n">uperp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">150.</span><span class="p">,</span> <span class="mf">150.</span><span class="p">),</span>
     <span class="n">nucleation_strike</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">num</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
     <span class="n">nucleation_dip</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">num</span><span class="o">.</span><span class="n">inf</span><span class="p">),</span>
-    <span class="n">nucleation_time</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">40.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">),</span>
     <span class="n">velocities</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">),</span>
 
     <span class="n">azimuth</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">),</span>
@@ -454,7 +492,8 @@
 
     <span class="n">hypers</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span>
 
-    <span class="n">ramp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">))</span>
+    <span class="n">ramp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span>
+    <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../api.html#heart.Parameter">[docs]</a><span class="k">class</span> <span class="nc">Parameter</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -481,9 +520,12 @@
 
     <span class="k">def</span> <span class="nf">validate_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">physical_bounds</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;ramp&#39;</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ramp&#39;</span>
+        <span class="n">supported_vars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">physical_bounds</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_vars</span><span class="p">:</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">supported_vars</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">candidate</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;h_&#39;</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s1">&#39;The parameter &quot;</span><span class="si">%s</span><span class="s1">&quot; cannot&#39;</span>
@@ -493,6 +535,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
+        <span class="n">phys_b</span> <span class="o">=</span> <span class="n">physical_bounds</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimension</span><span class="p">):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
@@ -506,8 +549,6 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="s1">&#39;The testvalue of parameter &quot;</span><span class="si">%s</span><span class="s1">&quot; has to&#39;</span>
                         <span class="s1">&#39; be within the upper and lower bounds&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-                <span class="n">phys_b</span> <span class="o">=</span> <span class="n">physical_bounds</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">phys_b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> \
                         <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">phys_b</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
@@ -805,7 +846,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">get_component_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_component_names</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">get_component_names</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_compound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
@@ -837,53 +878,21 @@
             <span class="n">odw</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">lats</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">iter_stations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Quadtree"><a class="viewcode-back" href="../api.html#heart.Quadtree">[docs]</a><span class="k">class</span> <span class="nc">Quadtree</span><span class="p">(</span><span class="n">GeodeticDataset</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    In the point coordinates are assumed to be te lower left corner</span>
-<span class="sd">    of the quadtree leaves.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sizeN</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sizeE</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ResultReport"><a class="viewcode-back" href="../api.html#heart.ResultReport">[docs]</a><span class="k">class</span> <span class="nc">ResultReport</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
 
-<div class="viewcode-block" id="Quadtree.iter_leaves"><a class="viewcode-back" href="../api.html#heart.Quadtree.iter_leaves">[docs]</a>    <span class="k">def</span> <span class="nf">iter_leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iterator over the quadtree leaves, returns lower left easting and</span>
-<span class="sd">        northing together with the width and height</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">E</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">sn</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">east_shifts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">north_shifts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizeE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizeN</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">E</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">sn</span></div>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_kite_quadtree</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">quadtree</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">east_shifts</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
-        <span class="n">north_shifts</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
-        <span class="n">sizeE</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
-        <span class="n">sizeN</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaves</span><span class="p">):</span>
-            <span class="n">east_shifts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">leaf</span><span class="o">.</span><span class="n">llE</span>
-            <span class="n">north_shifts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">leaf</span><span class="o">.</span><span class="n">llN</span>
-            <span class="n">sizeE</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">leaf</span><span class="o">.</span><span class="n">sizeE</span>
-            <span class="n">sizeN</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">leaf</span><span class="o">.</span><span class="n">sizeN</span>
-
-        <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">ne_to_latlon</span><span class="p">(</span>
-            <span class="n">lat0</span><span class="o">=</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">,</span>
-            <span class="n">north_m</span><span class="o">=</span><span class="n">north_shifts</span><span class="p">,</span> <span class="n">east_m</span><span class="o">=</span><span class="n">east_shifts</span><span class="p">)</span>
-
-        <span class="n">utme</span><span class="p">,</span> <span class="n">utmn</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">lonlat_to_utm</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">utm_zone</span><span class="p">)</span>
-
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
-            <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
-            <span class="n">utme</span><span class="o">=</span><span class="n">utme</span><span class="p">,</span>
-            <span class="n">utmn</span><span class="o">=</span><span class="n">utmn</span><span class="p">,</span>
-            <span class="n">sizeE</span><span class="o">=</span><span class="n">sizeE</span><span class="p">,</span>
-            <span class="n">sizeN</span><span class="o">=</span><span class="n">sizeN</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span></div>
+    <span class="n">solution_point</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s1">&#39;result point&#39;</span><span class="p">)</span>
+    <span class="n">post_llk</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Value of point of the likelihood distribution.&#39;</span><span class="p">)</span>
+    <span class="n">mean_point</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;mean of distributions, used for model&#39;</span>
+             <span class="s1">&#39; prediction covariance calculation.&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IFG"><a class="viewcode-back" href="../api.html#heart.IFG">[docs]</a><span class="k">class</span> <span class="nc">IFG</span><span class="p">(</span><span class="n">GeodeticDataset</span><span class="p">):</span>
@@ -945,9 +954,6 @@
     <span class="n">reference_point</span> <span class="o">=</span> <span class="n">Tuple</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">reference_value</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="n">displacement</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">quadtree</span> <span class="o">=</span> <span class="n">Quadtree</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Quadtree corner coordinate information for plotting.&#39;</span><span class="p">)</span>
     <span class="n">covariance</span> <span class="o">=</span> <span class="n">Covariance</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;:py:class:`Covariance` that holds data&#39;</span>
@@ -967,29 +973,40 @@
             <span class="s1">&#39;now, which may take a significant amount of time...&#39;</span> <span class="o">%</span>
             <span class="n">scene</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">covariance</span> <span class="o">=</span> <span class="n">Covariance</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">covariance_matrix</span><span class="p">)</span>
-        <span class="n">loce</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_eastings</span>
-        <span class="n">locn</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_northings</span>
-        <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">ne_to_latlon</span><span class="p">(</span>
-            <span class="n">lat0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">,</span>
-            <span class="n">north_m</span><span class="o">=</span><span class="n">locn</span><span class="p">,</span> <span class="n">east_m</span><span class="o">=</span><span class="n">loce</span><span class="p">)</span>
 
-        <span class="n">quadtree</span> <span class="o">=</span> <span class="n">Quadtree</span><span class="o">.</span><span class="n">from_kite_quadtree</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="p">)</span>
-
-        <span class="n">utme</span><span class="p">,</span> <span class="n">utmn</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">lonlat_to_utm</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">utm_zone</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">isDegree</span><span class="p">():</span>
+                <span class="n">lats</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
+                <span class="n">lons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
+                <span class="n">lats</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">)</span>
+                <span class="n">lons</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">)</span>
+                <span class="n">lons</span> <span class="o">+=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_focal_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="n">lats</span> <span class="o">+=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_focal_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">isMeter</span><span class="p">():</span>
+                <span class="n">loce</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_eastings</span>
+                <span class="n">locn</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_northings</span>
+                <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">ne_to_latlon</span><span class="p">(</span>
+                    <span class="n">lat0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">,</span>
+                    <span class="n">north_m</span><span class="o">=</span><span class="n">locn</span><span class="p">,</span> <span class="n">east_m</span><span class="o">=</span><span class="n">loce</span><span class="p">)</span>
 
         <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
             <span class="n">displacement</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_means</span><span class="p">,</span>
-            <span class="n">utme</span><span class="o">=</span><span class="n">utme</span><span class="p">,</span>
-            <span class="n">utmn</span><span class="o">=</span><span class="n">utmn</span><span class="p">,</span>
             <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
             <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
             <span class="n">covariance</span><span class="o">=</span><span class="n">covariance</span><span class="p">,</span>
             <span class="n">incidence</span><span class="o">=</span><span class="mi">90</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_thetas</span><span class="p">),</span>
             <span class="n">heading</span><span class="o">=-</span><span class="n">num</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_phis</span><span class="p">)</span> <span class="o">+</span> <span class="mi">180</span><span class="p">,</span>
-            <span class="n">odw</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_phis</span><span class="p">),</span>
-            <span class="n">quadtree</span><span class="o">=</span><span class="n">quadtree</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span></div>
+            <span class="n">odw</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_phis</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plane_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_name</span><span class="p">()]</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_name</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">ramp_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_ramp&#39;</span>
+
+    <span class="k">def</span> <span class="nf">offset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_offset&#39;</span></div>
 
 
 <div class="viewcode-block" id="GeodeticResult"><a class="viewcode-back" href="../api.html#heart.GeodeticResult">[docs]</a><span class="k">class</span> <span class="nc">GeodeticResult</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -1385,8 +1402,7 @@
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using global model ...&#39;</span><span class="p">)</span>
-        <span class="n">source_model</span> <span class="o">=</span> <span class="n">cake</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span>
-            <span class="n">earth_model_name</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">depth_max</span><span class="o">=</span><span class="s1">&#39;cmb&#39;</span><span class="p">)</span>
+        <span class="n">source_model</span> <span class="o">=</span> <span class="n">cake</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">earth_model_name</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">crust_ind</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">source_model</span> <span class="o">=</span> <span class="n">ensemble_earthmodel</span><span class="p">(</span>
@@ -1421,7 +1437,8 @@
     <span class="n">phases</span> <span class="o">=</span> <span class="p">[</span><span class="n">phase</span><span class="o">.</span><span class="n">phases</span> <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">fc</span><span class="o">.</span><span class="n">tabulated_phases</span><span class="p">]</span>
 
     <span class="n">all_phases</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="nb">map</span><span class="p">(</span><span class="n">all_phases</span><span class="o">.</span><span class="n">extend</span><span class="p">,</span> <span class="n">phases</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">phases</span><span class="p">:</span>
+        <span class="n">all_phases</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
 
     <span class="n">mean_source_depth</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
         <span class="p">(</span><span class="n">fc</span><span class="o">.</span><span class="n">source_depth_min</span><span class="p">,</span> <span class="n">fc</span><span class="o">.</span><span class="n">source_depth_max</span><span class="p">))</span> <span class="o">/</span> <span class="n">km</span>
@@ -1813,28 +1830,25 @@
 
     <span class="n">traces_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">store_dir</span><span class="p">,</span> <span class="s1">&#39;traces&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">execute</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">traces_path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Filling store ...&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">execute</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">traces_path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Filling store ...&#39;</span><span class="p">)</span>
 
-        <span class="n">store</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="n">store_dir</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">store</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="n">store_dir</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="c1"># build store</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">ppp</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">store_dir</span><span class="p">,</span> <span class="n">nworkers</span><span class="o">=</span><span class="n">gfc</span><span class="o">.</span><span class="n">nworkers</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ppp</span><span class="o">.</span><span class="n">PsCmpError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;could not start psgrn/pscmp&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;psgrn/pscmp not installed&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span>
+            <span class="c1"># build store</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ppp</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">store_dir</span><span class="p">,</span> <span class="n">nworkers</span><span class="o">=</span><span class="n">gfc</span><span class="o">.</span><span class="n">nworkers</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ppp</span><span class="o">.</span><span class="n">PsCmpError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;could not start psgrn/pscmp&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;psgrn/pscmp not installed&#39;</span><span class="p">)</span>
+                    <span class="k">return</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span>
 
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">execute</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">traces_path</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Geo GFs can be created in directory: </span><span class="si">%s</span><span class="s1"> ! &#39;</span>
-                    <span class="s1">&#39;(execute=True necessary)! GF params: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">store_dir</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="n">fomosto_config</span><span class="p">,</span> <span class="n">c</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Traces exist use force=True to overwrite!&#39;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Traces exist use force=True to overwrite!&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="geo_construct_gf_psgrn"><a class="viewcode-back" href="../api.html#heart.geo_construct_gf_psgrn">[docs]</a><span class="k">def</span> <span class="nf">geo_construct_gf_psgrn</span><span class="p">(</span>
@@ -1908,7 +1922,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">execute</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Geo GFs can be created in directory: </span><span class="si">%s</span><span class="s1"> ! &#39;</span>
                     <span class="s1">&#39;(execute=True necessary)! GF params: </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="o">.</span><span class="n">psgrn_outdir</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="n">c</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">execute</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating Geo GFs in directory: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="o">.</span><span class="n">psgrn_outdir</span><span class="p">)</span>
@@ -1960,7 +1974,7 @@
     <span class="k">return</span> <span class="n">runner</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s1">&#39;displ&#39;</span><span class="p">,</span> <span class="n">flip_z</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_phase_arrival_time"><a class="viewcode-back" href="../api.html#heart.get_phase_arrival_time">[docs]</a><span class="k">def</span> <span class="nf">get_phase_arrival_time</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">wavename</span><span class="p">):</span>
+<div class="viewcode-block" id="get_phase_arrival_time"><a class="viewcode-back" href="../api.html#heart.get_phase_arrival_time">[docs]</a><span class="k">def</span> <span class="nf">get_phase_arrival_time</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">wavename</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get arrival time from Greens Function store for respective</span>
 <span class="sd">    :class:`pyrocko.gf.seismosizer.Target`,</span>
@@ -1975,6 +1989,8 @@
 <span class="sd">    target : :class:`pyrocko.gf.seismosizer.Target`</span>
 <span class="sd">    wavename : string</span>
 <span class="sd">        of the tabulated phase that determines the phase arrival</span>
+<span class="sd">    snap : if True</span>
+<span class="sd">        force arrival time on discrete samples of the store</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1988,12 +2004,15 @@
             <span class="s1">&#39;No such store with ID </span><span class="si">%s</span><span class="s1"> found, distance [deg] to event: </span><span class="si">%f</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">target</span><span class="o">.</span><span class="n">store_id</span><span class="p">,</span> <span class="n">cake</span><span class="o">.</span><span class="n">m2d</span> <span class="o">*</span> <span class="n">dist</span><span class="p">))</span>
 
-    <span class="n">depth</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">depth</span>
-    <span class="k">return</span> <span class="n">store</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="n">wavename</span><span class="p">,</span> <span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">dist</span><span class="p">))</span> <span class="o">+</span> <span class="n">source</span><span class="o">.</span><span class="n">time</span></div>
+    <span class="n">atime</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="n">wavename</span><span class="p">,</span> <span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="n">dist</span><span class="p">))</span> <span class="o">+</span> <span class="n">source</span><span class="o">.</span><span class="n">time</span>
+    <span class="k">if</span> <span class="n">snap</span><span class="p">:</span>
+        <span class="n">deltat</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">store</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sample_rate</span>
+        <span class="n">atime</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">t2ind</span><span class="p">(</span><span class="n">atime</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="nb">round</span><span class="p">)</span> <span class="o">*</span> <span class="n">deltat</span>
+    <span class="k">return</span> <span class="n">atime</span></div>
 
 
 <div class="viewcode-block" id="get_phase_taperer"><a class="viewcode-back" href="../api.html#heart.get_phase_taperer">[docs]</a><span class="k">def</span> <span class="nf">get_phase_taperer</span><span class="p">(</span>
-        <span class="n">engine</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">wavename</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">arrival_taper</span><span class="p">,</span> <span class="n">arrival_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">engine</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">wavename</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">arrival_taper</span><span class="p">,</span> <span class="n">arrival_time</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">nan</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create phase taperer according to synthetic travel times from</span>
 <span class="sd">    source- target pair and taper return :class:`pyrocko.trace.CosTaper`</span>
@@ -2015,7 +2034,8 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`pyrocko.trace.CosTaper`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">arrival_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">arrival_time</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Using source reference for tapering!&#39;</span><span class="p">)</span>
         <span class="n">arrival_time</span> <span class="o">=</span> <span class="n">get_phase_arrival_time</span><span class="p">(</span>
             <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">wavename</span><span class="o">=</span><span class="n">wavename</span><span class="p">)</span>
 
@@ -2027,10 +2047,8 @@
 <span class="sd">    Weights have to be theano.shared variables!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_target2index</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">stations</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
-                 <span class="n">datasets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">station_correction_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">datasets</span><span class="o">=</span><span class="p">[],</span> <span class="n">targets</span><span class="o">=</span><span class="p">[],</span> <span class="n">station_correction_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stations</span> <span class="o">=</span> <span class="n">stations</span>
@@ -2043,6 +2061,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">station_correction_idxs</span> <span class="o">=</span> <span class="n">station_correction_idxs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_times</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target2index</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_trace_wavenames</span><span class="p">()</span>
@@ -2078,19 +2097,25 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">weed_data_traces</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_t</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">weed_targets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">weed_targets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_t</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># update station_correction_idx</span>
             <span class="n">target_idxs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">target_index_mapping</span><span class="p">()[</span><span class="n">target</span><span class="p">]</span>
-                 <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">])</span>
+                 <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">station_correction_idxs</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">_station_correction_reference</span><span class="p">[</span><span class="n">target_idxs</span><span class="p">]</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_target2index</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># reset mapping</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">check_consistency</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WaveformMapping.get_station_names"><a class="viewcode-back" href="../api.html#heart.WaveformMapping.get_station_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_station_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns list of strings of station names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">station</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="nf">check_consistency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_t</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_data</span><span class="p">:</span>
@@ -2133,31 +2158,16 @@
     <span class="k">def</span> <span class="nf">n_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">get_target_idxs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]):</span>
 
         <span class="n">t2i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_index_mapping</span><span class="p">()</span>
-
         <span class="n">dtargets</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">codes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
-        <span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tidxs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">cha</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dtargets</span><span class="p">[</span><span class="n">cha</span><span class="p">]:</span>
-                <span class="n">datasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="n">t2i</span><span class="p">[</span><span class="n">target</span><span class="p">]])</span>
+            <span class="n">tidxs</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">t2i</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dtargets</span><span class="p">[</span><span class="n">cha</span><span class="p">]])</span>
 
-        <span class="k">return</span> <span class="n">datasets</span>
-
-    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]):</span>
-
-        <span class="n">t2i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_index_mapping</span><span class="p">()</span>
-
-        <span class="n">dtargets</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">codes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-
-        <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">cha</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">dtargets</span><span class="p">[</span><span class="n">cha</span><span class="p">]:</span>
-                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">t2i</span><span class="p">[</span><span class="n">target</span><span class="p">]])</span>
-
-        <span class="k">return</span> <span class="n">weights</span>
+        <span class="k">return</span> <span class="n">tidxs</span>
 
 <div class="viewcode-block" id="WaveformMapping.prepare_data"><a class="viewcode-back" href="../api.html#heart.WaveformMapping.prepare_data">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_data</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">outmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]):</span>
@@ -2166,7 +2176,7 @@
 <span class="sd">        Traces are concatenated to one single array.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s1">&#39;Overwriting observed data windows in &quot;</span><span class="si">%s</span><span class="s1">&quot;!&#39;</span> <span class="o">%</span>
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapnumber</span><span class="p">)))</span>
 
@@ -2177,13 +2187,21 @@
                     <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
                     <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">wavename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">preprocess_data</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Pre-processing data ...&#39;</span><span class="p">)</span>
+                <span class="n">filterer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">filterer</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Not pre-processing data ...&#39;</span><span class="p">)</span>
+                <span class="n">filterer</span> <span class="o">=</span> <span class="kc">None</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">_prepared_data</span> <span class="o">=</span> <span class="n">taper_filter_traces</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span>
                 <span class="n">arrival_taper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">arrival_taper</span><span class="p">,</span>
-                <span class="n">filterer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">filterer</span><span class="p">,</span>
+                <span class="n">filterer</span><span class="o">=</span><span class="n">filterer</span><span class="p">,</span>
                 <span class="n">arrival_times</span><span class="o">=</span><span class="n">arrival_times</span><span class="p">,</span>
                 <span class="n">outmode</span><span class="o">=</span><span class="n">outmode</span><span class="p">,</span>
                 <span class="n">chop_bounds</span><span class="o">=</span><span class="n">chop_bounds</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_times</span> <span class="o">=</span> <span class="n">arrival_times</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wavemap needs configuration!&#39;</span><span class="p">)</span></div>
@@ -2219,18 +2237,29 @@
 <span class="sd">        of strings of tabulated phases that are to be used for misfit</span>
 <span class="sd">        calculation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_targets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-    <span class="n">_datasets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-    <span class="n">_target2index</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_station2index</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_station_correction_indexes</span> <span class="o">=</span> <span class="kc">None</span>
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stations</span><span class="p">,</span> <span class="n">waveforms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stations</span> <span class="o">=</span> <span class="n">stations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span> <span class="o">=</span> <span class="n">waveforms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deltat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_targets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datasets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target2index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_station2index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_station_correction_indexes</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">downsample_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltat</span><span class="p">):</span>
-        <span class="n">utility</span><span class="o">.</span><span class="n">downsample_traces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">deltat</span><span class="o">=</span><span class="n">deltat</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">adjust_sampling_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datasets</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">tr</span><span class="o">.</span><span class="n">nslc_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span><span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">nslc_id</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">utility</span><span class="o">.</span><span class="n">downsample_trace</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="n">snap</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CollectionError</span><span class="p">(</span>
+                    <span class="s1">&#39;Downsampled trace </span><span class="si">%s</span><span class="s1"> already in&#39;</span>
+                    <span class="s1">&#39; collection!&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">nslc_id</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deltat</span> <span class="o">=</span> <span class="n">deltat</span>
 
     <span class="k">def</span> <span class="nf">_check_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waveform</span><span class="p">,</span> <span class="n">errormode</span><span class="o">=</span><span class="s1">&#39;not_in&#39;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">errormode</span> <span class="o">==</span> <span class="s1">&#39;not_in&#39;</span><span class="p">:</span>
@@ -2307,6 +2336,12 @@
     <span class="k">def</span> <span class="nf">get_waveform_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span>
 
+    <span class="k">def</span> <span class="nf">get_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nslc</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span><span class="p">[</span><span class="n">nslc</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datasets</span><span class="p">[</span><span class="n">nslc</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="nf">add_waveforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waveforms</span><span class="o">=</span><span class="p">[],</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">waveform</span> <span class="ow">in</span> <span class="n">waveforms</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_collection</span><span class="p">(</span><span class="n">waveform</span><span class="p">,</span> <span class="n">errormode</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span>
@@ -2330,15 +2365,16 @@
 
         <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datasets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
 
-        <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datasets</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">d</span><span class="o">.</span><span class="n">set_location</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
 
             <span class="n">nslc_id</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">nslc_id</span>
             <span class="k">if</span> <span class="n">nslc_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">entries</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_datasets</span><span class="p">[</span><span class="n">nslc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datasets</span><span class="p">[</span><span class="n">nslc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s1">&#39;Dataset </span><span class="si">%s</span><span class="s1"> already in collection!&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">nslc_id</span><span class="p">))</span>
@@ -2452,7 +2488,7 @@
     <span class="n">datahandler</span> <span class="o">=</span> <span class="n">DataWaveformCollection</span><span class="p">(</span><span class="n">stations</span><span class="p">,</span> <span class="n">wavenames</span><span class="p">)</span>
     <span class="n">datahandler</span><span class="o">.</span><span class="n">add_datasets</span><span class="p">(</span>
         <span class="n">data_traces</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">reference_model_idx</span><span class="p">)</span>
-    <span class="n">datahandler</span><span class="o">.</span><span class="n">downsample_datasets</span><span class="p">(</span><span class="n">target_deltat</span><span class="p">)</span>
+    <span class="n">datahandler</span><span class="o">.</span><span class="n">adjust_sampling_datasets</span><span class="p">(</span><span class="n">target_deltat</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">datahandler</span><span class="o">.</span><span class="n">add_targets</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">datahandler</span></div>
 
@@ -2481,6 +2517,9 @@
     <span class="n">wmap</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">wc</span>
     <span class="n">wmap</span><span class="o">.</span><span class="n">mapnumber</span> <span class="o">=</span> <span class="n">mapnumber</span>
 
+    <span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">arrival_taper</span><span class="o">.</span><span class="n">check_sample_rate_consistency</span><span class="p">(</span>
+        <span class="n">datahandler</span><span class="o">.</span><span class="n">_deltat</span><span class="p">)</span>
+
     <span class="n">wmap</span><span class="o">.</span><span class="n">station_weeding</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">wc</span><span class="o">.</span><span class="n">distances</span><span class="p">,</span> <span class="n">blacklist</span><span class="o">=</span><span class="n">wc</span><span class="o">.</span><span class="n">blacklist</span><span class="p">)</span>
     <span class="n">wmap</span><span class="o">.</span><span class="n">update_interpolation</span><span class="p">(</span><span class="n">wc</span><span class="o">.</span><span class="n">interpolation</span><span class="p">)</span>
     <span class="n">wmap</span><span class="o">.</span><span class="n">_update_trace_wavenames</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">wc</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">mapnumber</span><span class="p">)]))</span>
@@ -2508,15 +2547,14 @@
 <span class="sd">        determines where to chop the trace on the taper attributes</span>
 <span class="sd">        may be combination of [a, b, c, d]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">filterer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">filterer</span><span class="p">:</span>
         <span class="c1"># filter traces</span>
         <span class="n">trace</span><span class="o">.</span><span class="n">bandpass</span><span class="p">(</span>
             <span class="n">corner_hp</span><span class="o">=</span><span class="n">filterer</span><span class="o">.</span><span class="n">lower_corner</span><span class="p">,</span>
             <span class="n">corner_lp</span><span class="o">=</span><span class="n">filterer</span><span class="o">.</span><span class="n">upper_corner</span><span class="p">,</span>
             <span class="n">order</span><span class="o">=</span><span class="n">filterer</span><span class="o">.</span><span class="n">order</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outmode</span> <span class="o">!=</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">taper</span> <span class="ow">and</span> <span class="n">outmode</span> <span class="o">!=</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
         <span class="n">tolerance</span> <span class="o">=</span> <span class="p">(</span><span class="n">taper</span><span class="o">.</span><span class="n">b</span> <span class="o">-</span> <span class="n">taper</span><span class="o">.</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">taper_tolerance_factor</span>
         <span class="n">lower_cut</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">tolerance</span>
         <span class="n">upper_cut</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">tolerance</span>
@@ -2526,8 +2564,7 @@
 
         <span class="n">trace</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lower_cut</span><span class="p">,</span> <span class="n">upper_cut</span><span class="p">,</span> <span class="n">fillmethod</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">)</span>
         <span class="n">trace</span><span class="o">.</span><span class="n">taper</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">trace</span><span class="o">.</span><span class="n">chop</span><span class="p">(</span><span class="n">tmin</span><span class="o">=</span><span class="n">lower_cut</span><span class="p">,</span>
-                   <span class="n">tmax</span><span class="o">=</span><span class="n">upper_cut</span><span class="p">)</span></div>
+        <span class="n">trace</span><span class="o">.</span><span class="n">chop</span><span class="p">(</span><span class="n">tmin</span><span class="o">=</span><span class="n">lower_cut</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="n">upper_cut</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">floor</span><span class="p">,</span> <span class="n">num</span><span class="o">.</span><span class="n">floor</span><span class="p">))</span></div>
 
 
 <span class="k">class</span> <span class="nc">StackingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -2557,9 +2594,6 @@
 <span class="sd">    wavename : string</span>
 <span class="sd">        of the tabulated phase that determines the phase arrival</span>
 <span class="sd">    filterer : :class:`Filterer`</span>
-<span class="sd">    reference_taperer : :class:`ArrivalTaper`</span>
-<span class="sd">        if set all the traces are tapered with the specifications of this</span>
-<span class="sd">        Taper</span>
 <span class="sd">    plot : boolean</span>
 <span class="sd">        flag for looking at traces</span>
 <span class="sd">    nprocs : int</span>
@@ -2576,7 +2610,7 @@
 <span class="sd">        tolerance to chop traces around taper.a and taper.d</span>
 <span class="sd">    arrival_times : None or :class:`numpy.NdArray`</span>
 <span class="sd">        of phase to apply taper, if None theoretic arrival of ray tracing used</span>
-<span class="sd">    chop_bounds : str</span>
+<span class="sd">    chop_bounds : list  of str</span>
 <span class="sd">        determines where to chop the trace on the taper attributes</span>
 <span class="sd">        may be combination of [a, b, c, d]</span>
 
@@ -2593,26 +2627,23 @@
             <span class="s1">&#39;Outmode &quot;</span><span class="si">%s</span><span class="s1">&quot; not available! Available: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">outmode</span><span class="p">,</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">stackmodes</span><span class="p">)))</span>
 
-    <span class="k">if</span> <span class="n">arrival_times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">arrival_times</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="n">arrival_times</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
         <span class="n">arrival_times</span><span class="p">[:]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">taperers</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">tapp</span> <span class="o">=</span> <span class="n">taperers</span><span class="o">.</span><span class="n">append</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">targets</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">reference_taperer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">tapp</span><span class="p">(</span><span class="n">get_phase_taperer</span><span class="p">(</span>
-                    <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
-                    <span class="n">source</span><span class="o">=</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">wavename</span><span class="o">=</span><span class="n">wavename</span><span class="p">,</span>
-                    <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
-                    <span class="n">arrival_taper</span><span class="o">=</span><span class="n">arrival_taper</span><span class="p">,</span>
-                    <span class="n">arrival_time</span><span class="o">=</span><span class="n">arrival_times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">tapp</span><span class="p">(</span><span class="n">reference_taperer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arrival_taper</span><span class="p">:</span>
+            <span class="n">tapp</span><span class="p">(</span><span class="n">get_phase_taperer</span><span class="p">(</span>
+                <span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
+                <span class="n">source</span><span class="o">=</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">wavename</span><span class="o">=</span><span class="n">wavename</span><span class="p">,</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+                <span class="n">arrival_taper</span><span class="o">=</span><span class="n">arrival_taper</span><span class="p">,</span>
+                <span class="n">arrival_time</span><span class="o">=</span><span class="n">arrival_times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
 
-    <span class="k">if</span> <span class="n">pre_stack_cut</span> <span class="ow">and</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">pre_stack_cut</span> <span class="ow">and</span> <span class="n">arrival_taper</span> <span class="ow">and</span> <span class="n">outmode</span> <span class="o">!=</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">taperer</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">taperers</span><span class="p">):</span>
             <span class="n">t</span><span class="o">.</span><span class="n">update_target_times</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">taperer</span><span class="p">)</span>
 
@@ -2634,7 +2665,7 @@
     <span class="n">taper_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">)]</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">iter_results</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arrival_taper</span><span class="p">:</span>
             <span class="n">taper</span> <span class="o">=</span> <span class="n">taperers</span><span class="p">[</span><span class="n">taper_index</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">taper</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2654,28 +2685,44 @@
     <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
         <span class="n">trace</span><span class="o">.</span><span class="n">snuffle</span><span class="p">(</span><span class="n">synt_trcs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outmode</span> <span class="o">!=</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
-        <span class="n">synths</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">tr</span><span class="o">.</span><span class="n">ydata</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">synt_trcs</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">and</span> <span class="n">outmode</span> <span class="o">!=</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">synths</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">tr</span><span class="o">.</span><span class="n">ydata</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">synt_trcs</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">tr</span><span class="o">.</span><span class="n">ydata</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">synt_trcs</span><span class="p">]</span>
+            <span class="n">tmins</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">tr</span><span class="o">.</span><span class="n">tmin</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">synt_trcs</span><span class="p">])</span>
+            <span class="n">tmaxs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">tr</span><span class="o">.</span><span class="n">tmax</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">synt_trcs</span><span class="p">])</span>
+            <span class="n">tmins</span> <span class="o">-=</span> <span class="n">tmins</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;lengths&#39;</span><span class="p">,</span> <span class="n">lengths</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tmins&#39;</span><span class="p">,</span> <span class="n">tmins</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tmaxs&#39;</span><span class="p">,</span> <span class="n">tmins</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="n">tmaxs</span> <span class="o">-</span> <span class="n">tmins</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;arrival_times&#39;</span><span class="p">,</span> <span class="n">arrival_times</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;arrival_times norm&#39;</span><span class="p">,</span> <span class="n">arrival_times</span> <span class="o">-</span> <span class="n">arrival_times</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+            <span class="n">trace</span><span class="o">.</span><span class="n">snuffle</span><span class="p">(</span><span class="n">synt_trcs</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Stacking error, traces different lengths!&#39;</span><span class="p">)</span>
 
         <span class="c1"># stack traces for all sources</span>
         <span class="n">t6</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">ns</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ns</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">outstack</span> <span class="o">=</span> <span class="n">synths</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">outstack</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nt</span><span class="p">,</span> <span class="n">synths</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">):</span>
                 <span class="n">outstack</span> <span class="o">+=</span> <span class="n">synths</span><span class="p">[(</span><span class="n">k</span> <span class="o">*</span> <span class="n">nt</span><span class="p">):(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">nt</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">outstack</span> <span class="o">=</span> <span class="n">synths</span>
+
         <span class="n">t7</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stack traces time </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t7</span> <span class="o">-</span> <span class="n">t6</span><span class="p">))</span>
 
         <span class="c1"># get taper times for tapering data as well</span>
-        <span class="n">tmins</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">at</span><span class="o">.</span><span class="n">a</span> <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">taperers</span><span class="p">])</span>
+        <span class="n">tmins</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">at</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">taperers</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># no taper defined so return trace tmins</span>
         <span class="n">tmins</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">tr</span><span class="o">.</span><span class="n">tmin</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">synt_trcs</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">outmode</span> <span class="o">==</span> <span class="s1">&#39;stacked_traces&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arrival_taper</span><span class="p">:</span>
             <span class="n">outtraces</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">oapp</span> <span class="o">=</span> <span class="n">outtraces</span><span class="o">.</span><span class="n">append</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nt</span><span class="p">):</span>
@@ -2810,7 +2857,7 @@
         <span class="n">cut_trace</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">cut_trace</span><span class="o">.</span><span class="n">set_location</span><span class="p">(</span><span class="s1">&#39;filt&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arrival_taper</span><span class="p">:</span>
             <span class="n">taper</span> <span class="o">=</span> <span class="n">arrival_taper</span><span class="o">.</span><span class="n">get_pyrocko_taper</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">arrival_times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">taper</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2833,7 +2880,7 @@
         <span class="n">trace</span><span class="o">.</span><span class="n">snuffle</span><span class="p">(</span><span class="n">cut_traces</span> <span class="o">+</span> <span class="n">traces</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">outmode</span> <span class="o">==</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">arrival_taper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arrival_taper</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Returning chopped traces ...&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">cut_traces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ydata</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">traces</span><span class="p">))])</span>
@@ -2881,7 +2928,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

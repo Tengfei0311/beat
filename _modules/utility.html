@@ -92,7 +92,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">cPickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">util</span><span class="p">,</span> <span class="n">orthodrome</span><span class="p">,</span> <span class="n">catalog</span>
 <span class="kn">from</span> <span class="nn">pyrocko.cake</span> <span class="k">import</span> <span class="n">m2d</span><span class="p">,</span> <span class="n">LayeredModel</span><span class="p">,</span> <span class="n">read_nd_model_str</span>
@@ -101,8 +101,6 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">num</span>
 <span class="kn">from</span> <span class="nn">theano</span> <span class="k">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">tconfig</span>
-
-<span class="kn">from</span> <span class="nn">pyproj</span> <span class="k">import</span> <span class="n">Proj</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;utility&#39;</span><span class="p">)</span>
@@ -375,14 +373,19 @@
     <span class="n">weeded_input_rvs</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">input_rvs</span><span class="p">)</span>
 
     <span class="n">burian</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">        lat lon name stf stf1 stf2 stf_mode moment anchor nucleation_x sign</span>
-<span class="s1">        nucleation_y velocity interpolation decimation_factor npointsources</span>
+<span class="s1">        lat lon name stf stf1 stf2 stf_mode moment anchor sign</span>
+<span class="s1">        velocity interpolation decimation_factor npointsources</span>
 <span class="s1">        elevation</span>
 <span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;geometry&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;geodetic&#39;</span><span class="p">:</span>
-            <span class="n">tobeweeded</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="s1">&#39;delta_time&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">burian</span>
+            <span class="n">tobeweeded</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;duration&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;delta_time&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;nucleation_x&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;nucleation_y&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">burian</span>
         <span class="k">elif</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;seismic&#39;</span><span class="p">:</span>
             <span class="n">tobeweeded</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;opening&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">burian</span>
 
@@ -500,26 +503,40 @@
     <span class="k">return</span> <span class="n">weeded_targets</span></div>
 
 
-<div class="viewcode-block" id="downsample_traces"><a class="viewcode-back" href="../api.html#utility.downsample_traces">[docs]</a><span class="k">def</span> <span class="nf">downsample_traces</span><span class="p">(</span><span class="n">data_traces</span><span class="p">,</span> <span class="n">deltat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="downsample_trace"><a class="viewcode-back" href="../api.html#utility.downsample_trace">[docs]</a><span class="k">def</span> <span class="nf">downsample_trace</span><span class="p">(</span><span class="n">data_trace</span><span class="p">,</span> <span class="n">deltat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Downsample data_traces to given sampling interval &#39;deltat&#39;.</span>
-<span class="sd">    Modifies input :class:`pyrocko.trace.Trace` Objects!</span>
+<span class="sd">    Downsample data_trace to given sampling interval &#39;deltat&#39;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    data_traces : list</span>
-<span class="sd">        of :class:`pyrocko.trace.Trace`</span>
-<span class="sd">    deltat : sampling interval [s] to which traces should be downsampled</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    data_trace : :class:`pyrocko.trace.Trace`</span>
+<span class="sd">    deltat : sampling interval [s] to which trace should be downsampled</span>
 
-    <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">data_traces</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">deltat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`pyrocko.trace.Trace`</span>
+<span class="sd">        new instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">data_trace</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">deltat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">deltat</span> <span class="o">-</span> <span class="n">deltat</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.e-6</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">tr</span><span class="o">.</span><span class="n">downsample_to</span><span class="p">(</span><span class="n">deltat</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_upsample_max</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">tr</span><span class="o">.</span><span class="n">downsample_to</span><span class="p">(</span>
+                    <span class="n">deltat</span><span class="p">,</span> <span class="n">snap</span><span class="o">=</span><span class="n">snap</span><span class="p">,</span> <span class="n">allow_upsample_max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">tr</span><span class="o">.</span><span class="n">deltat</span> <span class="o">=</span> <span class="n">deltat</span>
+                <span class="k">if</span> <span class="n">snap</span><span class="p">:</span>
+                    <span class="n">tr</span><span class="o">.</span><span class="n">snap</span><span class="p">()</span>
+
             <span class="k">except</span> <span class="n">util</span><span class="o">.</span><span class="n">UnavailableDecimation</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="s1">&#39;Cannot downsample </span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">nslc_id</span> <span class="o">+</span> <span class="p">(</span><span class="n">e</span><span class="p">,)))</span>
-                <span class="k">continue</span></div>
+        <span class="k">elif</span> <span class="n">snap</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tr</span><span class="o">.</span><span class="n">tmin</span> <span class="o">/</span> <span class="n">tr</span><span class="o">.</span><span class="n">deltat</span> <span class="o">&gt;</span> <span class="mf">1e-6</span> <span class="ow">or</span> <span class="n">tr</span><span class="o">.</span><span class="n">tmax</span> <span class="o">/</span> <span class="n">tr</span><span class="o">.</span><span class="n">deltat</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                <span class="n">tr</span><span class="o">.</span><span class="n">snap</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Need to provide target sample rate!&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tr</span></div>
 
 
 <div class="viewcode-block" id="weed_stations"><a class="viewcode-back" href="../api.html#utility.weed_stations">[docs]</a><span class="k">def</span> <span class="nf">weed_stations</span><span class="p">(</span><span class="n">stations</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">distances</span><span class="o">=</span><span class="p">(</span><span class="mf">30.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">)):</span>
@@ -543,11 +560,17 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">weeded_stations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s1">&#39;Valid distance range: [</span><span class="si">%f</span><span class="s1">, </span><span class="si">%f</span><span class="s1">]!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">distances</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">distances</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
     <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">:</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">distance_accurate50m</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">station</span><span class="p">)</span> <span class="o">*</span> <span class="n">m2d</span>
-
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s1">&#39;Distance of station </span><span class="si">%s</span><span class="s1">: </span><span class="si">%f</span><span class="s1"> [deg]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">station</span><span class="p">,</span> <span class="n">distance</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">distance</span> <span class="o">&gt;=</span> <span class="n">distances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">distances</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Inside defined distance range!&#39;</span><span class="p">)</span>
             <span class="n">weeded_stations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Outside defined distance range!&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">weeded_stations</span></div>
 
@@ -611,7 +634,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">mpoint</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">point</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">point</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kmtypes</span><span class="p">:</span>
             <span class="n">mpoint</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="n">km</span>
         <span class="k">else</span><span class="p">:</span>
@@ -637,14 +660,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">n_sources</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_sources</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">params</span><span class="p">))]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">n_sources</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">source_points</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sources</span><span class="p">):</span>
         <span class="n">source_param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">point</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">point</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">source_param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
         <span class="n">source_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source_param_dict</span><span class="p">)</span>
@@ -658,7 +681,7 @@
 <span class="sd">    values of keys that are present in multiple dicts.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">k</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ldicts</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">()])</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">k</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">ldicts</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
 
     <span class="n">jpoint</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
@@ -671,7 +694,7 @@
     <span class="k">return</span> <span class="n">jpoint</span></div>
 
 
-<div class="viewcode-block" id="update_source"><a class="viewcode-back" href="../api.html#utility.update_source">[docs]</a><span class="k">def</span> <span class="nf">update_source</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">point</span><span class="p">):</span>
+<div class="viewcode-block" id="update_source"><a class="viewcode-back" href="../api.html#utility.update_source">[docs]</a><span class="k">def</span> <span class="nf">update_source</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">input_depth</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">point</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update source keeping stf and source params seperate.</span>
 <span class="sd">    Modifies input source Object!</span>
@@ -683,100 +706,22 @@
 <span class="sd">        :func:`pymc3.model.Point`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">point</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">point</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">stf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">source</span><span class="o">.</span><span class="n">stf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">source</span><span class="o">.</span><span class="n">stf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Not updating source with </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                     <span class="s1">&#39;Please set a STF before updating its&#39;</span>
                     <span class="s1">&#39; parameters.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">source</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="n">source</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">RectangularSource</span><span class="p">):</span>
-        <span class="n">adjust_fault_reference</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">input_depth</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="utm_to_loc"><a class="viewcode-back" href="../api.html#utility.utm_to_loc">[docs]</a><span class="k">def</span> <span class="nf">utm_to_loc</span><span class="p">(</span><span class="n">utmx</span><span class="p">,</span> <span class="n">utmy</span><span class="p">,</span> <span class="n">zone</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert UTM[m] to local coordinates with reference to the</span>
-<span class="sd">    :class:`pyrocko.model.Event`</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    utmx : :class:`numpy.ndarray`</span>
-<span class="sd">        with UTM easting</span>
-<span class="sd">    utmy : :class:`numpy.ndarray`</span>
-<span class="sd">        with UTM northing</span>
-<span class="sd">    zone : int</span>
-<span class="sd">        number with utm zone</span>
-<span class="sd">    event : :class:`pyrocko.model.Event`</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    locx : :class:`numpy.ndarray`</span>
-<span class="sd">        Local coordinates [m] for x direction (East)</span>
-<span class="sd">    locy : :class:`numpy.ndarray`</span>
-<span class="sd">        Local coordinates [m] for y direction (North)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">Proj</span><span class="p">(</span><span class="n">proj</span><span class="o">=</span><span class="s1">&#39;utm&#39;</span><span class="p">,</span> <span class="n">zone</span><span class="o">=</span><span class="n">zone</span><span class="p">,</span> <span class="n">ellps</span><span class="o">=</span><span class="s1">&#39;WGS84&#39;</span><span class="p">)</span>
-    <span class="n">ref_x</span><span class="p">,</span> <span class="n">ref_y</span> <span class="o">=</span> <span class="n">p</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span>
-    <span class="n">locx</span> <span class="o">=</span> <span class="n">utmx</span> <span class="o">-</span> <span class="n">ref_x</span>
-    <span class="n">locy</span> <span class="o">=</span> <span class="n">utmy</span> <span class="o">-</span> <span class="n">ref_y</span>
-    <span class="k">return</span> <span class="n">locx</span><span class="p">,</span> <span class="n">locy</span></div>
-
-
-<div class="viewcode-block" id="lonlat_to_utm"><a class="viewcode-back" href="../api.html#utility.lonlat_to_utm">[docs]</a><span class="k">def</span> <span class="nf">lonlat_to_utm</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">zone</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert UTM[m] to local coordinates with reference to the</span>
-<span class="sd">    :class:`pyrocko.model.Event`</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    utmx : :class:`numpy.ndarray`</span>
-<span class="sd">        with UTM easting</span>
-<span class="sd">    utmy : :class:`numpy.ndarray`</span>
-<span class="sd">        with UTM northing</span>
-<span class="sd">    zone : int</span>
-<span class="sd">        number with utm zone</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    utme : :class:`numpy.ndarray`</span>
-<span class="sd">        Local coordinates [m] for x direction (East)</span>
-<span class="sd">    utmn : :class:`numpy.ndarray`</span>
-<span class="sd">        Local coordinates [m] for y direction (North)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">Proj</span><span class="p">(</span><span class="n">proj</span><span class="o">=</span><span class="s1">&#39;utm&#39;</span><span class="p">,</span> <span class="n">zone</span><span class="o">=</span><span class="n">zone</span><span class="p">,</span> <span class="n">ellps</span><span class="o">=</span><span class="s1">&#39;WGS84&#39;</span><span class="p">)</span>
-    <span class="n">utme</span><span class="p">,</span> <span class="n">utmn</span> <span class="o">=</span> <span class="n">p</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">utme</span><span class="p">,</span> <span class="n">utmn</span></div>
-
-
-<div class="viewcode-block" id="utm_to_lonlat"><a class="viewcode-back" href="../api.html#utility.utm_to_lonlat">[docs]</a><span class="k">def</span> <span class="nf">utm_to_lonlat</span><span class="p">(</span><span class="n">utmx</span><span class="p">,</span> <span class="n">utmy</span><span class="p">,</span> <span class="n">zone</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert UTM[m] to Latitude and Longitude coordinates.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    utmx : :class:`numpy.ndarray`</span>
-<span class="sd">        with UTM easting</span>
-<span class="sd">    utmy : :class:`numpy.ndarray`</span>
-<span class="sd">        with UTM northing</span>
-<span class="sd">    zone : int</span>
-<span class="sd">        number with utm zone</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    lon : :class:`numpy.ndarray` Longitude [decimal deg]</span>
-<span class="sd">    lat : :class:`numpy.ndarray` Latitude [decimal deg]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">Proj</span><span class="p">(</span><span class="n">proj</span><span class="o">=</span><span class="s1">&#39;utm&#39;</span><span class="p">,</span> <span class="n">zone</span><span class="o">=</span><span class="n">zone</span><span class="p">,</span> <span class="n">ellps</span><span class="o">=</span><span class="s1">&#39;WGS84&#39;</span><span class="p">)</span>
-    <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">p</span><span class="p">(</span><span class="n">utmx</span><span class="p">,</span> <span class="n">utmy</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span></div>
+        <span class="n">adjust_fault_reference</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">input_depth</span><span class="o">=</span><span class="n">input_depth</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="setup_logging"><a class="viewcode-back" href="../api.html#utility.setup_logging">[docs]</a><span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">levelname</span><span class="p">,</span> <span class="n">logfilename</span><span class="o">=</span><span class="s1">&#39;BEAT_log.txt&#39;</span><span class="p">):</span>
@@ -862,7 +807,7 @@
             <span class="s1">&#39;found! Please copy the relevant event information to the &#39;</span>
             <span class="s1">&#39;configuration file!&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-            <span class="nb">print</span> <span class="n">event</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
         <span class="n">event</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1003,6 +948,8 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">loadpath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">loadpath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin1&#39;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
             <span class="s1">&#39;File </span><span class="si">%s</span><span class="s1"> does not exist!&#39;</span> <span class="o">%</span> <span class="n">loadpath</span><span class="p">)</span>
@@ -1142,7 +1089,7 @@
     <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">mode</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="list2string"><a class="viewcode-back" href="../api.html#utility.list2string">[docs]</a><span class="k">def</span> <span class="nf">list2string</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+<div class="viewcode-block" id="list2string"><a class="viewcode-back" href="../api.html#utility.list2string">[docs]</a><span class="k">def</span> <span class="nf">list2string</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert list of string to single string.</span>
 
@@ -1151,7 +1098,7 @@
 <span class="sd">    l: list</span>
 <span class="sd">        of strings</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">listentry</span> <span class="k">for</span> <span class="n">listentry</span> <span class="ow">in</span> <span class="n">l</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">fill</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">listentry</span> <span class="k">for</span> <span class="n">listentry</span> <span class="ow">in</span> <span class="n">l</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="unique_list"><a class="viewcode-back" href="../api.html#utility.unique_list">[docs]</a><span class="k">def</span> <span class="nf">unique_list</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
@@ -1234,7 +1181,7 @@
 <span class="sd">    fullc : int or float depending on input</span>
 <span class="sd">    rest : int or float depending on input</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fullc</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">cycle</span>
+    <span class="n">fullc</span> <span class="o">=</span> <span class="n">i</span> <span class="o">//</span> <span class="n">cycle</span>
     <span class="n">rest</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">cycle</span>
     <span class="k">return</span> <span class="n">fullc</span><span class="p">,</span> <span class="n">rest</span></div>
 
@@ -1276,7 +1223,7 @@
         <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sort</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">v</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">sort</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">d</span></div>
@@ -1370,13 +1317,6 @@
             <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[\[\]]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">num</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span>
                 <span class="n">b</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                 <span class="n">formatter</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;float_kind&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span><span class="p">}))))</span></div>
-
-
-<div class="viewcode-block" id="list_to_str"><a class="viewcode-back" href="../api.html#utility.list_to_str">[docs]</a><span class="k">def</span> <span class="nf">list_to_str</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Transform entries of a list or 1-d array to one single string.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%f</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">l</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="swap_columns"><a class="viewcode-back" href="../api.html#utility.swap_columns">[docs]</a><span class="k">def</span> <span class="nf">swap_columns</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">):</span>
@@ -1494,6 +1434,22 @@
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">values</span></div>
+
+
+<div class="viewcode-block" id="positions2idxs"><a class="viewcode-back" href="../api.html#utility.positions2idxs">[docs]</a><span class="k">def</span> <span class="nf">positions2idxs</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">min_pos</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">num</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return index to a grid with a given cell size.npatches</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    positions : :class:`numpy.NdArray` float</span>
+<span class="sd">        of positions [km]</span>
+<span class="sd">    cell_size : float</span>
+<span class="sd">        size of grid cells</span>
+<span class="sd">    backend : str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">positions</span> <span class="o">-</span> <span class="n">min_pos</span> <span class="o">-</span> <span class="p">(</span>
+        <span class="n">cell_size</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">))</span> <span class="o">/</span> <span class="n">cell_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -1509,7 +1465,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

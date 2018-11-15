@@ -190,11 +190,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns sampler attributes that are not saved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">bl</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;array_population&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;likelihoods&#39;</span><span class="p">,</span>
+        <span class="n">bl</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;likelihoods&#39;</span><span class="p">,</span>
               <span class="s1">&#39;check_bnd&#39;</span><span class="p">,</span>
               <span class="s1">&#39;logp_forw&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bij&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;lij&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;ordering&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;lordering&#39;</span><span class="p">,</span>
               <span class="s1">&#39;proposal_samples_array&#39;</span><span class="p">,</span>
               <span class="s1">&#39;vars&#39;</span><span class="p">,</span>
               <span class="s1">&#39;_BlockedStep__newargs&#39;</span><span class="p">]</span>
@@ -243,7 +245,6 @@
 <span class="sd">        cov : :class:`numpy.ndarray`</span>
 <span class="sd">            weighted covariances (NumPy &gt; 1.10. required)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">array_population</span><span class="p">,</span>
             <span class="n">aweights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
@@ -346,7 +347,7 @@
 
         <span class="k">return</span> <span class="n">chain_previous_lpoint</span></div>
 
-<div class="viewcode-block" id="SMC.mean_end_points"><a class="viewcode-back" href="../../api.html#sampler.smc.SMC.mean_end_points">[docs]</a>    <span class="k">def</span> <span class="nf">mean_end_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMC.get_map_end_points"><a class="viewcode-back" href="../../api.html#sampler.smc.SMC.get_map_end_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_map_end_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate mean of the end-points and return point.</span>
 
@@ -354,8 +355,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        Dictionary of trace variables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">rmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_population</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihoods</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">rmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array_population</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:])</span></div>
 
 <div class="viewcode-block" id="SMC.resample"><a class="viewcode-back" href="../../api.html#sampler.smc.SMC.resample">[docs]</a>    <span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -543,8 +544,8 @@
 
             <span class="k">if</span> <span class="n">update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Updating Covariances ...&#39;</span><span class="p">)</span>
-                <span class="n">mean_pt</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">mean_end_points</span><span class="p">()</span>
-                <span class="n">update</span><span class="o">.</span><span class="n">update_weights</span><span class="p">(</span><span class="n">mean_pt</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+                <span class="n">map_pt</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">get_map_end_points</span><span class="p">()</span>
+                <span class="n">update</span><span class="o">.</span><span class="n">update_weights</span><span class="p">(</span><span class="n">map_pt</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
                 <span class="n">mtrace</span> <span class="o">=</span> <span class="n">update_last_samples</span><span class="p">(</span>
                     <span class="n">homepath</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">progressbar</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">rm_flag</span><span class="p">)</span>
                 <span class="n">step</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">array_population</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">likelihoods</span> <span class="o">=</span> \
@@ -632,7 +633,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
 

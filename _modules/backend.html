@@ -311,6 +311,41 @@
     <span class="k">return</span> <span class="n">flat_names</span><span class="p">,</span> <span class="n">var_shapes</span></div>
 
 
+<div class="viewcode-block" id="extract_bounds_from_summary"><a class="viewcode-back" href="../api.html#backend.extract_bounds_from_summary">[docs]</a><span class="k">def</span> <span class="nf">extract_bounds_from_summary</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">roundto</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract lower and upper bound of random variable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of num.Ndarray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">do_nothing</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="n">indexes</span> <span class="o">=</span> <span class="n">ttab</span><span class="o">.</span><span class="n">create_flat_names</span><span class="p">(</span><span class="n">varname</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="n">lower_quant</span> <span class="o">=</span> <span class="s1">&#39;hpd_2.5&#39;</span>
+    <span class="n">upper_quant</span> <span class="o">=</span> <span class="s1">&#39;hpd_97.5&#39;</span>
+
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">quant</span> <span class="ow">in</span> <span class="p">[</span><span class="n">lower_quant</span><span class="p">,</span> <span class="n">upper_quant</span><span class="p">]:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indexes</span><span class="p">):</span>
+            <span class="n">adjust</span> <span class="o">=</span> <span class="mf">10.</span> <span class="o">**</span> <span class="n">roundto</span>
+            <span class="k">if</span> <span class="n">roundto</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">quant</span> <span class="o">==</span> <span class="n">lower_quant</span><span class="p">:</span>
+                    <span class="n">operation</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">floor</span>
+                <span class="k">elif</span> <span class="n">quant</span> <span class="o">==</span> <span class="n">upper_quant</span><span class="p">:</span>
+                    <span class="n">operation</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">ceil</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">operation</span> <span class="o">=</span> <span class="n">do_nothing</span>
+            <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">quant</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">adjust</span><span class="p">)</span> <span class="o">/</span> <span class="n">adjust</span>
+
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bounds</span></div>
+
+
 <div class="viewcode-block" id="TextChain"><a class="viewcode-back" href="../api.html#backend.TextChain">[docs]</a><span class="k">class</span> <span class="nc">TextChain</span><span class="p">(</span><span class="n">BaseTrace</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Text trace object</span>
@@ -416,7 +451,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stored_samples</span> <span class="o">+=</span> <span class="n">n_samples</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s1">&#39;Writing </span><span class="si">%i</span><span class="s1"> / </span><span class="si">%i</span><span class="s1"> samples of chain </span><span class="si">%i</span><span class="s1"> to disk...&#39;</span> <span class="o">%</span>
                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stored_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">draws</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">))</span>
@@ -466,7 +501,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span> <span class="o">=</span> <span class="n">extract_variables_from_df</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -795,8 +830,16 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading multitrace from </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">dirname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">chains</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="s1">&#39;chain-*.csv&#39;</span><span class="p">))</span>
-            <span class="n">chains</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span>
-                <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]))</span>
+            <span class="n">chains</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;chain-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+            <span class="n">final_chain</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="n">final_chain</span> <span class="ow">in</span> <span class="n">chains</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">chains</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">final_chain</span><span class="p">)</span>
+                <span class="n">files</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+                <span class="n">chains</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">files</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -840,8 +883,11 @@
     <span class="n">not_sampled_idx</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_chains</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">mtrace</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mtrace</span><span class="o">.</span><span class="n">_straces</span><span class="p">[</span><span class="n">chain</span><span class="p">])</span> <span class="o">!=</span> <span class="n">draws</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Trace number </span><span class="si">%i</span><span class="s1"> incomplete&#39;</span> <span class="o">%</span> <span class="n">chain</span><span class="p">)</span>
+            <span class="n">chain_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mtrace</span><span class="o">.</span><span class="n">_straces</span><span class="p">[</span><span class="n">chain</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">chain_len</span> <span class="o">!=</span> <span class="n">draws</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s1">&#39;Trace number </span><span class="si">%i</span><span class="s1"> incomplete: (</span><span class="si">%i</span><span class="s1"> / </span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">chain</span><span class="p">,</span> <span class="n">chain_len</span><span class="p">,</span> <span class="n">draws</span><span class="p">))</span>
                 <span class="n">mtrace</span><span class="o">.</span><span class="n">_straces</span><span class="p">[</span><span class="n">chain</span><span class="p">]</span><span class="o">.</span><span class="n">corrupted_flag</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">not_sampled_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
@@ -935,7 +981,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

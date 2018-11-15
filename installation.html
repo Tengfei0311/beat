@@ -79,8 +79,12 @@
             
   <div class="section" id="detailed-installation-instructions">
 <h1>Detailed Installation instructions<a class="headerlink" href="#detailed-installation-instructions" title="Permalink to this headline">¶</a></h1>
-<p>BEAT can be installed on any Unix based system with python2.7
+<p>BEAT can be installed on any Unix based system with python&gt;3.5
 that supports its prerequisites.</p>
+<p>For any user who has no user rights on the machine where BEAT is supposed to be installed, please add –user at the end of each sudo command, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
 <div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>First of all please download the beat source code:</p>
@@ -91,7 +95,7 @@ that supports its prerequisites.</p>
 <p>The package includes scripts that help setting up and testing the following
 optimizations of your numerics libraries.</p>
 <p>Then we will need a fortran compiler and the python developers library:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span> <span class="n">gfortran</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span> <span class="n">gfortran</span>
 </pre></div>
 </div>
 <p>BEAT does many intensive calculations, which is why we need to get as much as
@@ -144,7 +148,7 @@ your .bashrc or .cshrc in the homedirectory:</p>
 <h3>Numpy<a class="headerlink" href="#numpy" title="Permalink to this headline">¶</a></h3>
 <p>This following step is completely optional and one may decide to use a standard pip numpy package.
 Building numpy from source requires cython:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">cython</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">cython</span>
 </pre></div>
 </div>
 <p>If you compile numpy locally against the previously installed OpenBlas
@@ -157,7 +161,7 @@ in a speed-up of the numpy related calculations by a factor of at least 3.:</p>
 </div>
 <p>Per default, the current developers branch is being installed. We want to
 install one of the most recent stable branches:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">v1</span><span class="o">.</span><span class="mf">14.1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">v1</span><span class="o">.</span><span class="mf">17.1</span>
 </pre></div>
 </div>
 <p>Next, create a configuration file <cite>site.cfg</cite> that tells numpy where to find the
@@ -176,25 +180,20 @@ previously installed OpenBlas library:</p>
 </pre></div>
 </div>
 <p>To make sure everything is working you should run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">config</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">config</span>
 </pre></div>
 </div>
 <p>If everything worked ok,i.e. no mention of the ATLAS library, run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
 </pre></div>
 </div>
 <p>Finally:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
-<p>or if you prefer you can again use pip and it will be cleaner recognized by the
-packaging:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
-</pre></div>
-</div>
 <p>Test the performance and if everything works fine:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
-<span class="n">python</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">numpy_test</span><span class="o">.</span><span class="n">py</span>
+<span class="n">python3</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">numpy_test</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p>Depending on your hardware something around these numbers should be fine!:</p>
@@ -220,7 +219,7 @@ well.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Theano</span><span class="o">/</span><span class="n">Theano</span>
 <span class="n">cd</span> <span class="n">Theano</span>
-<span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 <p>For any troubleshooting and detailed installation instructions I refer to the
@@ -274,7 +273,8 @@ intended to be used. Set amdlibm = True if you did the optional step!</p>
 </div>
 <div class="section" id="gpu-setup">
 <h4>GPU setup<a class="headerlink" href="#gpu-setup" title="Permalink to this headline">¶</a></h4>
-<p>For NVIDIA graphics cards there is the CUDA package that needs to be installed.:</p>
+<p>Only for Theano version &lt; 0.9.
+For NVIDIA graphics cards there is the CUDA package that needs to be installed.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nvidia</span><span class="o">-</span><span class="n">current</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nvdidia</span><span class="o">-</span><span class="n">cuda</span><span class="o">-</span><span class="n">toolkit</span>
 </pre></div>
@@ -320,7 +320,7 @@ as intended:</p>
 </pre></div>
 </div>
 <p>Using the CPU (amdlibm = False):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
 
 <span class="p">[</span><span class="n">Elemwise</span><span class="p">{</span><span class="n">exp</span><span class="p">,</span><span class="n">no_inplace</span><span class="p">}(</span><span class="o">&lt;</span><span class="n">TensorType</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span><span class="o">&gt;</span><span class="p">)]</span>
 <span class="n">Looping</span> <span class="mi">1000</span> <span class="n">times</span> <span class="n">took</span> <span class="mf">2.717895</span> <span class="n">seconds</span>
@@ -330,7 +330,7 @@ as intended:</p>
 </pre></div>
 </div>
 <p>Using the CPU (amdlibm = True):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
 
 <span class="p">[</span><span class="n">Elemwise</span><span class="p">{</span><span class="n">exp</span><span class="p">,</span><span class="n">no_inplace</span><span class="p">}(</span><span class="o">&lt;</span><span class="n">TensorType</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span><span class="o">&gt;</span><span class="p">)]</span>
 <span class="n">Looping</span> <span class="mi">1000</span> <span class="n">times</span> <span class="n">took</span> <span class="mf">0.703979</span> <span class="n">seconds</span>
@@ -341,7 +341,7 @@ as intended:</p>
 </div>
 <p>That’s a speedup of 3.86! On the ELEMENTARY operations like exp(), log(), cos() …</p>
 <p>Using the GPU:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">gpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">gpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
 
 <span class="n">Using</span> <span class="n">gpu</span> <span class="n">device</span> <span class="mi">0</span><span class="p">:</span> <span class="n">Quadro</span> <span class="mi">5000</span> <span class="p">(</span><span class="n">CNMeM</span> <span class="ow">is</span> <span class="n">disabled</span><span class="p">,</span> <span class="n">cuDNN</span> <span class="ow">not</span> <span class="n">available</span><span class="p">)</span>
 <span class="p">[</span><span class="n">GpuElemwise</span><span class="p">{</span><span class="n">exp</span><span class="p">,</span><span class="n">no_inplace</span><span class="p">}(</span><span class="o">&lt;</span><span class="n">CudaNdarrayType</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span><span class="o">&gt;</span><span class="p">),</span>
@@ -377,7 +377,7 @@ allows to build Bayesian models. For the last stable release:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pymc</span><span class="o">-</span><span class="n">devs</span><span class="o">/</span><span class="n">pymc3</span>
 <span class="n">cd</span> <span class="n">pymc3</span>
-<span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 </div>
@@ -388,7 +388,7 @@ framework to efficiently store and access Greens Functions.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">.</span><span class="n">git</span> <span class="n">pyrocko</span>
 <span class="n">cd</span> <span class="n">pyrocko</span>
-<span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 </div>
@@ -397,14 +397,7 @@ framework to efficiently store and access Greens Functions.:</p>
 <p>For the Parallel Tempering algorithm OpenMPI and the python
 bindings are required.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">mpi4py</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="pyproj">
-<h3>Pyproj<a class="headerlink" href="#pyproj" title="Permalink to this headline">¶</a></h3>
-<p>Pyproj is the last package and also the most easy one to install:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyproj</span>
+<span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">mpi4py</span>
 </pre></div>
 </div>
 </div>
@@ -412,11 +405,13 @@ bindings are required.:</p>
 <h3>BEAT<a class="headerlink" href="#beat" title="Permalink to this headline">¶</a></h3>
 <p>After these long and heavy installations, you can setup BEAT itself:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
-<span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
-<div class="section" id="greens-function-calculations">
-<h4>Greens Function calculations<a class="headerlink" href="#greens-function-calculations" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="greens-functions">
+<h2>Greens Functions<a class="headerlink" href="#greens-functions" title="Permalink to this headline">¶</a></h2>
 <p>To calculate the Greens Functions we rely on modeling codes written by
 <a class="reference external" href="http://www.gfz-potsdam.de/en/section/physics-of-earthquakes-and-volcanoes/staff/profil/rongjiang-wang/">Rongjiang Wang</a>.
 If you plan to use the GreensFunction calculation framework,
@@ -427,6 +422,10 @@ The original codes are packaged for windows and can be found
 <p>The packages below are also github repositories and you may want to use “git clone” to download:</p>
 <blockquote>
 <div>git clone &lt;url&gt;</div></blockquote>
+<p>For example to clone the github repository for QSEIS please execute:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">/</span><span class="n">fomosto</span><span class="o">-</span><span class="n">qseis</span>
+</pre></div>
+</div>
 <p>This also enables easy updating for potential future changes.</p>
 <p>For configuration and compilation please follow the descriptions provided in each repository respectively.</p>
 <p>Seismic synthetics</p>
@@ -438,8 +437,6 @@ The original codes are packaged for windows and can be found
 <ul class="simple">
 <li><a class="reference external" href="https://github.com/pyrocko/fomosto-psgrn-pscmp">PSGRN_PSCMP</a></li>
 </ul>
-</div>
-</div>
 </div>
 </div>
 
@@ -465,15 +462,15 @@ The original codes are packaged for windows and can be found
 <li class="toctree-l3"><a class="reference internal" href="#pymc3">pymc3</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pyrocko">Pyrocko</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#openmpi">OpenMPI</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pyproj">Pyproj</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#beat">BEAT</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#greens-functions">Greens Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 

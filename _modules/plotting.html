@@ -709,8 +709,7 @@
     <span class="n">dataset_to_result</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
         <span class="n">dataset_to_result</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-
-    <span class="n">nfigs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">nrmax</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">ndmax</span><span class="p">)))</span>
+    <span class="n">nfigs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ndmax</span><span class="p">)</span> <span class="o">//</span> <span class="nb">float</span><span class="p">(</span><span class="n">nrmax</span><span class="p">)))</span>
 
     <span class="n">figures</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1093,16 +1092,16 @@
         <span class="n">nframes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
 
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nframes</span><span class="p">)))</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="p">(</span><span class="n">nframes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">nx</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="p">(</span><span class="n">nframes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">nx</span> <span class="o">+</span> <span class="mi">1</span>
 
         <span class="n">nxmax</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="n">nymax</span> <span class="o">=</span> <span class="mi">4</span>
 
-        <span class="n">nxx</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">nxmax</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">nyy</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">nymax</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nxx</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">nxmax</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nyy</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">nymax</span> <span class="o">+</span> <span class="mi">1</span>
 
-        <span class="n">xs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
-        <span class="n">ys</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ny</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span> <span class="o">//</span> <span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
+        <span class="n">ys</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ny</span><span class="p">)</span> <span class="o">//</span> <span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
 
         <span class="n">xs</span> <span class="o">-=</span> <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
         <span class="n">ys</span> <span class="o">-=</span> <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
@@ -1153,13 +1152,13 @@
             <span class="n">frame_to_target</span><span class="p">[</span><span class="n">iy</span><span class="p">,</span> <span class="n">ix</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span>
 
         <span class="n">figures</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">iy</span><span class="p">,</span> <span class="n">ix</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frame_to_target</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="n">ixx</span> <span class="o">=</span> <span class="n">ix</span> <span class="o">/</span> <span class="n">nxmax</span>
-                <span class="n">iyy</span> <span class="o">=</span> <span class="n">iy</span> <span class="o">/</span> <span class="n">nymax</span>
+                <span class="n">ixx</span> <span class="o">=</span> <span class="n">ix</span> <span class="o">//</span> <span class="n">nxmax</span>
+                <span class="n">iyy</span> <span class="o">=</span> <span class="n">iy</span> <span class="o">//</span> <span class="n">nymax</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">iyy</span><span class="p">,</span> <span class="n">ixx</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">figures</span><span class="p">:</span>
                     <span class="n">figures</span><span class="p">[</span><span class="n">iyy</span><span class="p">,</span> <span class="n">ixx</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
                         <span class="n">figsize</span><span class="o">=</span><span class="n">mpl_papersize</span><span class="p">(</span><span class="s1">&#39;a4&#39;</span><span class="p">,</span> <span class="s1">&#39;landscape&#39;</span><span class="p">))</span>
@@ -1206,9 +1205,9 @@
                 <span class="n">tap_color_edge</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">)</span>
                 <span class="n">tap_color_fill</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">)</span>
 
-                <span class="c1"># plot_taper(</span>
-                <span class="c1">#    axes2, result.processed_obs.get_xdata(), result.taper,</span>
-                <span class="c1">#    fc=tap_color_fill, ec=tap_color_edge)</span>
+                <span class="n">plot_taper</span><span class="p">(</span>
+                    <span class="n">axes2</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_obs</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">(),</span> <span class="n">result</span><span class="o">.</span><span class="n">taper</span><span class="p">,</span>
+                    <span class="n">fc</span><span class="o">=</span><span class="n">tap_color_fill</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="n">tap_color_edge</span><span class="p">)</span>
 
                 <span class="n">obs_color</span> <span class="o">=</span> <span class="n">scolor</span><span class="p">(</span><span class="s1">&#39;aluminium5&#39;</span><span class="p">)</span>
                 <span class="n">obs_color_light</span> <span class="o">=</span> <span class="n">light</span><span class="p">(</span><span class="n">obs_color</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -1302,7 +1301,7 @@
                 <span class="n">dist</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">distance_to</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
                 <span class="n">azi</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">azibazi_to</span><span class="p">(</span><span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_dist</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
-                <span class="n">infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="si">%.0f</span><span class="se">\u00B0</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">azi</span><span class="p">)</span>
+                <span class="n">infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.0f</span><span class="se">\u00B0</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">azi</span><span class="p">)</span>
                 <span class="c1"># infos.append(&#39;%.3f&#39; % gcms[itarget])</span>
                 <span class="n">axes2</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
                     <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infos</span><span class="p">),</span>
@@ -1315,7 +1314,7 @@
                     <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
                     <span class="n">fontstyle</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="p">(</span><span class="n">iyy</span><span class="p">,</span> <span class="n">ixx</span><span class="p">),</span> <span class="n">fig</span> <span class="ow">in</span> <span class="n">figures</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">iyy</span><span class="p">,</span> <span class="n">ixx</span><span class="p">),</span> <span class="n">fig</span> <span class="ow">in</span> <span class="n">figures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cg</span> <span class="k">if</span> <span class="n">x</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">figures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">title</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%i</span><span class="s1">/</span><span class="si">%i</span><span class="s1">, </span><span class="si">%i</span><span class="s1">/</span><span class="si">%i</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">iyy</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nyy</span><span class="p">,</span> <span class="n">ixx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nxx</span><span class="p">)</span>
@@ -1602,7 +1601,7 @@
 
                     <span class="k">if</span> <span class="n">posterior</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">posterior</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">posterior_idxs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">posterior_idxs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                                 <span class="n">axs</span><span class="p">[</span><span class="n">rowi</span><span class="p">,</span> <span class="n">coli</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
                                     <span class="n">x</span><span class="o">=</span><span class="n">e</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
@@ -1639,7 +1638,7 @@
         <span class="k">if</span> <span class="n">n_steps</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">nchains</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_steps</span>
+            <span class="n">nchains</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">n_steps</span>
             <span class="n">xout</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nchains</span><span class="p">):</span>
                 <span class="n">nstart</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">n_steps</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">n_steps</span> <span class="o">*</span> <span class="n">pa</span><span class="o">.</span><span class="n">burn</span><span class="p">))</span>
@@ -1786,7 +1785,7 @@
         <span class="n">varnames</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">hypernames</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sampler_config</span>
-        <span class="n">varnames</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">varnames</span> <span class="o">+</span> <span class="n">problem</span><span class="o">.</span><span class="n">hypernames</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;like&#39;</span><span class="p">]</span>
+        <span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">varnames</span><span class="p">)</span> <span class="o">+</span> <span class="n">problem</span><span class="o">.</span><span class="n">hypernames</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;like&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">varnames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">varnames</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">varnames</span>
@@ -1918,7 +1917,7 @@
 
     <span class="n">po</span> <span class="o">=</span> <span class="n">plot_options</span>
 
-    <span class="k">for</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">composite</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">composite</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
         <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;seismic&#39;</span><span class="p">:</span>
             <span class="n">models_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1943,7 +1942,7 @@
                         <span class="n">earth_model_name</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">earth_model_name</span><span class="p">,</span>
                         <span class="n">channels</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">get_unique_channels</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
                         <span class="n">sample_rate</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span>
-                        <span class="n">crust_inds</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">),</span>
+                        <span class="n">crust_inds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">sc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">)),</span>
                         <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;multilinear&#39;</span><span class="p">)</span>
 
                     <span class="n">models</span> <span class="o">=</span> <span class="n">load_earthmodels</span><span class="p">(</span>
@@ -1981,7 +1980,7 @@
                     <span class="n">datasets</span><span class="o">=</span><span class="n">composite</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span>
                     <span class="n">earth_model_name</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">earth_model_name</span><span class="p">,</span>
                     <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;multilinear&#39;</span><span class="p">,</span>
-                    <span class="n">crust_inds</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">),</span>
+                    <span class="n">crust_inds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">)),</span>
                     <span class="n">sample_rate</span><span class="o">=</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 
                 <span class="n">models</span> <span class="o">=</span> <span class="n">load_earthmodels</span><span class="p">(</span>
@@ -2003,7 +2002,7 @@
         <span class="n">figs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">tobepopped</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">models</span> <span class="ow">in</span> <span class="n">models_dict</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">models</span> <span class="ow">in</span> <span class="n">models_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">n_model_plot</span><span class="p">(</span>
                     <span class="n">models</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2283,7 +2282,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

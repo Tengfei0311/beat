@@ -182,7 +182,7 @@
             <span class="n">scale</span> <span class="o">=</span> <span class="n">covariance</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tune</span> <span class="o">=</span> <span class="n">tune</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_bnd</span> <span class="o">=</span> <span class="n">check_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_bound</span> <span class="o">=</span> <span class="n">check_bound</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tune_interval</span> <span class="o">=</span> <span class="n">tune_interval</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps_until_tune</span> <span class="o">=</span> <span class="n">tune_interval</span>
 
@@ -226,21 +226,21 @@
 
         <span class="nb">super</span><span class="p">(</span><span class="n">Metropolis</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">out_vars</span><span class="p">,</span> <span class="n">shared</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">:</span>
-            <span class="n">lpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logp_forw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">point</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lpoint</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span> <span class="o">=</span> <span class="p">[[]]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_chains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tps</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_sampler_state_blacklist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns sampler attributes that are not saved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">bl</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;array_population&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;check_bnd&#39;</span><span class="p">,</span>
+        <span class="n">bl</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;check_bnd&#39;</span><span class="p">,</span>
               <span class="s1">&#39;logp_forw&#39;</span><span class="p">,</span>
               <span class="s1">&#39;proposal_samples_array&#39;</span><span class="p">,</span>
               <span class="s1">&#39;vars&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bij&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;lij&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;ordering&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;lordering&#39;</span><span class="p">,</span>
               <span class="s1">&#39;_BlockedStep__newargs&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">bl</span>
 
@@ -269,15 +269,17 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">time_per_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
-        <span class="n">tps</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_points</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
-            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logp_forw</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-            <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-            <span class="n">tps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span>
-        <span class="k">return</span> <span class="n">tps</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">time_per_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tps</span><span class="p">:</span>
+            <span class="n">tps</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_points</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logp_forw</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+                <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+                <span class="n">tps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tps</span> <span class="o">=</span>  <span class="n">tps</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tps</span>
 
     <span class="k">def</span> <span class="nf">astep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q0</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -285,7 +287,8 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">num</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">l_new</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s1">&#39;Got NaN in likelihood evaluation! &#39;</span>
-                    <span class="s1">&#39;Invalid model definition?&#39;</span><span class="p">)</span>
+                    <span class="s1">&#39;Invalid model definition? &#39;</span>
+                    <span class="s1">&#39;Or starting point outside prior bounds!&#39;</span><span class="p">)</span>
 
             <span class="n">q_new</span> <span class="o">=</span> <span class="n">q0</span>
 
@@ -328,9 +331,15 @@
 
                 <span class="n">q</span> <span class="o">=</span> <span class="n">q0</span> <span class="o">+</span> <span class="n">delta</span>
 
-            <span class="n">l0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">l0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">]</span>
+                <span class="n">llk0</span> <span class="o">=</span> <span class="n">l0</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="n">l0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logp_forw</span><span class="p">(</span><span class="n">q0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">l0</span>
+                <span class="n">llk0</span> <span class="o">=</span> <span class="n">l0</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_bnd</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_bound</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Checking bound: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
                 <span class="n">varlogp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_bnd</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
@@ -353,7 +362,7 @@
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Accepted: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;proposed: </span><span class="si">%f</span><span class="s1"> previous: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                            <span class="n">lp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">],</span> <span class="n">l0</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]))</span>
+                            <span class="n">lp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">],</span> <span class="n">llk0</span><span class="p">))</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">accepted</span> <span class="o">+=</span> <span class="mi">1</span>
                         <span class="n">l_new</span> <span class="o">=</span> <span class="n">lp</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">l_new</span>
@@ -376,7 +385,7 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Select: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
                 <span class="n">q_new</span><span class="p">,</span> <span class="n">accepted</span> <span class="o">=</span> <span class="n">metrop_select</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">lp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">l0</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">lp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">llk0</span><span class="p">),</span>
                     <span class="n">q</span><span class="p">,</span> <span class="n">q0</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">accepted</span><span class="p">:</span>
@@ -399,6 +408,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s1">&#39;End step: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
+
         <span class="k">return</span> <span class="n">q_new</span><span class="p">,</span> <span class="n">l_new</span></div>
 
 
@@ -580,7 +590,7 @@
 
     <span class="n">posterior_idxs</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">get_fit_indexes</span><span class="p">(</span><span class="n">llks</span><span class="p">)</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">posterior_idxs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">posterior_idxs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">rmap</span><span class="p">(</span><span class="n">array_population</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="p">:])</span>
 
     <span class="n">d</span><span class="p">[</span><span class="s1">&#39;dist_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">bij</span><span class="o">.</span><span class="n">rmap</span><span class="p">(</span><span class="n">array_population</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
@@ -606,7 +616,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
 

@@ -144,7 +144,7 @@
     <span class="k">def</span> <span class="nf">get_vertex</span><span class="p">(</span><span class="n">outlines</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
         <span class="n">f1</span> <span class="o">=</span> <span class="n">outlines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">f2</span> <span class="o">=</span> <span class="n">outlines</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-        <span class="nb">print</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">utility</span><span class="o">.</span><span class="n">line_intersect</span><span class="p">(</span><span class="n">f1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">f1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">f2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">f2</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
 
     <span class="n">tol</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">km</span>
@@ -174,12 +174,12 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">poly_vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_vertex</span><span class="p">(</span><span class="n">outlines</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 
-    <span class="nb">print</span> <span class="n">poly_vertices</span><span class="p">,</span> <span class="n">outlines</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">poly_vertices</span><span class="p">,</span> <span class="n">outlines</span><span class="p">)</span>
     <span class="n">polygon</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">poly_vertices</span><span class="p">),</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">ens</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">easts</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">norths</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
     <span class="n">ref_en</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">east_ref</span><span class="p">,</span> <span class="n">north_ref</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-    <span class="nb">print</span> <span class="n">ens</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ens</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">polygon</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="n">ens</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">polygon</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="n">ref_en</span><span class="p">):</span>
@@ -408,7 +408,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 

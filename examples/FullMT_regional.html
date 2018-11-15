@@ -3,12 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Scenarios &#8212; beat 1.0beta documentation</title>
-    <link rel="stylesheet" href="_static/pydoctheme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <title>Scenario 0: Regional Full Moment Tensor &#8212; beat 1.0beta documentation</title>
+    <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '../',
         VERSION:     '1.0beta',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -16,24 +16,24 @@
         SOURCELINK_SUFFIX: '.txt'
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="api.html" />
-    <link rel="prev" title="Getting started with BEAT" href="getting_started.html" />
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scenario I: Rectangular source" href="Rectangular.html" />
+    <link rel="prev" title="Scenarios" href="index.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <link rel="shortcut icon" type="image/png" href="_static/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
     <meta name="viewport" content="width=device-width,initial-scale=0.8">
     
     
       <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Slab">
     
     
-    <script type="text/javascript" src="_static/jquery.gifplayer.js"></script>
-    <link rel="stylesheet" type="text/css" href="_static/gifplayer.css">
+    <script type="text/javascript" src="../_static/jquery.gifplayer.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/gifplayer.css">
     <!-- Piwik -->
     <script type="text/javascript">
       var _paq = _paq || [];
@@ -64,8 +64,9 @@
           </li>
            &#187;
           <li>
-              <a href="index.html">beat 1.0beta documentation</a> &#187;
-          </li> 
+              <a href="../index.html">beat 1.0beta documentation</a> &#187;
+          </li>
+            <li><a href="index.html" accesskey="U">Scenarios</a> &#187;</li> 
         </ul>
     </div>
     
@@ -77,18 +78,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="scenarios">
-<h1>Scenarios<a class="headerlink" href="#scenarios" title="Permalink to this headline">¶</a></h1>
-<p>The example scenarios are located in the directory:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">examples</span>
-</pre></div>
-</div>
-<p>In the following tutorials we will use synthetic example data to get familiar with the basic functionality of BEAT.</p>
-<div class="section" id="regional-full-moment-tensor">
-<h2>Regional Full Moment Tensor<a class="headerlink" href="#regional-full-moment-tensor" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="scenario-0-regional-full-moment-tensor">
+<h1>Scenario 0: Regional Full Moment Tensor<a class="headerlink" href="#scenario-0-regional-full-moment-tensor" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="clone-project">
-<h3>Clone project<a class="headerlink" href="#clone-project" title="Permalink to this headline">¶</a></h3>
+<h2>Clone project<a class="headerlink" href="#clone-project" title="Permalink to this headline">¶</a></h2>
 <p>This setup is comprised of 20 seismic stations that are randomly distributed within distances of 40 to 1000 km compared to a reference event.
+We will explore the solution space of a Full Moment Tensor .
 To copy the scenario (including the data) to a directory outside of the package source directory, please edit the ‘model path’ (referred to as $beat_models now on) and execute:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">beat</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span>
 <span class="n">beat</span> <span class="n">clone</span> <span class="n">FullMT</span> <span class="o">/</span><span class="s1">&#39;model path&#39;</span><span class="o">/</span><span class="n">FullMT</span> <span class="o">--</span><span class="n">copy_data</span>
@@ -98,10 +93,10 @@ To copy the scenario (including the data) to a directory outside of the package 
 This directory is going to be referred to as ‘$project_directory’ in the following.</p>
 </div>
 <div class="section" id="calculate-greens-functions">
-<h3>Calculate Greens Functions<a class="headerlink" href="#calculate-greens-functions" title="Permalink to this headline">¶</a></h3>
+<h2>Calculate Greens Functions<a class="headerlink" href="#calculate-greens-functions" title="Permalink to this headline">¶</a></h2>
 <p>The station-event geometry determines the grid of Greens Functions (GFs) that will need to be calculated next.</p>
-<p>Please open $project_directory/config_geometry.yaml with any text editor (e.g. vi) and check the line 144: store_superdir. Here is written for now /home/vasyurhm/BEATS/GF, which is an example path to the directory of Greens Functions.
-This path needs to be replaced with the path to where the GFs are supposed to be stored on your computer. This directory is refered to as the $GF_path in the rest of the text. It is strongly recommended to use a seperate directory apart from the beat source directory and the $project_directory as the GF databases can become very large, depending on the problem! For real examples, the GF databases may require up to several Gigabyte of free disc space. For our example the database that we are going to create is only around 30 Megabyte.:</p>
+<p>Please open $project_directory/config_geometry.yaml with any text editor (e.g. vi) and search for “store_superdir”. Here, it is written for now /home/vasyurhm/BEATS/GF, which is an example path to the directory of Greens Functions.
+This path needs to be replaced with the path to where the GFs are supposed to be stored on your computer. This directory is referred to as the $GF_path in the rest of the text. It is strongly recommended to use a separate directory apart from the beat source directory and the $project_directory as the GF databases can become very large, depending on the problem! For real examples, the GF databases may require up to several Gigabyte of free disc space. For our example the database that we are going to create is only around 30 Megabyte.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>cd $beat_models
 beat build_gfs FullMT --datatypes=&#39;seismic&#39;
 </pre></div>
@@ -147,7 +142,7 @@ Dependend on the case study there are crucial parameters that often need to be c
 Below are the grid definitions of the GFs. In this example the source depth grid is limited to one depth (8 km) to reduce calculation time.
 As we have stations up to a distance of 970km distance to the event, the distance grid is accordingly extending up to 1000km.
 These grid sampling parameters as well as the sample rate are of major importance for the overall optimization. How to adjust these parameters
-according to other case studies is described <a class="reference external" href="https://pyrocko.org/docs/current/apps/fomosto/tutorial.html#considerations-for-real-world-applications">here</a>.</p>
+according to individual case studies is described <a class="reference external" href="https://pyrocko.org/docs/current/apps/fomosto/tutorial.html#considerations-for-real-world-applications">here</a>.</p>
 <p>The ‘nworkers’ variable defines the number of CPUs to use in parallel for the GF calculations. As these calculations may become very expensive and time-consuming it is of advantage to use as many CPUs as available. To be still able to navigate in your Operating System without crashing the system it is good to leave one CPU work-less. Please edit the ‘nworkers’ parameter now!</p>
 <p>For our use-case the grid specifications are fine for now.</p>
 <p>The seismic phases for which the GFs are going to be calculated are defined under ‘waveforms’ in the $project_directory/config_geometry.yaml there are</p>
@@ -255,11 +250,11 @@ Your seismic_config within the $project_directory/config_geometry.yaml should lo
 </div>
 <p>This looks reasonably well!</p>
 <blockquote>
-<div><img alt="_images/fomosto_traces_snuffler.png" src="_images/fomosto_traces_snuffler.png" />
+<div><img alt="../_images/fomosto_traces_snuffler.png" src="../_images/fomosto_traces_snuffler.png" />
 </div></blockquote>
 </div>
 <div class="section" id="data-windowing-and-optimization-setup">
-<h3>Data windowing and optimization setup<a class="headerlink" href="#data-windowing-and-optimization-setup" title="Permalink to this headline">¶</a></h3>
+<h2>Data windowing and optimization setup<a class="headerlink" href="#data-windowing-and-optimization-setup" title="Permalink to this headline">¶</a></h2>
 <p>Once we are confident that the GFs are reasonable we may continue to define the optimization specific setup variables.
 First of all we check again the WaveformFitConfig for the waves we want to optimize.
 In this case we want to optimize the whole waveform from P until the end of the surface waves.
@@ -292,19 +287,19 @@ We may inspect the raw data together with the processed data that is going to be
 <p>This should open again the ‘snuffler’ window and you can interactively scroll through the traces zoom in and out, filter the traces and much more.
 A detailed tutorial about handeling the browser is given <a class="reference external" href="https://pyrocko.org/docs/current/apps/snuffler/tutorial.html">here</a>.</p>
 <blockquote>
-<div><img alt="_images/FullMT_data.png" src="_images/FullMT_data.png" />
+<div><img alt="../_images/FullMT_data.png" src="../_images/FullMT_data.png" />
 </div></blockquote>
 <p>To better sort the displayed traces and to inspect the processed data we may use snufflers display options.
 Please right click in the window and see a menu that pops up. There, please select: “Sort by Distance” to sort the traces by distance to get a better picture of the setup. To see, which traces actually belong to the same station and component, please open the menu again and select “Subsort by Network, Station, Channel (Grouped by Location)” and “Common Scale per Component”. To distinguish better between the overlapping traces please select as well “Color Traces” and deselect “Show Boxes”.
 Your display should look something like this.</p>
 <blockquote>
-<div><img alt="_images/FullMT_windowed.png" src="_images/FullMT_windowed.png" />
+<div><img alt="../_images/FullMT_windowed.png" src="../_images/FullMT_windowed.png" />
 </div></blockquote>
 <p>In red we see the raw data traces as stored under $project_directory/seismic_data.pkl; and in blue we see the processed data where the WaveformFitConfig parameters (see above) have been applied. The blue traces are going to be used in this form throughout the optimization. For this setup here we are good, but for future problems the user may now adjust the configuration and repeatedly check if the data windowing is satisfying. For example, the user may widen the arrival_taper times to make sure that a respective wave train is completely included in case it is cut at the taper boundary. Or in case of noisy or bad quality data a station may be completely excluded by putting its name in the “blacklist” parameter.</p>
 <p>Now that we checked the optimization setup we are good to go.</p>
 </div>
 <div class="section" id="sample-the-solution-space">
-<h3>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h3>
+<h2>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h2>
 <p>Firstly, we fix the source parameters to some random value and only optimize for the noise scaling or hyperparameters (HPs).
 How many different random source parameters are choosen and the sampling repeated is determined by the hyper_sampler_config parameters ‘n_chains’ (default:20). In case there are several CPUs available the ‘n_jobs’ parameter determines how many processes (Markov Chains) are sampled in paralell. You may want to increase that now! To start the sampling please run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">FullMT</span> <span class="o">--</span><span class="n">hypers</span>
@@ -370,7 +365,7 @@ smc          - INFO     Finished sampling!
 </div>
 </div>
 <div class="section" id="restarting-sampling">
-<h3>Restarting sampling<a class="headerlink" href="#restarting-sampling" title="Permalink to this headline">¶</a></h3>
+<h2>Restarting sampling<a class="headerlink" href="#restarting-sampling" title="Permalink to this headline">¶</a></h2>
 <p>For one or the other reason it may happen that sampling crashes and you will want to restart at the point where it crashed.
 Otherwise all the sampling that has been done before would be lost. First you have to find out in which ‘stage’ of the sampling the
 algorithm crashed. You can do this in two ways. Either by checking the output to the screen of the terminal where you did run the job.
@@ -392,7 +387,7 @@ Now that we redefined the starting point of the sampling algorithm we are good t
 </div>
 </div>
 <div class="section" id="summarize-the-results">
-<h3>Summarize the results<a class="headerlink" href="#summarize-the-results" title="Permalink to this headline">¶</a></h3>
+<h2>Summarize the results<a class="headerlink" href="#summarize-the-results" title="Permalink to this headline">¶</a></h2>
 <p>The sampled chain results of the SMC sampler are stored in seperate files and have to be summarized.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -418,7 +413,7 @@ If you check the summary.txt file (path then also printed to the screen):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>vi $project_directory/geometry/summary.txt
 </pre></div>
 </div>
-<p>For example for the first 4 entries (mee, med, posterior likelihood, north-shift), the posterior pdf quantiles show:</p>
+<p>For example for the first 4 entries (mee, med, posterior like-lihood, north-shift), the posterior pdf quantiles show:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>                         <span class="n">mean</span>        <span class="n">sd</span>  <span class="n">mc_error</span>       <span class="n">hpd_2</span><span class="o">.</span><span class="mi">5</span>      <span class="n">hpd_97</span><span class="o">.</span><span class="mi">5</span>
 <span class="n">mee__0</span>             <span class="o">-</span><span class="mf">0.756400</span>  <span class="mf">0.001749</span>  <span class="mf">0.000087</span>     <span class="o">-</span><span class="mf">0.759660</span>     <span class="o">-</span><span class="mf">0.752939</span>
 <span class="n">med__0</span>             <span class="o">-</span><span class="mf">0.256697</span>  <span class="mf">0.000531</span>  <span class="mf">0.000024</span>     <span class="o">-</span><span class="mf">0.257759</span>     <span class="o">-</span><span class="mf">0.255713</span>
@@ -429,7 +424,7 @@ If you check the summary.txt file (path then also printed to the screen):</p>
 <p>As this is a synthetic case with only little noise it is not particularly surprising to get such steeply peaked distributions.</p>
 </div>
 <div class="section" id="plotting">
-<h3>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h3>
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
 <p>Now to the point that you all have been waiting for ;) the result in pictures.
 To see the waveform fit of the posterior maximum likelihood solution. In the $beat_models run:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT</span> <span class="n">waveform_fits</span>
@@ -439,7 +434,7 @@ To see the waveform fit of the posterior maximum likelihood solution. In the $be
 The black waveforms are the unfiltered data. Red are the best fitting synthetic traces. Light grey and light red are the filtered, untapered data and synthetic traces respectively. The red data trace below are the residual traces between data and synthetics.
 The Z-components from our stations should look something like this.</p>
 <blockquote>
-<div><img alt="_images/FullMT_waveforms_max.png" src="_images/FullMT_waveforms_max.png" />
+<div><img alt="../_images/FullMT_waveforms_max.png" src="../_images/FullMT_waveforms_max.png" />
 </div></blockquote>
 <p>The waveform fits for a specific point in the solution space may be produced by setting the testvalues
 in the Prior distributions of the config file. Here, these values got already set to the true solution. So we can compare if our best estimated source parameters are reasonable compared to the true ones.</p>
@@ -448,7 +443,7 @@ in the Prior distributions of the config file. Here, these values got already se
 </div>
 <p>Again looking at the Z-components of the traces shows that our estimate is almost identical to the true test value.</p>
 <blockquote>
-<div><img alt="_images/FullMT_waveforms_ref.png" src="_images/FullMT_waveforms_ref.png" />
+<div><img alt="../_images/FullMT_waveforms_ref.png" src="../_images/FullMT_waveforms_ref.png" />
 </div></blockquote>
 <p>The following command produces a ‘.png’ file with the final posterior distribution. In the $beat_models run:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT</span> <span class="n">stage_posteriors</span> <span class="o">--</span><span class="n">reference</span> <span class="o">--</span><span class="n">stage_number</span><span class="o">=-</span><span class="mi">1</span> <span class="o">--</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span>
@@ -456,7 +451,7 @@ in the Prior distributions of the config file. Here, these values got already se
 </div>
 <p>It may look like this.</p>
 <blockquote>
-<div><img alt="_images/FullMT_stage_-1_max.png" src="_images/FullMT_stage_-1_max.png" />
+<div><img alt="../_images/FullMT_stage_-1_max.png" src="../_images/FullMT_stage_-1_max.png" />
 <p>The vertical black lines are the true values and the vertical red lines are the maximum likelihood values.
 We see that the true solution is not comprised within the marginals of all parameters. This may have several reasons. In the next section we will discuss and investigate the influence of the noise characteristics.</p>
 <p>To get an image of parameter correlations (including the true reference value in red) of moment tensor components, the location and the magnitude. In the $beat_models run:</p>
@@ -466,7 +461,7 @@ We see that the true solution is not comprised within the marginals of all param
 </div></blockquote>
 <p>This will show an image like that.</p>
 <blockquote>
-<div><img alt="_images/FullMT_corr_hist_max.png" src="_images/FullMT_corr_hist_max.png" />
+<div><img alt="../_images/FullMT_corr_hist_max.png" src="../_images/FullMT_corr_hist_max.png" />
 </div></blockquote>
 <p>This shows 2d kernel density estimates (kde) and histograms of the specified model parameters. The darker the 2d kde the higher the probability of the model parameter.
 The red dot and the vertical red lines show the true values of the target source in the kde plots and histograms, respectively.</p>
@@ -474,7 +469,7 @@ The red dot and the vertical red lines show the true values of the target source
 If it is not specified all sampled parameters are taken into account.</p>
 </div>
 <div class="section" id="seismic-noise-estimation">
-<h3>Seismic noise estimation<a class="headerlink" href="#seismic-noise-estimation" title="Permalink to this headline">¶</a></h3>
+<h2>Seismic noise estimation<a class="headerlink" href="#seismic-noise-estimation" title="Permalink to this headline">¶</a></h2>
 <p>If we have poor knowledge of the noise in the data, the model parameter estimates may be poor and the true parameters are not covered by the distributions (as was the case above). In the previous run we used a data covariance matrix of the form of an identity matrix with only the noise variance in the diagonal. Under the seismic_config you find the configuration for the noise analyser, which looks like that:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>noise_estimator: !beat.SeismicNoiseAnalyserConfig
   structure: identity
@@ -483,18 +478,12 @@ If it is not specified all sampled parameters are taken into account.</p>
 </div>
 <p>The “structure” argument refers to the structure of the covariance matrix that is estimated on the data, prior to the synthetic P-wave arrival. The argument “pre_arrival_time” refers to the time before the P-wave arrival. 3.0 means that the noise is estimated on each data trace up to 3. seconds before the synthetic P-wave arrival.
 Obviously, in the previos run the white-noise assumption was not working well. So we may set the structure to “exponential” to also estimate noise covariances depending on the shortest wavelength in the data, following <a class="reference internal" href="#duputel2012" id="id1">[Duputel2012]</a>.</p>
-<dl class="docutils">
-<dt>Other options are:</dt>
-<dd><ul class="first last simple">
-<li>“import” to use the covariance matrixes that have been imported with the data</li>
-<li>“non-toeplitz” to estimate non-stationary, correlated noise on the residuals following <a class="reference internal" href="#dettmer2007" id="id2">[Dettmer2007]</a>
-in this case the values from the priors and hypers “testvalues” are used as reference to calculate the residuals</li>
-</ul>
-</dd>
-</dl>
+<p>Other options are to “import” to use the covariance matrixes that have been imported with the data
+Also the option “non-toeplitz” to estimate non-stationary, correlated noise on the residuals following <a class="reference internal" href="#dettmer2007" id="id2">[Dettmer2007]</a>
+in this case the values from the priors and hypers “testvalues” are used as reference to calculate the residuals.</p>
 </div>
 <div class="section" id="references">
-<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <table class="docutils citation" frame="void" id="dettmer2007" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -509,7 +498,6 @@ in this case the values from the priors and hypers “testvalues” are used as 
 </table>
 </div>
 </div>
-</div>
 
 
           </div>
@@ -519,14 +507,14 @@ in this case the values from the priors and hypers “testvalues” are used as 
         <div class="sphinxsidebarwrapper">
     <a id="sidebar-anchor"></a>
     
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="short_installation.html">Short Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Detailed Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Scenarios</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#regional-full-moment-tensor">Regional Full Moment Tensor</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../short_installation.html">Short Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Scenarios</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Scenario 0: Regional Full Moment Tensor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#clone-project">Clone project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-greens-functions">Calculate Greens Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-windowing-and-optimization-setup">Data windowing and optimization setup</a></li>
@@ -538,9 +526,10 @@ in this case the values from the priors and hypers “testvalues” are used as 
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Scenario I: Rectangular source</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -552,16 +541,16 @@ in this case the values from the priors and hypers “testvalues” are used as 
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="api.html" title="API Reference"
+          <a href="Rectangular.html" title="Scenario I: Rectangular source"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting started with BEAT"
+          <a href="index.html" title="Scenarios"
              accesskey="P">previous</a> |</li>
       </ul>
     </div>

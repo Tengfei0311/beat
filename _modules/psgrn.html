@@ -157,8 +157,8 @@
     <span class="n">end_distance</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">100.</span><span class="p">)</span>    <span class="c1"># end</span>
 
     <span class="k">def</span> <span class="nf">string_for_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%i</span><span class="s1"> </span><span class="si">%15e</span><span class="s1"> </span><span class="si">%15e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_distance</span><span class="p">,</span>
-                                                        <span class="bp">self</span><span class="o">.</span><span class="n">end_distance</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%i</span><span class="s1"> </span><span class="si">%15e</span><span class="s1"> </span><span class="si">%15e</span><span class="s1">&#39;</span> \
+            <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_distance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_distance</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PsGrnConfig"><a class="viewcode-back" href="../api.html#psgrn.PsGrnConfig">[docs]</a><span class="k">class</span> <span class="nc">PsGrnConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -169,10 +169,12 @@
     <span class="n">max_time</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
 
     <span class="n">observation_depth</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
-    <span class="n">distance_grid</span> <span class="o">=</span> <span class="n">PsGrnSpatialSampling</span><span class="p">(</span><span class="n">n_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                                         <span class="n">start_distance</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">end_distance</span><span class="o">=</span><span class="mf">50.</span><span class="p">)</span>
-    <span class="n">depth_grid</span> <span class="o">=</span> <span class="n">PsGrnSpatialSampling</span><span class="p">(</span><span class="n">n_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-                                         <span class="n">start_distance</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">end_distance</span><span class="o">=</span><span class="mf">40.</span><span class="p">)</span>
+    <span class="n">distance_grid</span> <span class="o">=</span> <span class="n">PsGrnSpatialSampling</span><span class="p">(</span>
+        <span class="n">n_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">start_distance</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">end_distance</span><span class="o">=</span><span class="mf">50.</span><span class="p">)</span>
+    <span class="n">depth_grid</span> <span class="o">=</span> <span class="n">PsGrnSpatialSampling</span><span class="p">(</span>
+        <span class="n">n_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">start_distance</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">end_distance</span><span class="o">=</span><span class="mf">40.</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">inamevals</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
@@ -481,7 +483,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Scenarios</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
 </ul>
 
