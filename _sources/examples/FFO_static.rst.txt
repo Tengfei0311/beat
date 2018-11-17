@@ -22,8 +22,8 @@ It will load the *config_geometry.yaml* and port arguments that have been specif
 The main differences in the two configuration files are in the *geodetic_config.gf_config* and the *problem_config*. You may want to have a first glance at the new config. The general structure is the same and the argument names are chosen to give the user an initial idea what these are for. A short explanation for each argument is again given in the module API `here <https://hvasbath.github.io/beat/api.html#module-config>`__, where you can use the search function of your browser to find the argument of interest.
 
 
-Build GFs
-^^^^^^^^^
+Calculate Greens Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 For the distributed slip optimization a reference fault has to be defined that determines the overall geometry.
 Once this has been done the problem becomes linear as the only unknown parameters are the slips in rake perpendicular and rake parallel direction.
 The fault geometry needs to be defined in the *geodetic.gf_config.reference_sources*.:: 
@@ -66,9 +66,9 @@ The values shown above are parts of the MAP solution from the optimization from 
 
 Of course, these values could be edited manually to whatever the user deems reasonable.
 
- .. warning:: The reference point(s) on the *reference_fault(s)* are the top, central point of the fault(s)! Ergo the *depth* parameter(s) relate(s) to the **top edge(s)** of the fault(s).
+.. warning:: The reference point(s) on the *reference_fault(s)* are the top, central point of the fault(s)! Ergo the *depth* parameter(s) relate(s) to the **top edge(s)** of the fault(s).
 
-Now we need to specify the dimensions of the patches we want to discretize the reference fault(s) into. The *patch_widths* and *patch_lengths* arguments have to be lists and the respective entry needs to result in **square** patches. The parameters **extension_withs** and **extension_lengths** specify by how much the reference fault(s)should be extended in **each** direction.
+Now we need to specify the dimensions of the patches we want to discretize the reference fault(s) into. The *patch_widths* and *patch_lengths* arguments have to be lists and the respective entry needs to result in **square** patches. The parameters **extension_withs** and **extension_lengths** specify by how much the reference fault(s)should be extended in **each** direction. Example: 0.1 means that the fault is extended by 10% of its width/length value in each direction and 0. means no extension.
 
 Once we decided for the discretization and the reference fault values we can create the discretized fault through.::
 
@@ -85,6 +85,9 @@ This will open an interactive 3d plot of the fault geometry, which looks along t
 
 The grey rectangle shows the geometry of the fault specified under *reference_sources* and the red rectangle(s) show the extended fault with the respective discretization of the sub-patches. The grey and red dots mark the centres of the *reference_fault(s)* and the extended faults, respectively.
 The numbers are the indexes of the repsective sub-patch in the Green's Function matrix we are going to calculate next.
+
+.. note:: If the upper edge of the fault would intersect the surface (no topography assumed) due to the extension it is truncated at the intersection and not extended further. Which is why the extent of the red fault is assymetric around the grey reference fault in dip-direction.
+
 To repeat the fault discretization after changing some parameters please add the --force option and the previously fault geometry will be overwritten.::
 
   beat build_gfs Laquila --datatypes=geodetic --mode=ffo --force

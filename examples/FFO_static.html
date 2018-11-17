@@ -17,7 +17,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Frequently asked questions" href="../faq.html" />
+    <link rel="next" title="Scenario III: kinematic finite-fault optimization" href="FFO_kinematic.html" />
     <link rel="prev" title="Scenario I: Rectangular source" href="Rectangular.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
@@ -91,8 +91,8 @@ The following command will create a configuration file for the <em>ffo</em> mode
 <p>It will load the <em>config_geometry.yaml</em> and port arguments that have been specified before to ensure consistency and will only use <em>geodetic</em> data.</p>
 <p>The main differences in the two configuration files are in the <em>geodetic_config.gf_config</em> and the <em>problem_config</em>. You may want to have a first glance at the new config. The general structure is the same and the argument names are chosen to give the user an initial idea what these are for. A short explanation for each argument is again given in the module API <a class="reference external" href="https://hvasbath.github.io/beat/api.html#module-config">here</a>, where you can use the search function of your browser to find the argument of interest.</p>
 </div>
-<div class="section" id="build-gfs">
-<h2>Build GFs<a class="headerlink" href="#build-gfs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="calculate-greens-functions">
+<h2>Calculate Greens Functions<a class="headerlink" href="#calculate-greens-functions" title="Permalink to this headline">¶</a></h2>
 <p>For the distributed slip optimization a reference fault has to be defined that determines the overall geometry.
 Once this has been done the problem becomes linear as the only unknown parameters are the slips in rake perpendicular and rake parallel direction.
 The fault geometry needs to be defined in the <em>geodetic.gf_config.reference_sources</em>.:</p>
@@ -134,13 +134,11 @@ The fault geometry needs to be defined in the <em>geodetic.gf_config.reference_s
 </pre></div>
 </div>
 <p>Of course, these values could be edited manually to whatever the user deems reasonable.</p>
-<blockquote>
-<div><div class="admonition warning">
+<div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">The reference point(s) on the <em>reference_fault(s)</em> are the top, central point of the fault(s)! Ergo the <em>depth</em> parameter(s) relate(s) to the <strong>top edge(s)</strong> of the fault(s).</p>
 </div>
-</div></blockquote>
-<p>Now we need to specify the dimensions of the patches we want to discretize the reference fault(s) into. The <em>patch_widths</em> and <em>patch_lengths</em> arguments have to be lists and the respective entry needs to result in <strong>square</strong> patches. The parameters <strong>extension_withs</strong> and <strong>extension_lengths</strong> specify by how much the reference fault(s)should be extended in <strong>each</strong> direction.</p>
+<p>Now we need to specify the dimensions of the patches we want to discretize the reference fault(s) into. The <em>patch_widths</em> and <em>patch_lengths</em> arguments have to be lists and the respective entry needs to result in <strong>square</strong> patches. The parameters <strong>extension_withs</strong> and <strong>extension_lengths</strong> specify by how much the reference fault(s)should be extended in <strong>each</strong> direction. Example: 0.1 means that the fault is extended by 10% of its width/length value in each direction and 0. means no extension.</p>
 <p>Once we decided for the discretization and the reference fault values we can create the discretized fault through.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">geodetic</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffo</span>
 </pre></div>
@@ -153,8 +151,12 @@ We can inspect the geometry of the resulting extended discretized fault wrt. the
 <p>This will open an interactive 3d plot of the fault geometry, which looks along the lines of</p>
 <img alt="../_images/Laquila_FaultGeometry.png" src="../_images/Laquila_FaultGeometry.png" />
 <p>The grey rectangle shows the geometry of the fault specified under <em>reference_sources</em> and the red rectangle(s) show the extended fault with the respective discretization of the sub-patches. The grey and red dots mark the centres of the <em>reference_fault(s)</em> and the extended faults, respectively.
-The numbers are the indexes of the repsective sub-patch in the Green’s Function matrix we are going to calculate next.
-To repeat the fault discretization after changing some parameters please add the –force option and the previously fault geometry will be overwritten.:</p>
+The numbers are the indexes of the repsective sub-patch in the Green’s Function matrix we are going to calculate next.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the upper edge of the fault would intersect the surface (no topography assumed) due to the extension it is truncated at the intersection and not extended further. Which is why the extent of the red fault is assymetric around the grey reference fault in dip-direction.</p>
+</div>
+<p>To repeat the fault discretization after changing some parameters please add the –force option and the previously fault geometry will be overwritten.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">geodetic</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffo</span> <span class="o">--</span><span class="n">force</span>
 </pre></div>
 </div>
@@ -384,13 +386,14 @@ h_SAR: !beat.heart.Parameter
 <li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Scenario I: Rectangular source</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Scenario II: static finite-fault optimization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#init">Init</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-gfs">Build GFs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculate-greens-functions">Calculate Greens Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optimization-setup">Optimization setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sample-the-solution-space">Sample the solution space</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#summarize-and-plotting">Summarize and plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html">Scenario III: kinematic finite-fault optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>
@@ -412,7 +415,7 @@ h_SAR: !beat.heart.Parameter
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="../faq.html" title="Frequently asked questions"
+          <a href="FFO_kinematic.html" title="Scenario III: kinematic finite-fault optimization"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Rectangular.html" title="Scenario I: Rectangular source"
