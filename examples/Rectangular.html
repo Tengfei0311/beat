@@ -225,14 +225,28 @@ Rule of thumbs for setting these parameters for other individual studies are dis
     d: 270.0
 </pre></div>
 </div>
-<p>In this case the GFs are going to be calculated for the P body waves as can be seen by the “name” parameter “any_P”. How to calculate GFs also for S or surface waves is discussed in <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#calculate-greens-functions">Scenario 0</a>.</p>
+<p>In this case the GFs are going to be calculated for the P body waves as can be seen by the “name” parameter “any_P”. How to calculate GFs also for S or surface waves is discussed in <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#calculate-greens-functions">Scenario 0</a>.</p>
 <p>The specifications for the Green’s Functions are fine now and we can start the setup with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">execute</span>
 </pre></div>
 </div>
+<p>To check if the calculated GF stores are complete please run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">check</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">what</span><span class="o">=</span><span class="n">stores</span>
+</pre></div>
+</div>
+<p>Everything worked well if the output is like that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>heart        - INFO     Checking stores for empty traces ...
+beat         - WARNING  Store(s) with empty traces! : []
+</pre></div>
+</div>
+<p>If there are stores with empty traces please rerun:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">execute</span> <span class="o">--</span><span class="n">force</span>
+</pre></div>
+</div>
+<p>In case the holes still persist likely the velocity model has to be adjusted.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Please also see <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#calculate-greens-functions">Scenario 0</a> for more detailed instructions like quality control.</p>
+<p class="last">Please also see <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#calculate-greens-functions">Scenario 0</a> for more detailed instructions like quality control.</p>
 </div>
 </div>
 </div>
@@ -298,7 +312,7 @@ To enable this option the parameter ‘station_corrections’ in the seismic_con
 </div>
 <div class="section" id="sample-the-solution-space">
 <h2>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h2>
-<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#sample-the-solution-space">Scenario 0</a> scenario for a more detailed description of the sampling and associated parameters.</p>
+<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">Scenario 0</a> scenario for a more detailed description of the sampling and associated parameters.</p>
 <p>Firstly, we only optimize for the noise scaling or hyperparameters (HPs):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">hypers</span>
 </pre></div>
@@ -424,6 +438,7 @@ For a comparison between data, synthetic displacements and residuals for the two
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="FFO_static.html">Scenario II: static finite-fault optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html">Scenario III: kinematic finite-fault optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>

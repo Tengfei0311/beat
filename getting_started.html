@@ -411,11 +411,13 @@ systems.</p>
 <p>The beatdown command for downloading FDSN data can be executed in different formats, e.g. by giving an event time or an event name.
 It will download all wanted data in a given radius around the origin. For a complete list of input options
 please use:</p>
-<blockquote>
-<div>beatdown –help</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
 <p>An example line to download and prepare the data for the 2009 L’Aquila earthquake would be:</p>
-<blockquote>
-<div>beatdown /path/to/project_directory “2009-04-06 01:32:39” 1000. 0.001 5. Laquila</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">project_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span>
+</pre></div>
+</div>
 <p>This command downloads the available data for the event at time 2009-04-06 01:32:39 in a
 radius of 1000 km restitutes the traces to frequencies between 0.001 and 5. Hz and saves them in the folder
 /path/to/project_directory/data/events/Laquila. Additionally it creates a seismic_data.pkl into the “project_directory”, which will
@@ -425,8 +427,9 @@ based on data quality and separation of stations. The option –nstations-wanted
 weeding and tries to find a suitable subset of stations close to the number provided. The actual resulting
 station number might vary based on station distribution and quality. For the above
 example we might want to use around 60 stations, so the command line for that would look like:</p>
-<blockquote>
-<div>beatdown /path/to/home_directory “2009-04-06 01:32:39” 1000. 0.001 5. Laquila –nstations-wanted=60</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">home_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">nstations</span><span class="o">-</span><span class="n">wanted</span><span class="o">=</span><span class="mi">60</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="data-import">
 <h4>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h4>
@@ -459,19 +462,17 @@ In addition to these an ascii text file with the station information is needed o
 <p>The seismic data may be saved using the package “pickle” as a file “seismic_data.pkl” containing a list of 2 lists: 1. list of “pyrocko.trace.Trace” objects alternating for (R T Z) rotated traces. 2. list of “pyrocko.model.Station” objects in the same order like the data traces.</p>
 <p>Pyrocko supports the import of various data formats and all the necessary tools to remove the instrument response and to convert the traces to displacement.
 How to do this based on some examples is shown <a class="reference external" href="https://pyrocko.org/docs/current/library/examples/trace_handling.html#restitute-to-displacement-using-poles-and-zeros">here</a> webpage.</p>
-<p>For import from obspy you can use the following pyrocko commands to convert your obspy data into pyrocko data and obspy inventories to pyrocko stations:</p>
-<blockquote>
-<div><a class="reference external" href="https://pyrocko.org/docs/current/library/reference/obspy_compat.html#pyrocko.obspy_compat.plant">obspy_to_pyrocko conversion</a></div></blockquote>
-<p>Once you have done this the standard pyrocko traces will need to be converted to beat trace objects, this is done simply, assuming that “traces”
+<p>For import from obspy you can checkout the <a class="reference external" href="https://pyrocko.org/docs/current/library/reference/obspy_compat.html#pyrocko.obspy_compat.plant">obspy_compat</a>
+pyrocko module to convert your obspy data into pyrocko data and obspy inventories to pyrocko stations.
+Once you have done this the standard pyrocko traces will need to be converted to beat trace objects, this is done simply, assuming that “traces”
 is a list of pyrocko trace objects, by:</p>
-<blockquote>
-<div><p>from beat import heart
-traces_beat = []
-for tr in traces:</p>
-<blockquote>
-<div>tr_beat= heart.SeismicDataset.from_pyrocko_trace(tr)
-traces_beat.append(tr_beat)</div></blockquote>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">heart</span>
+<span class="n">traces_beat</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">traces</span><span class="p">:</span>
+    <span class="n">tr_beat</span><span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">SeismicDataset</span><span class="o">.</span><span class="n">from_pyrocko_trace</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span>
+    <span class="n">traces_beat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tr_beat</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Once a list of traces and station objects exists it may be exported to the project directory (here path from example):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">utility</span>
 
@@ -692,9 +693,8 @@ The “source_type” argument will replace any existing source with the specifi
   starttime_sampling: 1.0
 </pre></div>
 </div>
-<p>In the next step again Green’s Functions have to be calculated. What? Again? That’s right! This time the geometry of the source needs to be specified. This is defined under the “reference_sources” attribute (see above). The distance units are [m], the angles [deg] and the slip [m]. If an optimization for these “geometry” parameters has been completed, the maximum likelihood result may be imported
-with.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">FFOproject</span> <span class="o">--</span><span class="n">results</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffo&#39;</span>
+<p>In the next step again Green’s Functions have to be calculated. What? Again? That’s right! This time the geometry of the source needs to be specified. This is defined under the “reference_sources” attribute (see above). The distance units are [m], the angles [deg] and the slip [m]. If an optimization for these “geometry” parameters has been completed, the maximum likelihood result may be imported with.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">FFOproject</span> <span class="o">--</span><span class="n">results</span><span class="o">=/</span><span class="n">path_to_geometry_project</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span>
 </pre></div>
 </div>
 <p>If not, the parameters would need to be adjusted manually based on a-priori information from structural geology, literature or …
@@ -868,6 +868,7 @@ The hypocentral location bounds have been adjusted to be within the bounds of th
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently asked questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 

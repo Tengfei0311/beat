@@ -280,9 +280,9 @@ Adding the –diff option will display the changes to the config to screen inste
 </div>
 <div class="section" id="sample-the-solution-space">
 <h2>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h2>
-<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#sample-the-solution-space">Scenario 0</a> scenario for a more detailed description of the sampling and associated parameters.</p>
+<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">Scenario 0</a> scenario for a more detailed description of the sampling and associated parameters.</p>
 <p>Firstly, we only optimize for the noise scaling or hyperparameters (HPs) including the laplacian smoothing weight:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">hypers</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">hypers</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffo</span>
 </pre></div>
 </div>
 <p>Checking the $project_directory/config_ffo.yaml, the hyperparameter bounds show something like:</p>
@@ -293,12 +293,12 @@ h_SAR: !beat.heart.Parameter
   lower: [-1.0]
   upper: [5.0]
   testvalue: [2.0]
- h_laplacian: !beat.heart.Parameter
-   name: h_laplacian
-   form: Uniform
-   lower: [-5.0]
-   upper: [5.0]
-   testvalue: [0.5]
+h_laplacian: !beat.heart.Parameter
+  name: h_laplacian
+  form: Uniform
+  lower: [-5.0]
+  upper: [5.0]
+  testvalue: [0.5]
 </pre></div>
 </div>
 <div class="section" id="markov-chain-initialization">

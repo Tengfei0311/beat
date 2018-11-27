@@ -281,12 +281,12 @@ Please set the <em>duration_sampling</em> to 0.25. As we are using GFs with 2Hz 
 </div>
 <p>This will load the seismic traces for the first station (target), for all patches, durations and starttimes.</p>
 <img alt="../_images/uparr_library_gf.png" src="../_images/uparr_library_gf.png" />
-<p>Here we see the slip parallel traces for patch 0, at starttime (t0) of -1s (after the hypocentral source time wrt. the <a href="#id2"><span class="problematic" id="id3">*</span></a>event.time*(see time- explanation above)) and slip durations(tau) of 0. and 0.25[s].</p>
+<p>Here we see the slip parallel traces for patch 0, at starttime (t0) of -1s (after the hypocentral source time wrt. the <em>event.time</em> (see time explanation above) and slip durations(tau) of 0. and 0.25[s].</p>
 </div>
 </div>
 <div class="section" id="sample-the-solution-space">
 <h2>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h2>
-<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#sample-the-solution-space">Scenario 0</a> scenario for a more detailed description of the sampling and associated parameters.</p>
+<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">Scenario 0</a> scenario for a more detailed description of the sampling and associated parameters.</p>
 <p>Firstly, we only optimize for the noise scaling or hyperparameters (HPs) including the laplacian smoothing weight:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">hypers</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffo</span>
 </pre></div>
