@@ -17,6 +17,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Scenario III: kinematic finite-fault optimization" href="examples/FFO_kinematic.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="_static/favicon.png" />
     <meta name="viewport" content="width=device-width,initial-scale=0.8">
@@ -71,15 +73,32 @@
             
   <div class="section" id="frequently-asked-questions">
 <h1>Frequently asked questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
-<p>Below you find a list for known errors, that may occur and how to work around:</p>
-<p>1. HDF5surrogate escape
-NameError: global name ‘exc’ is not defined</p>
-<p>export LC_ALL=en_AU.utf8
-to your .bashrc</p>
-<p>2. Theano MKL support
-RuntimeError: To use MKL 2018 with Theano you MUST set “MKL_THREADING_LAYER=GNU” in your environement.
-export MKL_THREADING_LAYER=GNU
-to your .bashrc</p>
+<div class="line-block">
+<div class="line">Below you find a list for known errors, that may occur and how to work around:</div>
+<div class="line"><br /></div>
+<div class="line"><strong>1. HDF5surrogate escape</strong></div>
+</div>
+<p>NameError: global name ‘exc’ is not defined</p>
+<div class="line-block">
+<div class="line">add:</div>
+<div class="line">export LC_ALL=en_AU.utf8</div>
+<div class="line">to your .bashrc</div>
+<div class="line"><br /></div>
+<div class="line"><strong>2. Theano MKL support</strong></div>
+</div>
+<p>RuntimeError: To use MKL 2018 with Theano you MUST set “MKL_THREADING_LAYER=GNU” in your environement.</p>
+<div class="line-block">
+<div class="line">add</div>
+<div class="line">export MKL_THREADING_LAYER=GNU</div>
+<div class="line">to your .bashrc</div>
+<div class="line"><br /></div>
+<div class="line"><strong>3. Slow compilation</strong></div>
+</div>
+<p>No error will be thrown, but during “beat sample” the compilation of the forward model function ḿay take a long time.
+In such a case the default compilation flags of theano may be overwritten. This may result in longer runtime.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">optimizer</span><span class="o">=</span><span class="n">fast_compile</span> <span class="n">beat</span> <span class="n">sample</span> <span class="n">Projectpath</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -91,12 +110,13 @@ to your .bashrc</p>
     <a id="sidebar-anchor"></a>
     
 <h3><a href="index.html">Table Of Contents</a></h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="short_installation.html">Short Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started with BEAT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Scenarios</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently asked questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 
@@ -114,6 +134,12 @@ to your .bashrc</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="examples/FFO_kinematic.html" title="Scenario III: kinematic finite-fault optimization"
+             accesskey="P">previous</a> |</li>
       </ul>
     </div>
 
