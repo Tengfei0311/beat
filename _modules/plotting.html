@@ -2412,6 +2412,12 @@
 
 <span class="sd">    rupture_fronts : list</span>
 <span class="sd">        of output of cs = pyplot.contour; cs.allsegs</span>
+<span class="sd">    xgrid : array_like</span>
+<span class="sd">        of center coordinates of the sub-patches of the fault in</span>
+<span class="sd">        strike-direction in [km]</span>
+<span class="sd">    ygrid : array_like</span>
+<span class="sd">        of center coordinates of the sub-patches of the fault in</span>
+<span class="sd">        dip-direction in [km]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">LinearSegmentedColormap</span>
@@ -2421,15 +2427,18 @@
         <span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">],</span> <span class="n">N</span><span class="o">=</span><span class="n">ncolors</span><span class="p">)</span>
 
     <span class="n">res_km</span> <span class="o">=</span> <span class="mi">25</span>   <span class="c1"># pixel per km</span>
+
     <span class="n">xmin</span> <span class="o">=</span> <span class="n">xgrid</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
     <span class="n">xmax</span> <span class="o">=</span> <span class="n">xgrid</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
     <span class="n">ymin</span> <span class="o">=</span> <span class="n">ygrid</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
     <span class="n">ymax</span> <span class="o">=</span> <span class="n">ygrid</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
     <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+
     <span class="n">grid</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
         <span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ymax</span><span class="p">)</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ymin</span><span class="p">))</span> <span class="o">*</span> <span class="n">res_km</span><span class="p">),</span>
          <span class="nb">int</span><span class="p">((</span><span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xmax</span><span class="p">)</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xmin</span><span class="p">))</span> <span class="o">*</span> <span class="n">res_km</span><span class="p">)),</span>
         <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">rupture_front</span> <span class="ow">in</span> <span class="n">rupture_fronts</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">rupture_front</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">level</span><span class="p">:</span>
@@ -2473,8 +2482,8 @@
         <span class="n">slips</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">uperp</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">uparr</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">normalisation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">normalisation</span> <span class="o">=</span> <span class="n">slips</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
-                <span class="n">ygr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ygr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
+            <span class="n">normalisation</span> <span class="o">=</span> <span class="n">slips</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+                <span class="n">ygr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ygr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
 
         <span class="n">slips</span> <span class="o">/=</span> <span class="n">normalisation</span>
 
@@ -2491,10 +2500,10 @@
             <span class="n">quiver_legend_length</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span>
                 <span class="n">num</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">slips</span> <span class="o">*</span> <span class="n">normalisation</span><span class="p">)</span> <span class="o">*</span> <span class="mf">10.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.</span>
 
-            <span class="n">ax</span><span class="o">.</span><span class="n">quiverkey</span><span class="p">(</span>
-                <span class="n">quivers</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span>
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> [m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quiver_legend_length</span><span class="p">),</span> <span class="n">labelpos</span><span class="o">=</span><span class="s1">&#39;E&#39;</span><span class="p">,</span>
-                <span class="n">coordinates</span><span class="o">=</span><span class="s1">&#39;figure&#39;</span><span class="p">)</span>
+            <span class="c1">#ax.quiverkey(</span>
+            <span class="c1">#    quivers, 0.9, 0.8, quiver_legend_length,</span>
+            <span class="c1">#    &#39;{} [m]&#39;.format(quiver_legend_length), labelpos=&#39;E&#39;,</span>
+            <span class="c1">#    coordinates=&#39;figure&#39;)</span>
 
         <span class="k">return</span> <span class="n">quivers</span><span class="p">,</span> <span class="n">normalisation</span>
 
@@ -2542,7 +2551,7 @@
         <span class="k">return</span> <span class="n">pa_col</span>
 
     <span class="k">def</span> <span class="nf">draw_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cb_related</span><span class="p">,</span> <span class="n">labeltext</span><span class="p">):</span>
-        <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
+        <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.88</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
         <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cb_related</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbaxes</span><span class="p">)</span>
         <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">labeltext</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
@@ -2601,7 +2610,7 @@
                     <span class="n">rupture_fronts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">contours</span><span class="o">.</span><span class="n">allsegs</span><span class="p">)</span>
 
                 <span class="n">fuzzy_rupture_fronts</span><span class="p">(</span>
-                    <span class="n">ax</span><span class="p">,</span> <span class="n">rupture_fronts</span><span class="p">,</span> <span class="n">ygr</span><span class="p">,</span> <span class="n">xgr</span><span class="p">,</span>
+                    <span class="n">ax</span><span class="p">,</span> <span class="n">rupture_fronts</span><span class="p">,</span> <span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span><span class="p">,</span>
                     <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
                 <span class="n">durations</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">mtrace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span>
@@ -2879,7 +2888,8 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="s1">&#39;grid_resolution has to be of length 2! [xstep, ystep]!&#39;</span><span class="p">)</span>
 
-    <span class="n">xnstep</span><span class="p">,</span> <span class="n">ynstep</span> <span class="o">=</span> <span class="n">grid_resolution</span>
+    <span class="n">ynstep</span><span class="p">,</span> <span class="n">xnstep</span> <span class="o">=</span> <span class="n">grid_resolution</span>
+
     <span class="n">xvec</span><span class="p">,</span> <span class="n">xstep</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xnstep</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retstep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">yvec</span><span class="p">,</span> <span class="n">ystep</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">ynstep</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retstep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -2888,7 +2898,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Given grid has to be of dimension 2!&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">axis</span><span class="p">,</span> <span class="p">(</span><span class="n">ngr</span><span class="p">,</span> <span class="n">naim</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
-                <span class="nb">zip</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">grid_resolution</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">grid_resolution</span><span class="p">)):</span>
             <span class="n">check_grid_shape</span><span class="p">(</span><span class="n">ngr</span><span class="p">,</span> <span class="n">naim</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">grid</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ynstep</span><span class="p">,</span> <span class="n">xnstep</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
@@ -3014,7 +3024,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
                 <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">mpl_papersize</span><span class="p">(</span><span class="s1">&#39;a7&#39;</span><span class="p">,</span> <span class="s1">&#39;landscape&#39;</span><span class="p">))</span>
-            <span class="n">labelpos</span> <span class="o">=</span> <span class="n">mpl_margins</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+            <span class="n">labelpos</span> <span class="o">=</span> <span class="n">mpl_margins</span><span class="p">(</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
             <span class="n">labelpos</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">mtrace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">nchains</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mtrace</span><span class="p">)</span>
@@ -3104,6 +3115,119 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
+<span class="k">def</span> <span class="nf">draw_station_map</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">cartopy</span> <span class="k">as</span> <span class="nn">ctp</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s1">&#39;Cartopy is not installed.&#39;</span>
+            <span class="s1">&#39;For a station map cartopy needs to be installed!&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw_gridlines</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+        <span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">grid_proj</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">gl</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">=</span> <span class="mi">300</span>
+        <span class="n">gl</span><span class="o">.</span><span class="n">xlines</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">gl</span><span class="o">.</span><span class="n">ylocator</span> <span class="o">=</span> <span class="n">mticker</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+
+    <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">12</span>
+
+    <span class="k">if</span> <span class="s1">&#39;seismic&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">datatypes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Station map is available only for seismic stations!&#39;</span>
+            <span class="s1">&#39; However, the datatypes do not include &quot;seismic&quot; data&#39;</span><span class="p">)</span>
+
+    <span class="n">event</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">event</span>
+
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="p">[</span><span class="s1">&#39;seismic&#39;</span><span class="p">]</span>
+
+    <span class="n">mpl_init</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+    <span class="n">stations_proj</span> <span class="o">=</span> <span class="n">ctp</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="n">sc</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
+        <span class="n">outpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">outfolder</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">figure_dir</span><span class="p">,</span> <span class="s1">&#39;station_map_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%i</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">wmap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wmap</span><span class="o">.</span><span class="n">mapnumber</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">distances</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>
+                <span class="n">map_proj</span> <span class="o">=</span> <span class="n">ctp</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">Orthographic</span><span class="p">(</span>
+                    <span class="n">central_longitude</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">central_latitude</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span>
+                <span class="n">extent</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">max_dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">distances</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">map_proj</span> <span class="o">=</span> <span class="n">ctp</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
+                <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">lon</span> <span class="o">-</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">max_dist</span><span class="p">,</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">lat</span> <span class="o">-</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="n">max_dist</span><span class="p">]</span>
+
+            <span class="n">grid_proj</span> <span class="o">=</span> <span class="n">ctp</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">RotatedPole</span><span class="p">(</span>
+                <span class="n">pole_longitude</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">pole_latitude</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+                <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">mpl_papersize</span><span class="p">(</span><span class="s1">&#39;a6&#39;</span><span class="p">,</span> <span class="s1">&#39;landscape&#39;</span><span class="p">),</span>
+                <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="n">map_proj</span><span class="p">})</span>
+
+            <span class="n">stations_meta</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">station</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">station</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">extent</span><span class="p">:</span>
+                <span class="c1"># regional map</span>
+                <span class="n">labelpos</span> <span class="o">=</span> <span class="n">mpl_margins</span><span class="p">(</span>
+                    <span class="n">fig</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+                <span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeature</span>
+                <span class="kn">from</span> <span class="nn">cartopy.mpl.gridliner</span> <span class="k">import</span> \
+                    <span class="n">LONGITUDE_FORMATTER</span><span class="p">,</span> <span class="n">LATITUDE_FORMATTER</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">map_proj</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
+                    <span class="n">category</span><span class="o">=</span><span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;land&#39;</span><span class="p">,</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">cfeature</span><span class="o">.</span><span class="n">LAND</span><span class="o">.</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
+                    <span class="n">category</span><span class="o">=</span><span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">cfeature</span><span class="o">.</span><span class="n">OCEAN</span><span class="o">.</span><span class="n">kwargs</span><span class="p">))</span>
+
+                <span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">gl</span><span class="o">.</span><span class="n">ylocator</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">gl</span><span class="o">.</span><span class="n">xlocator</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">gl</span><span class="o">.</span><span class="n">xlabels_top</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">gl</span><span class="o">.</span><span class="n">ylabels_right</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">gl</span><span class="o">.</span><span class="n">xformatter</span> <span class="o">=</span> <span class="n">LONGITUDE_FORMATTER</span>
+                <span class="n">gl</span><span class="o">.</span><span class="n">yformatter</span> <span class="o">=</span> <span class="n">LATITUDE_FORMATTER</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># global teleseismic map</span>
+                <span class="n">labelpos</span> <span class="o">=</span> <span class="n">mpl_margins</span><span class="p">(</span>
+                    <span class="n">fig</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+                <span class="n">draw_gridlines</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">stock_img</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">stations_meta</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                    <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;r^&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">stations_proj</span><span class="p">,</span>
+                    <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">stations_proj</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">stations_proj</span><span class="p">,</span>
+                <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+                <span class="n">markerfacecolor</span><span class="o">=</span><span class="n">scolor</span><span class="p">(</span><span class="s1">&#39;butter1&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span> <span class="o">==</span> <span class="s1">&#39;display&#39;</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;saving figure to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">outpath</span><span class="p">)</span>
+                <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Plot exists! Use --force to overwrite!&#39;</span><span class="p">)</span>
+
+
 <span class="n">plots_catalog</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;correlation_hist&#39;</span><span class="p">:</span> <span class="n">draw_correlation_hist</span><span class="p">,</span>
     <span class="s1">&#39;stage_posteriors&#39;</span><span class="p">:</span> <span class="n">draw_posteriors</span><span class="p">,</span>
@@ -3113,7 +3237,8 @@
     <span class="s1">&#39;slip_distribution&#39;</span><span class="p">:</span> <span class="n">draw_slip_dist</span><span class="p">,</span>
     <span class="s1">&#39;hudson&#39;</span><span class="p">:</span> <span class="n">draw_hudson</span><span class="p">,</span>
     <span class="s1">&#39;fuzzy_beachball&#39;</span><span class="p">:</span> <span class="n">draw_fuzzy_beachball</span><span class="p">,</span>
-    <span class="s1">&#39;moment_rate&#39;</span><span class="p">:</span> <span class="n">draw_moment_rate</span><span class="p">}</span>
+    <span class="s1">&#39;moment_rate&#39;</span><span class="p">:</span> <span class="n">draw_moment_rate</span><span class="p">,</span>
+    <span class="s1">&#39;station_map&#39;</span><span class="p">:</span> <span class="n">draw_station_map</span><span class="p">}</span>
 
 
 <span class="k">def</span> <span class="nf">available_plots</span><span class="p">():</span>
