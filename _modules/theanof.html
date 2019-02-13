@@ -377,6 +377,8 @@
 <span class="sd">        containing :class:`pyrocko.gf.seismosizer.Target` Objects</span>
 
 <span class="sd">    arrival_taper : :class:`heart.ArrivalTaper`</span>
+<span class="sd">    arrival_times : :class:`ǹumpy.NdArray`</span>
+<span class="sd">        with synthetic arrival times wrt reference event</span>
 <span class="sd">    filterer : :class:`heart.Filterer`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -451,8 +453,8 @@
         <span class="n">mpoint</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">adjust_point_units</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">station_corrections</span><span class="p">:</span>
-            <span class="n">arrival_times</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_times</span><span class="p">)</span> <span class="o">+</span> \
-                <span class="n">mpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;time_shift&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">time_shifts</span> <span class="o">=</span> <span class="n">mpoint</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;time_shift&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">arrival_times</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_times</span><span class="p">)</span> <span class="o">+</span> <span class="n">time_shifts</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">arrival_times</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrival_times</span><span class="p">)</span>
 

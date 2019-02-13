@@ -430,6 +430,15 @@ example we might want to use around 60 stations, so the command line for that wo
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">home_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">nstations</span><span class="o">-</span><span class="n">wanted</span><span class="o">=</span><span class="mi">60</span>
 </pre></div>
 </div>
+<p>To convert a distance in degree, e.g. 30 and 90 degrees for minimum and maximum data retrieval
+radii (rmin and rmax), you can use pyrockos cake function inbuilt converter factor d2m.
+The conversion than could look like this to retrieve rmin and rmax radii in km:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">cake</span>
+<span class="n">km</span> <span class="o">=</span> <span class="mf">1000.</span>
+<span class="n">rmin</span> <span class="o">=</span> <span class="mf">30.</span><span class="o">*</span><span class="n">cake</span><span class="o">.</span><span class="n">d2m</span><span class="o">/</span><span class="n">km</span>
+<span class="n">rmax</span> <span class="o">=</span> <span class="mf">90.</span><span class="o">*</span><span class="n">cake</span><span class="o">.</span><span class="n">d2m</span><span class="o">/</span><span class="n">km</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="data-import">
 <h4>Data import<a class="headerlink" href="#data-import" title="Permalink to this headline">¶</a></h4>

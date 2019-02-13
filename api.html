@@ -162,21 +162,21 @@ for one observation object.</p>
 <dl class="gattribute">
 <dt id="heart.Covariance.data">
 <em class="property">♦ </em><code class="descname">data</code><a class="headerlink" href="#heart.Covariance.data" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 <p>Data covariance matrix</p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.Covariance.pred_g">
 <em class="property">♦ </em><code class="descname">pred_g</code><a class="headerlink" href="#heart.Covariance.pred_g" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 <p>Model prediction covariance matrix, fault geometry</p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.Covariance.pred_v">
 <em class="property">♦ </em><code class="descname">pred_v</code><a class="headerlink" href="#heart.Covariance.pred_v" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 <p>Model prediction covariance matrix, velocity model</p>
 </dd></dl>
 
@@ -259,22 +259,6 @@ calculation</td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="heart.DataWaveformCollection.get_station_correction_idxs">
-<code class="descname">get_station_correction_idxs</code><span class="sig-paren">(</span><em>targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#DataWaveformCollection.get_station_correction_idxs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.DataWaveformCollection.get_station_correction_idxs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns array of indexes to problem stations,</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>targets</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – containing <a class="reference internal" href="#heart.DynamicTarget" title="heart.DynamicTarget"><code class="xref py py-class docutils literal notranslate"><span class="pre">DynamicTarget</span></code></a> Objects</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<p>Not to mix up with the wavemap specific stations!</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -285,13 +269,13 @@ of synthetics and container for SAR data.</p>
 <dl class="gattribute">
 <dt id="heart.DiffIFG.unwrapped_phase">
 <em class="property">♦ </em><code class="descname">unwrapped_phase</code><a class="headerlink" href="#heart.DiffIFG.unwrapped_phase" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.DiffIFG.coherence">
 <em class="property">♦ </em><code class="descname">coherence</code><a class="headerlink" href="#heart.DiffIFG.coherence" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -309,7 +293,7 @@ of synthetics and container for SAR data.</p>
 <dl class="gattribute">
 <dt id="heart.DiffIFG.displacement">
 <em class="property">♦ </em><code class="descname">displacement</code><a class="headerlink" href="#heart.DiffIFG.displacement" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -322,7 +306,7 @@ of synthetics and container for SAR data.</p>
 <dl class="gattribute">
 <dt id="heart.DiffIFG.odw">
 <em class="property">♦ </em><code class="descname">odw</code><a class="headerlink" href="#heart.DiffIFG.odw" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 <p>Overlapping data weights, additional weight factor to thedataset for overlaps with other datasets</p>
 </dd></dl>
 
@@ -332,6 +316,12 @@ of synthetics and container for SAR data.</p>
 <dt id="heart.DynamicTarget">
 <em class="property">class </em><code class="descclassname">heart.</code><code class="descname">DynamicTarget</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#DynamicTarget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.DynamicTarget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Undocumented.</p>
+<dl class="gattribute">
+<dt id="heart.DynamicTarget.response">
+<em class="property">♦ </em><code class="descname">response</code><a class="headerlink" href="#heart.DynamicTarget.response" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://pyrocko.org/v0.3/library/reference/trace.html#pyrocko.trace.PoleZeroResponse" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.trace.PoleZeroResponse</span></code></a>, <em>optional</em></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="heart.DynamicTarget.update_target_times">
 <code class="descname">update_target_times</code><span class="sig-paren">(</span><em>sources=None</em>, <em>taperer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#DynamicTarget.update_target_times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.DynamicTarget.update_target_times" title="Permalink to this definition">¶</a></dt>
@@ -357,7 +347,8 @@ side.</p>
 <dl class="class">
 <dt id="heart.Filter">
 <em class="property">class </em><code class="descclassname">heart.</code><code class="descname">Filter</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#Filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.Filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter object defining frequency range of traces after filtering</p>
+<dd><p>Filter object defining frequency range of traces after time-domain
+filtering.</p>
 <dl class="gattribute">
 <dt id="heart.Filter.lower_corner">
 <em class="property">♦ </em><code class="descname">lower_corner</code><a class="headerlink" href="#heart.Filter.lower_corner" title="Permalink to this definition">¶</a></dt>
@@ -382,33 +373,59 @@ side.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="heart.GPSComponent">
-<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GPSComponent</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GPSComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GPSComponent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Object holding the GPS data for a single station.</p>
+<dt id="heart.FilterBase">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">FilterBase</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#FilterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.FilterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undocumented.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="heart.FrequencyFilter">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">FrequencyFilter</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#FrequencyFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.FrequencyFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undocumented.</p>
 <dl class="gattribute">
-<dt id="heart.GPSComponent.name">
-<em class="property">♦ </em><code class="descname">name</code><a class="headerlink" href="#heart.GPSComponent.name" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.FrequencyFilter.freqlimits">
+<em class="property">♦ </em><code class="descname">freqlimits</code><a class="headerlink" href="#heart.FrequencyFilter.freqlimits" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code> of 4 <code class="docutils literal notranslate"><span class="pre">float</span></code> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">(0.005,</span> <span class="pre">0.006,</span> <span class="pre">166.0,</span> <span class="pre">200.0)</span></code></p>
+<p>Corner frequencies 4-tuple [Hz] for frequency domain filter.</p>
+</dd></dl>
+
+<dl class="gattribute">
+<dt id="heart.FrequencyFilter.tfade">
+<em class="property">♦ </em><code class="descname">tfade</code><a class="headerlink" href="#heart.FrequencyFilter.tfade" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">float</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">20.0</span></code></p>
+<p>Rise/fall time in seconds of taper applied in timedomain at both ends of trace.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="heart.GNSSComponent">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GNSSComponent</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GNSSComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GNSSComponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object holding the GNSS data for a single station.</p>
+<dl class="gattribute">
+<dt id="heart.GNSSComponent.name">
+<em class="property">♦ </em><code class="descname">name</code><a class="headerlink" href="#heart.GNSSComponent.name" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">str</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">'E'</span></code></p>
 <p>direction of measurement, E/N/U</p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSComponent.v">
-<em class="property">♦ </em><code class="descname">v</code><a class="headerlink" href="#heart.GPSComponent.v" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.GNSSComponent.v">
+<em class="property">♦ </em><code class="descname">v</code><a class="headerlink" href="#heart.GNSSComponent.v" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">float</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">0.1</span></code></p>
 <p>Average velocity in [m/yr]</p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSComponent.sigma">
-<em class="property">♦ </em><code class="descname">sigma</code><a class="headerlink" href="#heart.GPSComponent.sigma" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.GNSSComponent.sigma">
+<em class="property">♦ </em><code class="descname">sigma</code><a class="headerlink" href="#heart.GNSSComponent.sigma" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">float</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">0.01</span></code></p>
 <p>sigma measurement error (std) [m/yr]</p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSComponent.unit">
-<em class="property">♦ </em><code class="descname">unit</code><a class="headerlink" href="#heart.GPSComponent.unit" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.GNSSComponent.unit">
+<em class="property">♦ </em><code class="descname">unit</code><a class="headerlink" href="#heart.GNSSComponent.unit" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">str</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">'m/yr'</span></code></p>
 <p>Unit of velocity v</p>
 </dd></dl>
@@ -416,68 +433,68 @@ side.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="heart.GPSCompoundComponent">
-<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GPSCompoundComponent</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GPSCompoundComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GPSCompoundComponent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collecting many GPS components and merging them into arrays.
+<dt id="heart.GNSSCompoundComponent">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GNSSCompoundComponent</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GNSSCompoundComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GNSSCompoundComponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collecting many GNSS components and merging them into arrays.
 Make synthetics generation more efficient.</p>
 <dl class="gattribute">
-<dt id="heart.GPSCompoundComponent.los_vector">
-<em class="property">♦ </em><code class="descname">los_vector</code><a class="headerlink" href="#heart.GPSCompoundComponent.los_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dt id="heart.GNSSCompoundComponent.los_vector">
+<em class="property">♦ </em><code class="descname">los_vector</code><a class="headerlink" href="#heart.GNSSCompoundComponent.los_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSCompoundComponent.displacement">
-<em class="property">♦ </em><code class="descname">displacement</code><a class="headerlink" href="#heart.GPSCompoundComponent.displacement" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dt id="heart.GNSSCompoundComponent.displacement">
+<em class="property">♦ </em><code class="descname">displacement</code><a class="headerlink" href="#heart.GNSSCompoundComponent.displacement" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSCompoundComponent.name">
-<em class="property">♦ </em><code class="descname">name</code><a class="headerlink" href="#heart.GPSCompoundComponent.name" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.GNSSCompoundComponent.name">
+<em class="property">♦ </em><code class="descname">name</code><a class="headerlink" href="#heart.GNSSCompoundComponent.name" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">str</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">'E'</span></code></p>
 <p>direction of measurement, E/N/U</p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSCompoundComponent.station_names">
-<em class="property">♦ </em><code class="descname">station_names</code><a class="headerlink" href="#heart.GPSCompoundComponent.station_names" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.GNSSCompoundComponent.station_names">
+<em class="property">♦ </em><code class="descname">station_names</code><a class="headerlink" href="#heart.GNSSCompoundComponent.station_names" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSCompoundComponent.covariance">
-<em class="property">♦ </em><code class="descname">covariance</code><a class="headerlink" href="#heart.GPSCompoundComponent.covariance" title="Permalink to this definition">¶</a></dt>
+<dt id="heart.GNSSCompoundComponent.covariance">
+<em class="property">♦ </em><code class="descname">covariance</code><a class="headerlink" href="#heart.GNSSCompoundComponent.covariance" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#heart.Covariance" title="heart.Covariance"><code class="xref py py-class docutils literal notranslate"><span class="pre">Covariance</span></code></a>, <em>optional</em></p>
 <p><a class="reference internal" href="#heart.Covariance" title="heart.Covariance"><code class="xref py py-class docutils literal notranslate"><span class="pre">Covariance</span></code></a> that holds dataand model prediction covariance matrixes</p>
 </dd></dl>
 
 <dl class="gattribute">
-<dt id="heart.GPSCompoundComponent.odw">
-<em class="property">♦ </em><code class="descname">odw</code><a class="headerlink" href="#heart.GPSCompoundComponent.odw" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dt id="heart.GNSSCompoundComponent.odw">
+<em class="property">♦ </em><code class="descname">odw</code><a class="headerlink" href="#heart.GNSSCompoundComponent.odw" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 <p>Overlapping data weights, additional weight factor to thedataset for overlaps with other datasets</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="heart.GPSDataset">
-<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GPSDataset</code><span class="sig-paren">(</span><em>name=None</em>, <em>stations=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GPSDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GPSDataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collecting many GPS stations into one object. Easy managing and assessing
+<dt id="heart.GNSSDataset">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GNSSDataset</code><span class="sig-paren">(</span><em>name=None</em>, <em>stations=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GNSSDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GNSSDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collecting many GNSS stations into one object. Easy managing and assessing
 single stations and also merging all the stations components into compound
 components for fast and easy modeling.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="heart.GPSStation">
-<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GPSStation</code><span class="sig-paren">(</span><em>network=''</em>, <em>station=''</em>, <em>location=''</em>, <em>lat=0.0</em>, <em>lon=0.0</em>, <em>elevation=0.0</em>, <em>depth=0.0</em>, <em>name=''</em>, <em>channels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GPSStation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GPSStation" title="Permalink to this definition">¶</a></dt>
-<dd><p>GPS station object, holds the displacment components and has all pyrocko
+<dt id="heart.GNSSStation">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GNSSStation</code><span class="sig-paren">(</span><em>network=''</em>, <em>station=''</em>, <em>location=''</em>, <em>lat=0.0</em>, <em>lon=0.0</em>, <em>elevation=0.0</em>, <em>depth=0.0</em>, <em>name=''</em>, <em>channels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GNSSStation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GNSSStation" title="Permalink to this definition">¶</a></dt>
+<dd><p>GNSS station object, holds the displacment components and has all pyrocko
 station functionality.</p>
 <dl class="gattribute">
-<dt id="heart.GPSStation.components">
-<em class="property">♦ </em><code class="descname">components</code><a class="headerlink" href="#heart.GPSStation.components" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <a class="reference internal" href="#heart.GPSComponent" title="heart.GPSComponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">GPSComponent</span></code></a> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
+<dt id="heart.GNSSStation.components">
+<em class="property">♦ </em><code class="descname">components</code><a class="headerlink" href="#heart.GNSSStation.components" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <a class="reference internal" href="#heart.GNSSComponent" title="heart.GNSSComponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">GNSSComponent</span></code></a> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -490,26 +507,26 @@ station functionality.</p>
 <dt id="heart.GeodeticDataset.typ">
 <em class="property">♦ </em><code class="descname">typ</code><a class="headerlink" href="#heart.GeodeticDataset.typ" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">str</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">'SAR'</span></code></p>
-<p>Type of geodetic data, e.g. SAR, GPS, …</p>
+<p>Type of geodetic data, e.g. SAR, GNSS, …</p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.GeodeticDataset.name">
 <em class="property">♦ </em><code class="descname">name</code><a class="headerlink" href="#heart.GeodeticDataset.name" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">str</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">'A'</span></code></p>
-<p>e.g. GPS station name or InSAR satellite track</p>
+<p>e.g. GNSS station name or InSAR satellite track</p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.GeodeticDataset.utmn">
 <em class="property">♦ </em><code class="descname">utmn</code><a class="headerlink" href="#heart.GeodeticDataset.utmn" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.GeodeticDataset.utme">
 <em class="property">♦ </em><code class="descname">utme</code><a class="headerlink" href="#heart.GeodeticDataset.utme" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="method">
@@ -524,7 +541,7 @@ station functionality.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_points, 3)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_points, 3)</td>
 </tr>
 </tbody>
 </table>
@@ -583,31 +600,31 @@ station functionality.</p>
 <dl class="gattribute">
 <dt id="heart.IFG.amplitude">
 <em class="property">♦ </em><code class="descname">amplitude</code><a class="headerlink" href="#heart.IFG.amplitude" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.IFG.wrapped_phase">
 <em class="property">♦ </em><code class="descname">wrapped_phase</code><a class="headerlink" href="#heart.IFG.wrapped_phase" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.IFG.incidence">
 <em class="property">♦ </em><code class="descname">incidence</code><a class="headerlink" href="#heart.IFG.incidence" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.IFG.heading">
 <em class="property">♦ </em><code class="descname">heading</code><a class="headerlink" href="#heart.IFG.heading" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.IFG.los_vector">
 <em class="property">♦ </em><code class="descname">los_vector</code><a class="headerlink" href="#heart.IFG.los_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>optional</em></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -626,7 +643,7 @@ station functionality.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_points, 3)</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_points, 3)</td>
 </tr>
 </tbody>
 </table>
@@ -654,19 +671,19 @@ station functionality.</p>
 <dl class="gattribute">
 <dt id="heart.Parameter.lower">
 <em class="property">♦ </em><code class="descname">lower</code><a class="headerlink" href="#heart.Parameter.lower" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>default:</em> <code class="docutils literal notranslate"><span class="pre">array([0.,</span> <span class="pre">0.])</span></code></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>default:</em> <code class="docutils literal notranslate"><span class="pre">array([0.,</span> <span class="pre">0.])</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.Parameter.upper">
 <em class="property">♦ </em><code class="descname">upper</code><a class="headerlink" href="#heart.Parameter.upper" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>default:</em> <code class="docutils literal notranslate"><span class="pre">array([1.,</span> <span class="pre">1.])</span></code></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>default:</em> <code class="docutils literal notranslate"><span class="pre">array([1.,</span> <span class="pre">1.])</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="heart.Parameter.testvalue">
 <em class="property">♦ </em><code class="descname">testvalue</code><a class="headerlink" href="#heart.Parameter.testvalue" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>default:</em> <code class="docutils literal notranslate"><span class="pre">array([0.5,</span> <span class="pre">0.5])</span></code></p>
+<dd><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts_array.Array</span></code>), <em>default:</em> <code class="docutils literal notranslate"><span class="pre">array([0.5,</span> <span class="pre">0.5])</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -681,13 +698,18 @@ station functionality.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> of size (n, m)</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> of size (n, m)</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="exception">
+<dt id="heart.RayPathError">
+<em class="property">exception </em><code class="descclassname">heart.</code><code class="descname">RayPathError</code><a class="reference internal" href="_modules/heart.html#RayPathError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.RayPathError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="class">
 <dt id="heart.ReferenceLocation">
@@ -809,8 +831,24 @@ station functionality.</p>
 
 <dl class="class">
 <dt id="heart.WaveformMapping">
-<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">WaveformMapping</code><span class="sig-paren">(</span><em>name, stations, weights=None, channels=['Z'], datasets=[], targets=[], station_correction_idxs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#WaveformMapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.WaveformMapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Weights have to be theano.shared variables!</p>
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">WaveformMapping</code><span class="sig-paren">(</span><em>name, stations, weights=None, channels=['Z'], datasets=[], targets=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#WaveformMapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.WaveformMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps synthetic waveform parameters to targets, stations and data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – name of the waveform according to travel time tables</li>
+<li><strong>stations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/model.html#pyrocko.model.Station" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.model.Station</span></code></a></li>
+<li><strong>weights</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of theano.shared variables</li>
+<li><strong>channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of channel names valid for all the stations of this wavemap</li>
+<li><strong>datasets</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <code class="xref py py-class docutils literal notranslate"><span class="pre">heart.Dataset</span></code> inherited from <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/trace.html#pyrocko.trace.Trace" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.trace.Trace</span></code></a></li>
+<li><strong>targets</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.target.Target</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="heart.WaveformMapping.get_station_names">
 <code class="descname">get_station_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#WaveformMapping.get_station_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.WaveformMapping.get_station_names" title="Permalink to this definition">¶</a></dt>
@@ -968,7 +1006,7 @@ stored.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_observations; ux-North, uy-East, uz-Down)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_observations; ux-North, uy-East, uz-Down)</p>
 </td>
 </tr>
 </tbody>
@@ -1000,10 +1038,10 @@ reference source is the first in the list!!!</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
 <li><em>depends on outmode</em></li>
 <li><em>’stacked_array’</em></li>
-<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_observations; ux-North, uy-East, uz-Down)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n_observations; ux-North, uy-East, uz-Down)</li>
 <li><em>’stacked_arrays’</em></li>
 <li><em>or list of</em></li>
-<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (target.samples; ux-North, uy-East, uz-Down)</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (target.samples; ux-North, uy-East, uz-Down)</li>
 </ul>
 </p>
 </td>
@@ -1036,7 +1074,7 @@ According to the its location the earth model is being built</li>
 
 <dl class="function">
 <dt id="heart.get_phase_arrival_time">
-<code class="descclassname">heart.</code><code class="descname">get_phase_arrival_time</code><span class="sig-paren">(</span><em>engine</em>, <em>source</em>, <em>target</em>, <em>wavename</em>, <em>snap=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#get_phase_arrival_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.get_phase_arrival_time" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">heart.</code><code class="descname">get_phase_arrival_time</code><span class="sig-paren">(</span><em>engine</em>, <em>source</em>, <em>target</em>, <em>wavename=None</em>, <em>snap=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#get_phase_arrival_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.get_phase_arrival_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get arrival time from Greens Function store for respective
 <code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.seismosizer.Target</span></code>,
 <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/gf.html#pyrocko.gf.meta.Location" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.meta.Location</span></code></a> pair.</p>
@@ -1049,7 +1087,9 @@ According to the its location the earth model is being built</li>
 <li><strong>source</strong> (<a class="reference external" href="https://pyrocko.org/v0.3/library/reference/gf.html#pyrocko.gf.meta.Location" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.meta.Location</span></code></a>) – can be therefore <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/gf.html#pyrocko.gf.seismosizer.Source" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.seismosizer.Source</span></code></a> or
 <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/model.html#pyrocko.model.Event" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.model.Event</span></code></a></li>
 <li><strong>target</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.seismosizer.Target</span></code>) – </li>
-<li><strong>wavename</strong> (<em>string</em>) – of the tabulated phase that determines the phase arrival</li>
+<li><strong>wavename</strong> (<em>string</em>) – of the tabulated phase that determines the phase arrival
+needs to be the Id of a tabulated phase in the respective target.store
+if “None” uses first tabulated phase</li>
 <li><strong>snap</strong> (<em>if True</em>) – force arrival time on discrete samples of the store</li>
 </ul>
 </td>
@@ -1154,7 +1194,7 @@ indexes &gt; 0 use reference model and vary its parameters by a Gaussian</li>
 
 <dl class="function">
 <dt id="heart.init_datahandler">
-<code class="descclassname">heart.</code><code class="descname">init_datahandler</code><span class="sig-paren">(</span><em>seismic_config</em>, <em>seismic_data_path='./'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#init_datahandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.init_datahandler" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">heart.</code><code class="descname">init_datahandler</code><span class="sig-paren">(</span><em>seismic_config</em>, <em>seismic_data_path='./'</em>, <em>responses_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#init_datahandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.init_datahandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialise datahandler.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1280,7 +1320,7 @@ according to the properties of a triangular matrix.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>A</strong> (n x n <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – </li>
+<li><strong>A</strong> (n x n <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – </li>
 <li><strong>inverse</strong> (<em>boolean</em>) – <p>If true calculates the log determinant of the inverse of the colesky
 decomposition, which is equvalent to taking the determinant of the
 inverse of the matrix.</p>
@@ -1302,7 +1342,7 @@ L-1*(L-1)T = R-1     inverse=True</p>
 
 <dl class="function">
 <dt id="heart.post_process_trace">
-<code class="descclassname">heart.</code><code class="descname">post_process_trace</code><span class="sig-paren">(</span><em>trace, taper, filterer, taper_tolerance_factor=0.0, outmode=None, chop_bounds=['b', 'c']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#post_process_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.post_process_trace" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">heart.</code><code class="descname">post_process_trace</code><span class="sig-paren">(</span><em>trace, taper, filterer, taper_tolerance_factor=0.0, outmode=None, chop_bounds=['b', 'c'], transfer_function=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#post_process_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.post_process_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Taper, filter and then chop one trace in place.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1317,6 +1357,32 @@ taper.fadein times this factor determines added tolerance</li>
 <li><strong>chop_bounds</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – determines where to chop the trace on the taper attributes
 may be combination of [a, b, c, d]</li>
 </ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="heart.proto2zpk">
+<code class="descclassname">heart.</code><code class="descname">proto2zpk</code><span class="sig-paren">(</span><em>magnification</em>, <em>damping</em>, <em>period</em>, <em>quantity='displacement'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#proto2zpk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.proto2zpk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert magnification, damping and period of a station to poles and zeros.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>magnification</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – gain of station</li>
+<li><strong>damping</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – in []</li>
+<li><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – in [s]</li>
+<li><strong>quantity</strong> (<em>string</em>) – in which related data are recorded</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">lists of zeros, poles and gain</p>
 </td>
 </tr>
 </tbody>
@@ -1382,12 +1448,13 @@ taper</li>
 <li><strong>arrival_times</strong> (None or <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.NdArray</span></code>) – of phase to apply taper, if None theoretic arrival of ray tracing used</li>
 <li><strong>chop_bounds</strong> (<em>list  of str</em>) – determines where to chop the trace on the taper attributes
 may be combination of [a, b, c, d]</li>
+<li><strong>transfer_functions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of transfer functions to convolve the synthetics with</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or List of <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/trace.html#pyrocko.trace.Trace" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.trace.Trace</span></code></a> – with data each row-one target</li>
-<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> of tmins for traces</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or List of <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/trace.html#pyrocko.trace.Trace" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.trace.Trace</span></code></a> – with data each row-one target</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> of tmins for traces</li>
 </ul>
 </p>
 </td>
@@ -1422,7 +1489,7 @@ tapering</li>
 columns temporal values</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -1503,7 +1570,7 @@ generation, optimization algorithm and the data being used.</p>
 <dl class="gattribute">
 <dt id="config.BEATconfig.problem_config">
 <em class="property">♦ </em><code class="descname">problem_config</code><a class="headerlink" href="#config.BEATconfig.problem_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.ProblemConfig" title="config.ProblemConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProblemConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.ProblemConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533f1860&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.ProblemConfig" title="config.ProblemConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProblemConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.ProblemConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1970271d0&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -1521,13 +1588,13 @@ generation, optimization algorithm and the data being used.</p>
 <dl class="gattribute">
 <dt id="config.BEATconfig.sampler_config">
 <em class="property">♦ </em><code class="descname">sampler_config</code><a class="headerlink" href="#config.BEATconfig.sampler_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplerConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533f1860&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplerConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1970271d0&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="config.BEATconfig.hyper_sampler_config">
 <em class="property">♦ </em><code class="descname">hyper_sampler_config</code><a class="headerlink" href="#config.BEATconfig.hyper_sampler_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplerConfig</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533f1828&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplerConfig</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd197027198&gt;</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -1631,7 +1698,7 @@ hierarchical parameters.</p>
 <dl class="gattribute">
 <dt id="config.GFLibaryConfig.event">
 <em class="property">♦ </em><code class="descname">event</code><a class="headerlink" href="#config.GFLibaryConfig.event" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.model.event.Event</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;pyrocko.model.event.Event</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533efe48&gt;</span></code></p>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.model.event.Event</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;pyrocko.model.event.Event</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1970247b8&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -1675,14 +1742,14 @@ hierarchical parameters.</p>
 <dt id="config.GeodeticConfig.blacklist">
 <em class="property">♦ </em><code class="descname">blacklist</code><a class="headerlink" href="#config.GeodeticConfig.blacklist" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
-<p>GPS station name or scene name to be thrown out.</p>
+<p>GNSS station name or scene name to be thrown out.</p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="config.GeodeticConfig.types">
 <em class="property">♦ </em><code class="descname">types</code><a class="headerlink" href="#config.GeodeticConfig.types" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">['SAR']</span></code></p>
-<p>Types of geodetic data, i.e. SAR, GPS, …</p>
+<p>Types of geodetic data, i.e. SAR, GNSS, …</p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -1710,13 +1777,13 @@ hierarchical parameters.</p>
 <dt id="config.GeodeticConfig.dataset_specific_residual_noise_estimation">
 <em class="property">♦ </em><code class="descname">dataset_specific_residual_noise_estimation</code><a class="headerlink" href="#config.GeodeticConfig.dataset_specific_residual_noise_estimation" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">bool</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
-<p>If set, for EACH DATASET specific hyperparameter estimation.For geodetic data: n_hypers = nimages (SAR) or nstations * ncomponents (GPS).If false one hyperparameter for each DATATYPE and displacement COMPONENT.</p>
+<p>If set, for EACH DATASET specific hyperparameter estimation.For geodetic data: n_hypers = nimages (SAR) or nstations * ncomponents (GNSS).If false one hyperparameter for each DATATYPE and displacement COMPONENT.</p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="config.GeodeticConfig.gf_config">
 <em class="property">♦ </em><code class="descname">gf_config</code><a class="headerlink" href="#config.GeodeticConfig.gf_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.GeodeticGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533ea828&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.GeodeticGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1a405a4a8&gt;</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -2243,7 +2310,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SamplerConfig.parameters">
 <em class="property">♦ </em><code class="descname">parameters</code><a class="headerlink" href="#config.SamplerConfig.parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SamplerParameters" title="config.SamplerParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplerParameters</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SMCConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533efb38&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SamplerParameters" title="config.SamplerParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">SamplerParameters</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SMCConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1970244a8&gt;</span></code></p>
 <p>Sampler dependend Parameters</p>
 </dd></dl>
 
@@ -2296,8 +2363,15 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SeismicConfig.noise_estimator">
 <em class="property">♦ </em><code class="descname">noise_estimator</code><a class="headerlink" href="#config.SeismicConfig.noise_estimator" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SeismicNoiseAnalyserConfig" title="config.SeismicNoiseAnalyserConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeismicNoiseAnalyserConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SeismicNoiseAnalyserConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533ea320&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SeismicNoiseAnalyserConfig" title="config.SeismicNoiseAnalyserConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeismicNoiseAnalyserConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SeismicNoiseAnalyserConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1975eeb38&gt;</span></code></p>
 <p>Determines the structure of the data-covariance matrix.</p>
+</dd></dl>
+
+<dl class="gattribute">
+<dt id="config.SeismicConfig.responses_path">
+<em class="property">♦ </em><code class="descname">responses_path</code><a class="headerlink" href="#config.SeismicConfig.responses_path" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em></p>
+<p>Path to response file</p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -2330,7 +2404,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SeismicConfig.gf_config">
 <em class="property">♦ </em><code class="descname">gf_config</code><a class="headerlink" href="#config.SeismicConfig.gf_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SeismicGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533ea320&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.SeismicGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1975ee278&gt;</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -2382,7 +2456,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SeismicGFLibraryConfig.wave_config">
 <em class="property">♦ </em><code class="descname">wave_config</code><a class="headerlink" href="#config.SeismicGFLibraryConfig.wave_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.WaveformFitConfig" title="config.WaveformFitConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">WaveformFitConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.WaveformFitConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533f1358&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.WaveformFitConfig" title="config.WaveformFitConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">WaveformFitConfig</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;config.WaveformFitConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd197024c88&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -2505,7 +2579,7 @@ a specific type of waveform and calculate the misfit.</p>
 <dl class="gattribute">
 <dt id="config.WaveformFitConfig.filterer">
 <em class="property">♦ </em><code class="descname">filterer</code><a class="headerlink" href="#config.WaveformFitConfig.filterer" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">beat.heart.Filter</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;beat.heart.Filter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533dfe10&gt;</span></code></p>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">beat.heart.FilterBase</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;beat.heart.Filter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1a4083cc0&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -2524,7 +2598,7 @@ a specific type of waveform and calculate the misfit.</p>
 <dl class="gattribute">
 <dt id="config.WaveformFitConfig.arrival_taper">
 <em class="property">♦ </em><code class="descname">arrival_taper</code><a class="headerlink" href="#config.WaveformFitConfig.arrival_taper" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://pyrocko.org/v0.3/library/reference/trace.html#pyrocko.trace.Taper" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.trace.Taper</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;beat.heart.ArrivalTaper</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6533dfe10&gt;</span></code></p>
+<dd><p><a class="reference external" href="https://pyrocko.org/v0.3/library/reference/trace.html#pyrocko.trace.Taper" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.trace.Taper</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;beat.heart.ArrivalTaper</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1a4083cc0&gt;</span></code></p>
 <p>Taper a,b/c,d time [s] before/after wave arrival</p>
 </dd></dl>
 
@@ -2672,7 +2746,7 @@ are taken.</li>
 of number of n_jobs (processors to be used) on the machine.</li>
 <li><strong>scaling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Factor applied to the proposal distribution i.e. the step size of the
 Markov Chain</li>
-<li><strong>covariance</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – (n_chains x n_chains) for MutlivariateNormal, otherwise (n_chains)
+<li><strong>covariance</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – (n_chains x n_chains) for MutlivariateNormal, otherwise (n_chains)
 Initial Covariance matrix for proposal distribution,
 if None - identity matrix taken</li>
 <li><strong>likelihood_name</strong> (<em>string</em>) – name of the <code class="xref py py-class docutils literal notranslate"><span class="pre">pymc3.determinsitic</span></code> variable that contains the
@@ -2748,7 +2822,7 @@ are taken.</li>
 of number of n_jobs (processors to be used) on the machine.</li>
 <li><strong>scaling</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Factor applied to the proposal distribution i.e. the step size of the
 Markov Chain</li>
-<li><strong>covariance</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – (n_chains x n_chains) for MutlivariateNormal, otherwise (n_chains)
+<li><strong>covariance</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – (n_chains x n_chains) for MutlivariateNormal, otherwise (n_chains)
 Initial Covariance matrix for proposal distribution,
 if None - identity matrix taken</li>
 <li><strong>likelihood_name</strong> (<em>string</em>) – name of the <code class="xref py py-class docutils literal notranslate"><span class="pre">pymc3.determinsitic</span></code> variable that contains the
@@ -2794,7 +2868,7 @@ current beta and sample likelihoods.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><strong>beta(m+1)</strong> (<em>scalar, float</em>) – tempering parameter of the next stage</li>
 <li><strong>beta(m)</strong> (<em>scalar, float</em>) – tempering parameter of the current stage</li>
-<li><strong>weights</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Importance weights (floats)</li>
+<li><strong>weights</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Importance weights (floats)</li>
 </ul>
 </td>
 </tr>
@@ -2812,7 +2886,7 @@ current beta and sample likelihoods.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>cov</strong> – weighted covariances (NumPy &gt; 1.10. required)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2864,7 +2938,7 @@ based on Kitagawas deterministic resampling algorithm.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>outindex</strong> – Array of resampled trace indexes</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2883,8 +2957,8 @@ for each chain and set as start population for the next stage.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><strong>population</strong> (<em>list</em>) – of <code class="xref py py-func docutils literal notranslate"><span class="pre">pymc3.Point()</span></code> dictionaries</li>
-<li><strong>array_population</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of trace end-points</li>
-<li><strong>likelihoods</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of likelihoods of the trace end-points</li>
+<li><strong>array_population</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of trace end-points</li>
+<li><strong>likelihoods</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Array of likelihoods of the trace end-points</li>
 </ul>
 </td>
 </tr>
@@ -3883,7 +3957,7 @@ within a with model context.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>input_rvs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <code class="xref py py-class docutils literal notranslate"><span class="pre">pymc3.distribution.Distribution</span></code></li>
+<li><strong>input_rvs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <code class="xref py py-class docutils literal notranslate"><span class="pre">pymc3.distribution.Distribution</span></code> of source parameters</li>
 <li><strong>fixed_rvs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.array</span></code></li>
 <li><strong>hyperparams</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – of <code class="xref py py-class docutils literal notranslate"><span class="pre">pymc3.distribution.Distribution</span></code></li>
 <li><strong>problem_config</strong> (<a class="reference internal" href="#config.ProblemConfig" title="config.ProblemConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">config.ProblemConfig</span></code></a>) – </li>
@@ -4064,7 +4138,7 @@ solution space.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> synthetics for each target</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> synthetics for each target</p>
 </td>
 </tr>
 </tbody>
@@ -4108,7 +4182,7 @@ solution space.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> synthetics for each target</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> synthetics for each target</p>
 </td>
 </tr>
 </tbody>
@@ -4164,7 +4238,7 @@ called within a with-model-context.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> synthetics for each target</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> synthetics for each target</p>
 </td>
 </tr>
 </tbody>
@@ -4413,7 +4487,7 @@ library and may be removed from the beat repository in the future.</p>
 <dl class="gattribute">
 <dt id="pscmp.PsCmpConfig.observation">
 <em class="property">♦ </em><code class="descname">observation</code><a class="headerlink" href="#pscmp.PsCmpConfig.observation" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#pscmp.PsCmpObservation" title="pscmp.PsCmpObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">PsCmpObservation</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;pscmp.PsCmpScatter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff644197a90&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#pscmp.PsCmpObservation" title="pscmp.PsCmpObservation"><code class="xref py py-class docutils literal notranslate"><span class="pre">PsCmpObservation</span></code></a>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;pscmp.PsCmpScatter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1882dcb00&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -4443,7 +4517,7 @@ library and may be removed from the beat repository in the future.</p>
 <dl class="gattribute">
 <dt id="pscmp.PsCmpConfig.rectangular_source_patches">
 <em class="property">♦ </em><code class="descname">rectangular_source_patches</code><a class="headerlink" href="#pscmp.PsCmpConfig.rectangular_source_patches" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts.Any</span></code> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[&lt;pscmp.PsCmpRectangularSource</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff644197b00&gt;]</span></code></p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts.Any</span></code> objects, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[&lt;pscmp.PsCmpRectangularSource</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1882dcb70&gt;]</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -4467,7 +4541,7 @@ library and may be removed from the beat repository in the future.</p>
 <dl class="gattribute">
 <dt id="pscmp.PsCmpConfigFull.coulomb_master_field">
 <em class="property">♦ </em><code class="descname">coulomb_master_field</code><a class="headerlink" href="#pscmp.PsCmpConfigFull.coulomb_master_field" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#pscmp.PsCmpCoulombStress" title="pscmp.PsCmpCoulombStress"><code class="xref py py-class docutils literal notranslate"><span class="pre">PsCmpCoulombStress</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;pscmp.PsCmpCoulombStressMasterFault</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6441a3048&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#pscmp.PsCmpCoulombStress" title="pscmp.PsCmpCoulombStress"><code class="xref py py-class docutils literal notranslate"><span class="pre">PsCmpCoulombStress</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">&lt;pscmp.PsCmpCoulombStressMasterFault</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd1882df080&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -4776,11 +4850,11 @@ of the block-movement and the backslip.</p>
 <li><strong>sources</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/gf.html#pyrocko.gf.seismosizer.RectangularSource" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.seismosizer.RectangularSource</span></code></a>
 Sources to calculate synthetics for</li>
 <li><strong>targets</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/gf.html#pyrocko.gf.targets.StaticTarget" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.targets.StaticTarget</span></code></a></li>
-<li><strong>lons</strong> (list of floats, or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – longitudes [deg] of observation points</li>
-<li><strong>lats</strong> (list of floats, or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – latitudes [deg] of observation points</li>
+<li><strong>lons</strong> (list of floats, or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – longitudes [deg] of observation points</li>
+<li><strong>lats</strong> (list of floats, or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – latitudes [deg] of observation points</li>
 <li><strong>amplitude</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – slip [m] of the moving block</li>
 <li><strong>azimuth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – azimuth-angle[deg] ergo direction of moving block towards North</li>
-<li><strong>locking_depth</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – locking_depth [km] of the fault(s) below there is no movement</li>
+<li><strong>locking_depth</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – locking_depth [km] of the fault(s) below there is no movement</li>
 <li><strong>reference</strong> (<a class="reference internal" href="#heart.ReferenceLocation" title="heart.ReferenceLocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">heart.ReferenceLocation</span></code></a>) – reference location that determines the stable block</li>
 </ul>
 </td>
@@ -4788,7 +4862,7 @@ Sources to calculate synthetics for</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(n x 3) [North, East, Down] displacements [m]</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -4820,7 +4894,7 @@ matrix</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with Covariance due to velocity model uncertainties</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with Covariance due to velocity model uncertainties</p>
 </td>
 </tr>
 </tbody>
@@ -4849,7 +4923,7 @@ matrix</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with Covariance due to velocity model uncertainties</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with Covariance due to velocity model uncertainties</p>
 </td>
 </tr>
 </tbody>
@@ -4880,7 +4954,7 @@ in the velocity model for station and channel.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with Covariance due to velocity model uncertainties</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with Covariance due to velocity model uncertainties</p>
 </td>
 </tr>
 </tbody>
@@ -4924,7 +4998,7 @@ in the velocity model for station and channel.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -4974,8 +5048,8 @@ values are <code class="xref py py-class docutils literal notranslate"><span cla
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
-<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of synthetic displacements of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 3)</li>
+<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of synthetic displacements of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 3)</li>
 </ul>
 </td>
 </tr>
@@ -4996,8 +5070,8 @@ Deprecated, currently not used in composites.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>lats</strong> (n x 1 <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – with latitudes of observation points</li>
-<li><strong>lons</strong> (n x 1 <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – with longitudes of observation points</li>
+<li><strong>lats</strong> (n x 1 <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – with latitudes of observation points</li>
+<li><strong>lons</strong> (n x 1 <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – with longitudes of observation points</li>
 <li><strong>store_superdir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – with absolute path to the GF store super directory</li>
 <li><strong>crust_ind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – with the index to the GF store</li>
 <li><strong>sources</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pscmp.RectangularSource</span></code>) – to be used in generating the synthetic displacements</li>
@@ -5032,8 +5106,8 @@ values are <code class="xref py py-class docutils literal notranslate"><span cla
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
-<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of synthetic displacements of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 1)</li>
+<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of synthetic displacements of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 1)</li>
 </ul>
 </td>
 </tr>
@@ -5088,12 +5162,12 @@ values are <code class="xref py py-class docutils literal notranslate"><span cla
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
+<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
 <li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – <ol class="arabic">
-<li>of synthetic waveforms of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+<li>of synthetic waveforms of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
 (n x nsamples)</li>
 <li>of start times of the first waveform samples
-<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 1)</li>
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 1)</li>
 </ol>
 </li>
 </ul>
@@ -5169,6 +5243,7 @@ Input order does not matter anymore! Did in previous version.</p>
 <li><strong>sources</strong> (<em>List</em>) – containing <a class="reference external" href="https://pyrocko.org/v0.3/library/reference/gf.html#pyrocko.gf.seismosizer.Source" title="(in Pyrocko v0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.seismosizer.Source</span></code></a> Objects</li>
 <li><strong>targets</strong> (<em>List</em>) – containing <code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.gf.seismosizer.Target</span></code> Objects</li>
 <li><strong>arrival_taper</strong> (<a class="reference internal" href="#heart.ArrivalTaper" title="heart.ArrivalTaper"><code class="xref py py-class docutils literal notranslate"><span class="pre">heart.ArrivalTaper</span></code></a>) – </li>
+<li><strong>arrival_times</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ǹumpy.NdArray</span></code>) – with synthetic arrival times wrt reference event</li>
 <li><strong>filterer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">heart.Filterer</span></code>) – </li>
 </ul>
 </td>
@@ -5201,12 +5276,12 @@ values are <code class="xref py py-class docutils literal notranslate"><span cla
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
+<li><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
 <li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – <ol class="arabic">
-<li>of synthetic waveforms of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+<li>of synthetic waveforms of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
 (n x nsamples)</li>
 <li>of start times of the first waveform samples
-<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 1)</li>
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (n x 1)</li>
 </ol>
 </li>
 </ul>
@@ -5337,7 +5412,7 @@ Modified from pymc3 blocking.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">theano.tensor.Tensor</span></code></li>
+<li><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">theano.tensor.Tensor</span></code></li>
 <li><strong>intype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – defining the input type ‘tensor’ or ‘numpy’</li>
 </ul>
 </td>
@@ -5356,7 +5431,7 @@ Modified from pymc3 blocking.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ordering</strong> (<a class="reference internal" href="#utility.ListArrayOrdering" title="utility.ListArrayOrdering"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListArrayOrdering</span></code></a>) – </li>
-<li><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
+<li><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -5371,9 +5446,9 @@ Inverse operation of fmap.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>array</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>array</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>a_list</strong> – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>a_list</strong> – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></td>
 </tr>
@@ -5391,7 +5466,7 @@ it is filled with a low dummy value -999999.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dpt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dpt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -5409,11 +5484,11 @@ it is filled with a low dummy value -999999.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with size: n x 3</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with size: n x 3</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>array</strong> – single array comprising all the input arrays</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -5427,11 +5502,11 @@ it is filled with a low dummy value -999999.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>array</strong> – single array comprising all the input arrays</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -5445,7 +5520,7 @@ it is filled with a low dummy value -999999.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_arrays</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -5504,7 +5579,7 @@ it is filled with a low dummy value -999999.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> (<em>RedctangularSource</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with x, y, z coordinates of the center of the</li>
+<li><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> with x, y, z coordinates of the center of the</li>
 <li><em>fault</em></li>
 </ul>
 </td>
@@ -5525,7 +5600,7 @@ it is filled with a low dummy value -999999.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -5543,7 +5618,7 @@ it is filled with a low dummy value -999999.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -5704,11 +5779,11 @@ If not, find the nearest positive semi-definite matrix.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cov</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – symmetric covariance matrix</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cov</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – symmetric covariance matrix</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>cov</strong> – positive definite covariance matrix</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -5734,7 +5809,7 @@ If not, find the nearest positive semi-definite matrix.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>llk</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>llk</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -5907,7 +5982,7 @@ covariance matrix</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Covariance/correlation matrix</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Covariance/correlation matrix</li>
 <li><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Eigenvalue limit
 here set to accuracy of numbers in numpy, otherwise the resulting
 matrix, likely is still not going to be positive definite</li>
@@ -5917,7 +5992,7 @@ matrix, likely is still not going to be positive definite</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>near_cov</strong> – closest positive definite covariance/correlation matrix</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -5932,7 +6007,7 @@ the numbers!</p>
 
 <dl class="function">
 <dt id="utility.positions2idxs">
-<code class="descclassname">utility.</code><code class="descname">positions2idxs</code><span class="sig-paren">(</span><em>positions</em>, <em>cell_size</em>, <em>min_pos=0.0</em>, <em>backend=&lt;module 'numpy' from '/usr/local/lib/python3.5/dist-packages/numpy/__init__.py'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utility.html#positions2idxs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utility.positions2idxs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">utility.</code><code class="descname">positions2idxs</code><span class="sig-paren">(</span><em>positions</em>, <em>cell_size</em>, <em>min_pos=0.0</em>, <em>backend=&lt;module 'numpy' from '/usr/local/lib/python3.5/dist-packages/numpy/__init__.py'&gt;</em>, <em>dtype='int16'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utility.html#positions2idxs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utility.positions2idxs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return index to a grid with a given cell size.npatches</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -5942,6 +6017,7 @@ the numbers!</p>
 <li><strong>positions</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.NdArray</span></code> float) – of positions [km]</li>
 <li><strong>cell_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – size of grid cells</li>
 <li><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
+<li><strong>dtype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – data type of returned array, default: int16</li>
 </ul>
 </td>
 </tr>
@@ -5960,7 +6036,7 @@ at least that precision and backtransform.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Covariance/correlation matrix</li>
+<li><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>) – Covariance/correlation matrix</li>
 <li><strong>epsilon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a>) – Eigenvalue limit
 here set to accuracy of numbers in numpy, otherwise the resulting
 matrix, likely is still not going to be positive definite</li>
@@ -5970,7 +6046,7 @@ matrix, likely is still not going to be positive definite</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>near_cov</strong> – closest positive definite covariance/correlation matrix</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -5988,7 +6064,7 @@ matrix, likely is still not going to be positive definite</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> 1-d) – containing data to calculate stds from</li>
+<li><strong>data</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> 1-d) – containing data to calculate stds from</li>
 <li><strong>window_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – sample size of running window</li>
 <li><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – see numpy.convolve for modes</li>
 </ul>
@@ -5997,7 +6073,7 @@ matrix, likely is still not going to be positive definite</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">with stds, size data.size - window_size + 1</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> 1-d</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> 1-d</p>
 </td>
 </tr>
 </tbody>
@@ -6245,7 +6321,7 @@ a reference event.</p>
 
 <dl class="function">
 <dt id="utility.weed_targets">
-<code class="descclassname">utility.</code><code class="descname">weed_targets</code><span class="sig-paren">(</span><em>targets</em>, <em>stations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utility.html#weed_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utility.weed_targets" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">utility.</code><code class="descname">weed_targets</code><span class="sig-paren">(</span><em>targets</em>, <em>stations</em>, <em>discard_targets=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utility.html#weed_targets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utility.weed_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Throw out targets belonging to stations that are not in the
 stations list. Keeps list orders and returns new list!</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -6340,6 +6416,13 @@ stations list. Keeps list orders and returns new list!</p>
 <em class="property">♦ </em><code class="descname">varnames</code><a class="headerlink" href="#plotting.PlotOptions.varnames" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">pyrocko.guts.Any</span></code> objects, <em>optional</em>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">[]</span></code></p>
 <p>Names of variables to plot</p>
+</dd></dl>
+
+<dl class="gattribute">
+<dt id="plotting.PlotOptions.nensemble">
+<em class="property">♦ </em><code class="descname">nensemble</code><a class="headerlink" href="#plotting.PlotOptions.nensemble" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <em>default:</em> <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
+<p>Number of draws from the PPD to display fuzzy results.</p>
 </dd></dl>
 
 </dd></dl>
@@ -6534,9 +6617,9 @@ Returns Diff_IFG objects.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="inputf.load_and_blacklist_GPS">
-<code class="descclassname">inputf.</code><code class="descname">load_and_blacklist_GPS</code><span class="sig-paren">(</span><em>datadir</em>, <em>filename</em>, <em>blacklist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#load_and_blacklist_GPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.load_and_blacklist_GPS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load ascii GPS data, apply blacklist and initialise targets.</p>
+<dt id="inputf.load_and_blacklist_gnss">
+<code class="descclassname">inputf.</code><code class="descname">load_and_blacklist_gnss</code><span class="sig-paren">(</span><em>datadir</em>, <em>filename</em>, <em>blacklist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#load_and_blacklist_gnss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.load_and_blacklist_gnss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load ascii GNSS data, apply blacklist and initialise targets.</p>
 </dd></dl>
 
 <dl class="function">
@@ -6546,8 +6629,8 @@ Returns Diff_IFG objects.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="inputf.load_ascii_gps">
-<code class="descclassname">inputf.</code><code class="descname">load_ascii_gps</code><span class="sig-paren">(</span><em>filedir</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#load_ascii_gps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.load_ascii_gps" title="Permalink to this definition">¶</a></dt>
+<dt id="inputf.load_ascii_gnss">
+<code class="descclassname">inputf.</code><code class="descname">load_ascii_gnss</code><span class="sig-paren">(</span><em>filedir</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#load_ascii_gnss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.load_ascii_gnss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load ascii file columns containing:
 station name, Lon, Lat, ve, vn, vu, sigma_ve, sigma_vn, sigma_vu
 location [decimal deg]
@@ -6558,7 +6641,7 @@ measurement unit [mm/yr]</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#heart.GPSDataset" title="heart.GPSDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">heart.GPSDataset</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#heart.GNSSDataset" title="heart.GNSSDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">heart.GNSSDataset</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -6566,7 +6649,7 @@ measurement unit [mm/yr]</p>
 
 <dl class="function">
 <dt id="inputf.load_data_traces">
-<code class="descclassname">inputf.</code><code class="descname">load_data_traces</code><span class="sig-paren">(</span><em>datadir</em>, <em>stations</em>, <em>load_channels=[]</em>, <em>name_prefix=None</em>, <em>data_format='mseed'</em>, <em>divider='-'</em>, <em>convert=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#load_data_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.load_data_traces" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">inputf.</code><code class="descname">load_data_traces</code><span class="sig-paren">(</span><em>datadir</em>, <em>stations</em>, <em>load_channels=[]</em>, <em>name_prefix=None</em>, <em>name_suffix=None</em>, <em>data_format='mseed'</em>, <em>divider='-'</em>, <em>convert=False</em>, <em>no_network=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#load_data_traces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.load_data_traces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load data traces for the given stations from datadir.</p>
 </dd></dl>
 
@@ -6622,7 +6705,7 @@ Updates channels of stations in place!</p>
 
 <dl class="function">
 <dt id="inputf.setup_stations">
-<code class="descclassname">inputf.</code><code class="descname">setup_stations</code><span class="sig-paren">(</span><em>lats</em>, <em>lons</em>, <em>names</em>, <em>networks</em>, <em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#setup_stations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.setup_stations" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">inputf.</code><code class="descname">setup_stations</code><span class="sig-paren">(</span><em>lats</em>, <em>lons</em>, <em>names</em>, <em>networks</em>, <em>event</em>, <em>rotate=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inputf.html#setup_stations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#inputf.setup_stations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup station objects, based on station coordinates and reference event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

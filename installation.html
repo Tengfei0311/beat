@@ -389,9 +389,13 @@ framework to efficiently store and access Greens Functions.:</p>
 <div class="section" id="openmpi">
 <h3>OpenMPI<a class="headerlink" href="#openmpi" title="Permalink to this headline">¶</a></h3>
 <p>For the Parallel Tempering algorithm OpenMPI and the python
-bindings are required.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">mpi4py</span>
+bindings are required. If you do not have any MPI library installed, this needs to be installed first.
+To install openmpi:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span> <span class="n">openmpi</span><span class="o">-</span><span class="nb">bin</span>
+</pre></div>
+</div>
+<p>Finally, the python wrapper:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">mpi4py</span>
 </pre></div>
 </div>
 </div>
