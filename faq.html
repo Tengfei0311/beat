@@ -117,18 +117,22 @@ In such a case the default compilation flags of theano may be overwritten. This 
 <div class="line"><strong>5. Upgrading BEAT from beta</strong></div>
 </div>
 <p>Unfortunately, some incompatibility arose from beta to version 1.0. Finite fault projects that have been sampled and created using the beta version will need to undergo some manual changes by the user to be loadable under version 1.0.</p>
-<ol class="arabic simple">
-<li>Rename config_ffo.yaml to config_ffi.yaml</li>
-<li>Rename “$project_folder/ffo” to “$project_folder/ffi”</li>
-<li>To update the config file run:</li>
+<ol class="arabic">
+<li><p class="first">Rename config_ffo.yaml to config_ffi.yaml</p>
+</li>
+<li><p class="first">Rename “$project_folder/ffo” to “$project_folder/ffi”</p>
+</li>
+<li><p class="first">To update the config file run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>beat update $project_folder --mode=ffi  # (--diff to display updates first)
+</pre></div>
+</div>
+</li>
+<li><p class="first">According to the $datatypes that were included in the project, recreate the fault geometry with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>beat build_gfs $project_folder --mode=ffi --force --datatypes=$datatypes
+</pre></div>
+</div>
+</li>
 </ol>
-<blockquote>
-<div>beat update $project_folder –mode=ffi  # (–diff to display updates first)</div></blockquote>
-<ol class="arabic simple" start="4">
-<li>According to the $datatypes that were included in the project, recreate the fault geometry with:</li>
-</ol>
-<blockquote>
-<div>beat build_gfs $project_folder –mode=ffi –force –datatypes=$datatypes</div></blockquote>
 </div>
 
 
