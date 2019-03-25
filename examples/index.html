@@ -2,22 +2,27 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Scenarios &#8212; beat 1.0beta documentation</title>
+    <title>Examples &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Scenario 0: Regional Full Moment Tensor" href="FullMT_regional.html" />
+    <link rel="next" title="Example 1: Regional Full Moment Tensor" href="FullMT_regional.html" />
     <link rel="prev" title="Getting started with BEAT" href="../getting_started.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
@@ -47,7 +52,8 @@
     <img src="https://pyrocko.org/pwk/piwik.php?idsite=1&rec=1" style="border:0" alt="" />
     </noscript>
 
-  </head><body>
+  </head>
+  <body>
 
     <div class="related">
       <h3>Navigation</h3>
@@ -71,22 +77,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="scenarios">
-<h1>Scenarios<a class="headerlink" href="#scenarios" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <p>To get familiar with the basic functionality of BEAT we provide scenarios that can be followed step by step.
-The example scenarios are located in the directory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">examples</span>
+The examples are located in the directory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">examples</span>
 </pre></div>
 </div>
 <p>In the following tutorials we will use synthetic example data.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="FullMT_regional.html">Scenario 0: Regional Full Moment Tensor</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="FullMT_regional.html">Example 1: Regional Full Moment Tensor</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#clone-project">Clone project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#calculate-greens-functions">Calculate Greens Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#data-windowing-and-optimization-setup">Data windowing and optimization setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#sample-the-solution-space">Sample the solution space</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#restarting-sampling">Restarting sampling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#summarize-the-results">Summarize the results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#plotting">Plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html#seismic-noise-estimation">Seismic noise estimation</a></li>
@@ -95,10 +100,10 @@ The example scenarios are located in the directory:</p>
 </li>
 </ul>
 </div>
-<p>In the following examples we will use real data of the 2009 L’aquila earthquake.</p>
+<p>In the following examples we will use real data of the 2009 L’Aquila earthquake.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Rectangular.html">Scenario I: Rectangular source</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="Rectangular.html">Example 2: Rectangular source</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Rectangular.html#clone-project">Clone project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Rectangular.html#calculate-greens-functions">Calculate Greens Functions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Rectangular.html#geodetic">Geodetic</a></li>
@@ -110,43 +115,44 @@ The example scenarios are located in the directory:</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Rectangular.html#sample-the-solution-space">Sample the solution space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rectangular.html#restarting-sampling">Restarting sampling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Rectangular.html#summarize-and-plotting">Summarize and plotting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Rectangular.html#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="FFO_static.html">Scenario II: static finite-fault optimization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html#init">Init</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html#calculate-greens-functions">Calculate Greens Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html#optimization-setup">Optimization setup</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="FFO_static.html#hierarchicals">Hierarchicals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="FFO_static.html#priors">Priors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="FFO_static.html#regularization">Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FFI_static.html">Example 3: static finite-fault optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html#init">Init</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html#calculate-greens-functions">Calculate Greens Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html#optimization-setup">Optimization setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="FFI_static.html#hierarchicals">Hierarchicals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="FFI_static.html#priors">Priors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="FFI_static.html#regularization">Regularization</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html#sample-the-solution-space">Sample the solution space</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="FFO_static.html#markov-chain-initialization">Markov Chain initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html#sample-the-solution-space">Sample the solution space</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="FFI_static.html#markov-chain-initialization">Markov Chain initialization</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html#summarize-and-plotting">Summarize and plotting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html#references">References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html#summarize-and-plotting">Summarize and plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="FFO_kinematic.html">Scenario III: kinematic finite-fault optimization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html#clone-config">Clone config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html#import-results">Import results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html#calculate-green-s-functions">Calculate Green’s Functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="FFO_kinematic.html#elementary-gfs">Elementary GFs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FFI_kinematic.html">Example 4: kinematic finite-fault optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html#clone-config">Clone config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html#import-results">Import results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html#calculate-green-s-functions">Calculate Green’s Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="FFI_kinematic.html#elementary-gfs">Elementary GFs</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html#data-windowing">Data windowing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="FFO_kinematic.html#gf-library">GF Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html#data-windowing">Data windowing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="FFI_kinematic.html#gf-library">GF Library</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html#sample-the-solution-space">Sample the solution space</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="FFO_kinematic.html#markov-chain-initialization">Markov Chain initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html#sample-the-solution-space">Sample the solution space</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="FFI_kinematic.html#markov-chain-initialization">Markov Chain initialization</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html#summarize-and-plotting">Summarize and plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html#summarize-and-plotting">Summarize and plotting</a></li>
 </ul>
 </li>
 </ul>
@@ -167,11 +173,11 @@ The example scenarios are located in the directory:</p>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Scenarios</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html">Scenario 0: Regional Full Moment Tensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Scenario I: Rectangular source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_static.html">Scenario II: static finite-fault optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFO_kinematic.html">Scenario III: kinematic finite-fault optimization</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html">Example 1: Regional Full Moment Tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 2: Rectangular source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 3: static finite-fault optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 4: kinematic finite-fault optimization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>
@@ -193,7 +199,7 @@ The example scenarios are located in the directory:</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="FullMT_regional.html" title="Scenario 0: Regional Full Moment Tensor"
+          <a href="FullMT_regional.html" title="Example 1: Regional Full Moment Tensor"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../getting_started.html" title="Getting started with BEAT"
@@ -203,7 +209,7 @@ The example scenarios are located in the directory:</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Hannes Vasyura-Bathke.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

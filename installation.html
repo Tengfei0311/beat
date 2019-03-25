@@ -2,19 +2,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Detailed Installation instructions &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Updating beat" href="updating.html" />
@@ -47,7 +52,8 @@
     <img src="https://pyrocko.org/pwk/piwik.php?idsite=1&rec=1" style="border:0" alt="" />
     </noscript>
 
-  </head><body>
+  </head>
+  <body>
 
     <div class="related">
       <h3>Navigation</h3>
@@ -73,23 +79,23 @@
             
   <div class="section" id="detailed-installation-instructions">
 <h1>Detailed Installation instructions<a class="headerlink" href="#detailed-installation-instructions" title="Permalink to this headline">¶</a></h1>
-<p>BEAT can be installed on any Unix based system with python&gt;3.5
+<p>BEAT can be installed on any Unix based system with python&gt;=3.5
 that supports its prerequisites.</p>
 <p>For any user who has no user rights on the machine where BEAT is supposed to be installed, please add –user at the end of each sudo command, e.g.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
 </pre></div>
 </div>
 <div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>First of all please download the beat source code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>  <span class="c1"># or whereever you keep the packages</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>  <span class="c1"># or whereever you keep the packages</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">hvasbath</span><span class="o">/</span><span class="n">beat</span>
 </pre></div>
 </div>
 <p>The package includes scripts that help setting up and testing the following
 optimizations of your numerics libraries.</p>
 <p>Then we will need a fortran compiler and the python developers library:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span> <span class="n">gfortran</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span> <span class="n">gfortran</span>
 </pre></div>
 </div>
 <p>BEAT does many intensive calculations, which is why we need to get as much as
@@ -108,7 +114,7 @@ For all the heavy details I refer to these links:</p>
 <h3>OpenBlas<a class="headerlink" href="#openblas" title="Permalink to this headline">¶</a></h3>
 <p>If the OpenBlas library is compiled locally, it is optimized for your machine
 and speeds up the calculations:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>  <span class="c1"># or where you keep your source files</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>  <span class="c1"># or where you keep your source files</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">xianyi</span><span class="o">/</span><span class="n">OpenBLAS</span>
 <span class="n">cd</span> <span class="n">OpenBLAS</span>
 <span class="n">make</span> <span class="n">FC</span><span class="o">=</span><span class="n">gfortran</span>
@@ -118,23 +124,23 @@ and speeds up the calculations:</p>
 <p>Now we have to tell the system where to find the new OpenBLAS library.
 In the directory /etc/ld.so.conf.d/ should be a file <cite>libc.conf</cite> containing
 the line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span>
 </pre></div>
 </div>
 <p>If it is there, fine. If not, you have to create it.</p>
 <p>If you decided to install OpenBlas in a totally different directory you have to
 create a file <cite>openblas.conf</cite> containing your custom_path:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">custom_path</span><span class="o">/</span><span class="n">lib</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">custom_path</span><span class="o">/</span><span class="n">lib</span>
 </pre></div>
 </div>
 <p>In both cases, either only checking if the files are there or creating the new
 file with the path; you have to do:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ldconfig</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ldconfig</span>
 </pre></div>
 </div>
 <p>Alternatively, you could add your /custom_path/lib to the $LD_LIBRARY_PATH in
 your .bashrc or .cshrc in the homedirectory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export LD_LIBRARY_PATH=/custom_path/lib:$LD_LIBRARY_PATH
+<div class="highlight-default"><div class="highlight"><pre><span></span>export LD_LIBRARY_PATH=/custom_path/lib:$LD_LIBRARY_PATH
 </pre></div>
 </div>
 </div>
@@ -142,25 +148,25 @@ your .bashrc or .cshrc in the homedirectory:</p>
 <h3>Numpy<a class="headerlink" href="#numpy" title="Permalink to this headline">¶</a></h3>
 <p>This following step is completely optional and one may decide to use a standard pip numpy package.
 Building numpy from source requires cython:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">cython</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">cython</span>
 </pre></div>
 </div>
 <p>If you compile numpy locally against the previously installed OpenBlas
 library you can gain significant speedup. For my machine it resulted
 in a speed-up of the numpy related calculations by a factor of at least 3.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">numpy</span><span class="o">/</span><span class="n">numpy</span>
 <span class="n">cd</span> <span class="n">numpy</span>
 </pre></div>
 </div>
 <p>Per default, the current developers branch is being installed. We want to
 install one of the most recent stable branches:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">v1</span><span class="o">.</span><span class="mf">17.1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">v1</span><span class="o">.</span><span class="mf">17.1</span>
 </pre></div>
 </div>
 <p>Next, create a configuration file <cite>site.cfg</cite> that tells numpy where to find the
 previously installed OpenBlas library:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">default</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">default</span><span class="p">]</span>
 <span class="n">include_dirs</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">include</span>
 <span class="n">library_dirs</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span>
 
@@ -174,24 +180,24 @@ previously installed OpenBlas library:</p>
 </pre></div>
 </div>
 <p>To make sure everything is working you should run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">config</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">config</span>
 </pre></div>
 </div>
 <p>If everything worked ok,i.e. no mention of the ATLAS library, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
 </pre></div>
 </div>
 <p>Finally:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
 <p>Test the performance and if everything works fine:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
 <span class="n">python3</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">numpy_test</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 <p>Depending on your hardware something around these numbers should be fine!:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dotted</span> <span class="n">two</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span> <span class="n">matrices</span> <span class="ow">in</span> <span class="mf">73.6</span> <span class="n">ms</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dotted</span> <span class="n">two</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span> <span class="n">matrices</span> <span class="ow">in</span> <span class="mf">73.6</span> <span class="n">ms</span>
 <span class="n">dotted</span> <span class="n">two</span> <span class="p">(</span><span class="mi">4000</span><span class="p">)</span> <span class="n">vectors</span> <span class="ow">in</span> <span class="mf">10.82</span> <span class="n">us</span>
 <span class="n">SVD</span> <span class="n">of</span> <span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="mf">9.939</span> <span class="n">s</span>
 <span class="n">Eigendecomp</span> <span class="n">of</span> <span class="p">(</span><span class="mi">1500</span><span class="p">,</span><span class="mi">1500</span><span class="p">)</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="mf">36.625</span> <span class="n">s</span>
@@ -210,7 +216,7 @@ to configure your theano to efficiently use your GPU. Even if you dont plan to
 use your GPU, these instructions will help boosting your CPU performance as
 well.</p>
 <p>For the bleeding edge installation do:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Theano</span><span class="o">/</span><span class="n">Theano</span>
 <span class="n">cd</span> <span class="n">Theano</span>
 <span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
@@ -228,7 +234,7 @@ without including this, but the performance increase (below)
 will convince you to do so ;) .</p>
 <p>Download the amdlibm package <a class="reference external" href="https://developer.amd.com/amd-cpu-libraries/amd-math-library-libm/">here</a> according to your system.</p>
 <p>For Linux based systems if you have admin rights (with $ROOT=/usr) do</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tar -xvfz amdlibm-3.1-lin64.tar.gz
+<div class="highlight-default"><div class="highlight"><pre><span></span>tar -xvfz amdlibm-3.1-lin64.tar.gz
 cd amdlibm-3.1-lin64
 cp lib/*/* $ROOT/lib64/
 cp include/amdlibm.h $ROOT/include/
@@ -238,7 +244,7 @@ cp include/amdlibm.h $ROOT/include/
 $ROOT = /custom_path/ you need to add this path again to your environment
 variables $LD_LIBRARY_PATH and $LIBRARY_PATH, for example if
 $ROOT=/usr/local/</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export LIBRARY_PATH=/usr/local/lib64:$LIBRARY_PATH
+<div class="highlight-default"><div class="highlight"><pre><span></span>export LIBRARY_PATH=/usr/local/lib64:$LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
 export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 </pre></div>
@@ -249,7 +255,7 @@ export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
 <p>In your home directory create a file <cite>.theanorc</cite>.
 The file has to be edited depending on the type of processing unit that is
 intended to be used. Set amdlibm = True if you did the optional step!</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">blas</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">blas</span><span class="p">]</span>
 <span class="n">ldflags</span> <span class="o">=</span> <span class="o">-</span><span class="n">L</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span> <span class="o">-</span><span class="n">lopenblas</span> <span class="o">-</span><span class="n">lgfortran</span>
 
 <span class="p">[</span><span class="n">nvcc</span><span class="p">]</span>
@@ -265,17 +271,17 @@ intended to be used. Set amdlibm = True if you did the optional step!</p>
 </div>
 </div>
 </div>
-<div class="section" id="gpu-setup">
-<h4>GPU setup<a class="headerlink" href="#gpu-setup" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="gpu-setup-deprecated">
+<h4>GPU setup DEPRECATED<a class="headerlink" href="#gpu-setup-deprecated" title="Permalink to this headline">¶</a></h4>
 <p>Only for Theano version &lt; 0.9.
 For NVIDIA graphics cards there is the CUDA package that needs to be installed.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nvidia</span><span class="o">-</span><span class="n">current</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nvidia</span><span class="o">-</span><span class="n">current</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nvdidia</span><span class="o">-</span><span class="n">cuda</span><span class="o">-</span><span class="n">toolkit</span>
 </pre></div>
 </div>
 <p>Restart the system.
 To check if the installation worked well type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nvidia</span><span class="o">-</span><span class="n">smi</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">nvidia</span><span class="o">-</span><span class="n">smi</span>
 </pre></div>
 </div>
 <p>This should display stats about your graphics card model.</p>
@@ -284,7 +290,7 @@ For doing so we have to add the library folder to the $LD_LIBRARY_PATH and the
 CUDA root direct to the $PATH.</p>
 <p>In bash you can do it like this, e.g. (depending on the path to your cuda
 installation) add to your .bashrc file in the home directory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export CUDA_LIB=&quot;/usr/local/cuda-5.5/lib64&quot;
+<div class="highlight-default"><div class="highlight"><pre><span></span>export CUDA_LIB=&quot;/usr/local/cuda-5.5/lib64&quot;
 export CUDA_ROOT=&quot;/usr/local/cuda-5.5/bin&quot;
 
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$CUDA_LIB
@@ -294,7 +300,7 @@ export PATH=${PATH}:$CUDA_ROOT
 <p>Theano also supports OpenCL, however, I haven’t set it up myself so far and
 cannot provide instructions on how to do it.</p>
 <p>In your home directory create a file <cite>.theanorc</cite> with these settings:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">blas</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">blas</span><span class="p">]</span>
 <span class="n">ldflags</span> <span class="o">=</span> <span class="o">-</span><span class="n">L</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span> <span class="o">-</span><span class="n">lopenblas</span> <span class="o">-</span><span class="n">lgfortran</span>
 
 <span class="p">[</span><span class="n">nvcc</span><span class="p">]</span>
@@ -310,11 +316,11 @@ cannot provide instructions on how to do it.</p>
 <h4>Check performance<a class="headerlink" href="#check-performance" title="Permalink to this headline">¶</a></h4>
 <p>To check the performance of the CPU or GPU and whether the GPU is being used
 as intended:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
 </pre></div>
 </div>
 <p>Using the CPU (amdlibm = False):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
 
 <span class="p">[</span><span class="n">Elemwise</span><span class="p">{</span><span class="n">exp</span><span class="p">,</span><span class="n">no_inplace</span><span class="p">}(</span><span class="o">&lt;</span><span class="n">TensorType</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span><span class="o">&gt;</span><span class="p">)]</span>
 <span class="n">Looping</span> <span class="mi">1000</span> <span class="n">times</span> <span class="n">took</span> <span class="mf">2.717895</span> <span class="n">seconds</span>
@@ -324,7 +330,7 @@ as intended:</p>
 </pre></div>
 </div>
 <p>Using the CPU (amdlibm = True):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">cpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
 
 <span class="p">[</span><span class="n">Elemwise</span><span class="p">{</span><span class="n">exp</span><span class="p">,</span><span class="n">no_inplace</span><span class="p">}(</span><span class="o">&lt;</span><span class="n">TensorType</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span><span class="o">&gt;</span><span class="p">)]</span>
 <span class="n">Looping</span> <span class="mi">1000</span> <span class="n">times</span> <span class="n">took</span> <span class="mf">0.703979</span> <span class="n">seconds</span>
@@ -335,7 +341,7 @@ as intended:</p>
 </div>
 <p>That’s a speedup of 3.86! On the ELEMENTARY operations like exp(), log(), cos() …</p>
 <p>Using the GPU:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">gpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">THEANO_FLAGS</span><span class="o">=</span><span class="n">mode</span><span class="o">=</span><span class="n">FAST_RUN</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">gpu</span><span class="p">,</span><span class="n">floatX</span><span class="o">=</span><span class="n">float32</span> <span class="n">python3</span> <span class="n">src</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">gpu_test</span><span class="o">.</span><span class="n">py</span>
 
 <span class="n">Using</span> <span class="n">gpu</span> <span class="n">device</span> <span class="mi">0</span><span class="p">:</span> <span class="n">Quadro</span> <span class="mi">5000</span> <span class="p">(</span><span class="n">CNMeM</span> <span class="ow">is</span> <span class="n">disabled</span><span class="p">,</span> <span class="n">cuDNN</span> <span class="ow">not</span> <span class="n">available</span><span class="p">)</span>
 <span class="p">[</span><span class="n">GpuElemwise</span><span class="p">{</span><span class="n">exp</span><span class="p">,</span><span class="n">no_inplace</span><span class="p">}(</span><span class="o">&lt;</span><span class="n">CudaNdarrayType</span><span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span><span class="o">&gt;</span><span class="p">),</span>
@@ -364,11 +370,11 @@ can be found on the respective websites:</p>
 <h3>pymc3<a class="headerlink" href="#pymc3" title="Permalink to this headline">¶</a></h3>
 <p>Pymc3 is a framework that provides various optimization algorithms allows and
 allows to build Bayesian models. For the last stable release:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pymc3</span><span class="o">==</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pymc3</span><span class="o">==</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">1</span>
 </pre></div>
 </div>
 <p>For the bleeding edge:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pymc</span><span class="o">-</span><span class="n">devs</span><span class="o">/</span><span class="n">pymc3</span>
 <span class="n">cd</span> <span class="n">pymc3</span>
 <span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
@@ -379,7 +385,7 @@ allows to build Bayesian models. For the last stable release:</p>
 <h3>Pyrocko<a class="headerlink" href="#pyrocko" title="Permalink to this headline">¶</a></h3>
 <p>Pyrocko is an extensive library for seismological applications and provides a
 framework to efficiently store and access Greens Functions.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">.</span><span class="n">git</span> <span class="n">pyrocko</span>
 <span class="n">cd</span> <span class="n">pyrocko</span>
 <span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
@@ -391,18 +397,18 @@ framework to efficiently store and access Greens Functions.:</p>
 <p>For the Parallel Tempering algorithm OpenMPI and the python
 bindings are required. If you do not have any MPI library installed, this needs to be installed first.
 To install openmpi:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span> <span class="n">openmpi</span><span class="o">-</span><span class="nb">bin</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span> <span class="n">openmpi</span><span class="o">-</span><span class="nb">bin</span>
 </pre></div>
 </div>
 <p>Finally, the python wrapper:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">mpi4py</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">mpi4py</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="beat">
 <h3>BEAT<a class="headerlink" href="#beat" title="Permalink to this headline">¶</a></h3>
 <p>After these long and heavy installations, you can setup BEAT itself:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">src</span><span class="o">/</span><span class="n">beat</span>
 <span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
@@ -421,7 +427,7 @@ The original codes are packaged for windows and can be found
 <blockquote>
 <div>git clone &lt;url&gt;</div></blockquote>
 <p>For example to clone the github repository for QSEIS please execute:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">/</span><span class="n">fomosto</span><span class="o">-</span><span class="n">qseis</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pyrocko</span><span class="o">/</span><span class="n">fomosto</span><span class="o">-</span><span class="n">qseis</span>
 </pre></div>
 </div>
 <p>This also enables easy updating for potential future changes.</p>
@@ -468,7 +474,7 @@ The original codes are packaged for windows and can be found
 </li>
 <li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently asked questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
@@ -498,7 +504,7 @@ The original codes are packaged for windows and can be found
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Hannes Vasyura-Bathke.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

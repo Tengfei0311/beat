@@ -2,19 +2,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>models.seismic &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    
     <script type="text/javascript" src="../../_static/sidebar.js"></script>
-    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -45,7 +50,8 @@
     <img src="https://pyrocko.org/pwk/piwik.php?idsite=1&rec=1" style="border:0" alt="" />
     </noscript>
 
-  </head><body>
+  </head>
+  <body>
 
     <div class="related">
       <h3>Navigation</h3>
@@ -87,7 +93,7 @@
 <span class="kn">from</span> <span class="nn">pyrocko.trace</span> <span class="k">import</span> <span class="n">Trace</span>
 
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">theanof</span><span class="p">,</span> <span class="n">utility</span>
-<span class="kn">from</span> <span class="nn">beat.ffo</span> <span class="k">import</span> <span class="n">load_gf_library</span><span class="p">,</span> <span class="n">get_gf_prefix</span>
+<span class="kn">from</span> <span class="nn">beat.ffi</span> <span class="k">import</span> <span class="n">load_gf_library</span><span class="p">,</span> <span class="n">get_gf_prefix</span>
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">bconfig</span>
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">heart</span><span class="p">,</span> <span class="n">covariance</span> <span class="k">as</span> <span class="n">cov</span>
 <span class="kn">from</span> <span class="nn">beat.models.base</span> <span class="k">import</span> <span class="n">ConfigInconsistentError</span><span class="p">,</span> <span class="n">Composite</span>
@@ -756,7 +762,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">choppers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sweep_implementation</span> <span class="o">=</span> <span class="s1">&#39;c&#39;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="s1">&#39;ffo&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="s1">&#39;ffi&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gfpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">project_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">,</span> <span class="n">bconfig</span><span class="o">.</span><span class="n">linear_gf_dir_name</span><span class="p">)</span>
 
@@ -1107,7 +1113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started with BEAT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently asked questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
@@ -1131,7 +1137,7 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Hannes Vasyura-Bathke.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

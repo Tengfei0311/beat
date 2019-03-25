@@ -2,19 +2,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Getting started with BEAT &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Scenarios" href="examples/index.html" />
@@ -47,7 +52,8 @@
     <img src="https://pyrocko.org/pwk/piwik.php?idsite=1&rec=1" style="border:0" alt="" />
     </noscript>
 
-  </head><body>
+  </head>
+  <body>
 
     <div class="related">
       <h3>Navigation</h3>
@@ -78,11 +84,11 @@
 <p>The beat internal help can always be executed by typing ‘–help’ in the execution string.
 Also, by using the ‘tab’ button you can use automatic bash completion to see available commands and options.
 For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="o">--</span><span class="n">help</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 <p>Will display:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Usage: beat init &lt;event_name&gt; &lt;event_date &quot;YYYY-MM-DD&quot;&gt; [options]
+<div class="highlight-default"><div class="highlight"><pre><span></span>Usage: beat init &lt;event_name&gt; &lt;event_date &quot;YYYY-MM-DD&quot;&gt; [options]
 
 Create a new EQ model project, use only event name to skip catalog search.
 
@@ -96,7 +102,7 @@ Options:
   --datatypes=DATATYPES
                         Datatypes to include in the setup; &quot;geodetic,
                         seismic&quot;.
-  --mode=MODE           Inversion problem to solve; &quot;geometry&quot;, &quot;ffo&quot;,
+  --mode=MODE           Inversion problem to solve; &quot;geometry&quot;, &quot;ffi&quot;,
                         &quot;interseismic&quot; Default: &quot;geometry&quot;
   --source_type=SOURCE_TYPE
                         Source type to solve for; ExplosionSource&quot;,
@@ -128,7 +134,7 @@ Options:
 <h2>Initialise a new Modeling Project<a class="headerlink" href="#initialise-a-new-modeling-project" title="Permalink to this headline">¶</a></h2>
 <p>Each modeling project is initiated with the “beat init” command. There are many options that define the type of optimization, datatypes to include, sampling algorithm to use, number of sources, velocity model to use for the Greens Function calculations etc …</p>
 <p>For example to optimize for a Full Moment Tensor for the Landers EQ by using seismic data, with station dependend Greens Functions for P and S waves with the default sampling algorithm (Sequential Monte Carlo) run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">LandersEQ</span> <span class="mi">1992</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">individual_gfs</span> <span class="o">--</span><span class="n">n_sources</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">source_type</span><span class="o">=</span><span class="n">MTSource</span> <span class="o">--</span><span class="n">min_mag</span><span class="o">=</span><span class="mi">7</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">LandersEQ</span> <span class="mi">1992</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">28</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">individual_gfs</span> <span class="o">--</span><span class="n">n_sources</span><span class="o">=</span><span class="mi">1</span> <span class="o">--</span><span class="n">source_type</span><span class="o">=</span><span class="n">MTSource</span> <span class="o">--</span><span class="n">min_mag</span><span class="o">=</span><span class="mi">7</span>
 </pre></div>
 </div>
 <p>This will create project directory called LandersEQ in the current directory.
@@ -141,7 +147,7 @@ Within the directoy you will see that there have been two files created:</p>
 </div></blockquote>
 <p>The first file is a logging file where all the executed comments and outputs are written to. In case something goes wrong this log file helps to find the error.
 For now it contains:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>2018-01-04 16:15:06,696 - utility - INFO - Getting relevant events from the gCMT catalog for the dates:1992-06-27 00:00:00.000 - 1992-06-29 00:00:00.000
+<div class="highlight-default"><div class="highlight"><pre><span></span>2018-01-04 16:15:06,696 - utility - INFO - Getting relevant events from the gCMT catalog for the dates:1992-06-27 00:00:00.000 - 1992-06-29 00:00:00.000
 
 2018-01-04 16:15:07,097 - config - INFO - Added hyperparameter h_any_P_Z to config and model setup!
 2018-01-04 16:15:07,097 - config - INFO - Added hyperparameter h_any_S_Z to config and model setup!
@@ -156,7 +162,7 @@ This file can be read as is by the computer, therefore, it is important to keep 
 The content of this file is basically the serialised instance of the BEAT config class. At first the amount of content seems overwhelming, but once you are familiar with the variables you will find that there are not too many things that will need to be edited. Also we have to be aware that the problem we are going to try to solve is very complex, ergo a complex parameter file is somewhat understandable.
 To find a short explanation to each parameter and its format the reader is refered to the webpage of the <a class="reference external" href="https://hvasbath.github.io/beat/_modules/config.html#SeismicConfig">config</a> module.</p>
 <p>This example configuration file looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>--- !beat.BEATconfig
+<div class="highlight-default"><div class="highlight"><pre><span></span>--- !beat.BEATconfig
 name: LandersEQ
 date: &#39;1992-06-28&#39;
 event: !pf.Event
@@ -378,7 +384,7 @@ should consider to subsample it and to calculate the data-error-variance-covaria
 Once you are satisfied with your specifications please store the kite scenes in its native format as “numpy-npz containers”.</p>
 <p>In the $project_dir you find the config_geometry.yaml, where the geodetic_config variable ‘datadir’ points to the location where the data are stored.
 Under the ‘names’ variable, the names of the files of interest have to be entered (without the .npz and .yml suffixes). Afterwards, the following command has to be executed to import the data:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>beat import $project_dir
+<div class="highlight-default"><div class="highlight"><pre><span></span>beat import $project_dir
 </pre></div>
 </div>
 <p>The data are now accessible to beat as the file geodetic_data.pkl. In case it turns out the pre-processing (subsampling, covariance estimation) had to be repeated, the existing ‘geodetic_data.pkl’ file can be overwritten by adding the –force option to the import command above.</p>
@@ -386,7 +392,7 @@ Under the ‘names’ variable, the names of the files of interest have to be en
 <div class="section" id="gnss">
 <h4>GNSS<a class="headerlink" href="#gnss" title="Permalink to this headline">¶</a></h4>
 <p>The supported format for GNSS data is an ASCII file of the following format:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DOGG</span>  <span class="mf">10.0000</span>   <span class="mf">15.6546</span>   <span class="o">-</span><span class="mf">0.61</span>   <span class="mf">0.44</span>   <span class="mf">3.5900</span>     <span class="mf">0.18</span>  <span class="mf">0.15</span>  <span class="mf">0.7000</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DOGG</span>  <span class="mf">10.0000</span>   <span class="mf">15.6546</span>   <span class="o">-</span><span class="mf">0.61</span>   <span class="mf">0.44</span>   <span class="mf">3.5900</span>     <span class="mf">0.18</span>  <span class="mf">0.15</span>  <span class="mf">0.7000</span>
 <span class="n">CATT</span>  <span class="mf">135.0000</span>  <span class="o">-</span><span class="mf">45.000</span>   <span class="mf">0.15</span>    <span class="o">-</span><span class="mf">0.57</span>  <span class="mf">1.6100</span>     <span class="mf">0.23</span>  <span class="mf">0.20</span>  <span class="mf">0.9000</span>
 <span class="n">COOW</span>  <span class="mf">45.0000</span>   <span class="mf">98.0000</span>   <span class="mf">12.20</span>   <span class="mf">15.01</span>  <span class="mf">22.8600</span>    <span class="mf">0.93</span>  <span class="mf">0.78</span>  <span class="mf">3.5700</span>
 </pre></div>
@@ -411,11 +417,11 @@ systems.</p>
 <p>The beatdown command for downloading FDSN data can be executed in different formats, e.g. by giving an event time or an event name.
 It will download all wanted data in a given radius around the origin. For a complete list of input options
 please use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">--</span><span class="n">help</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 <p>An example line to download and prepare the data for the 2009 L’Aquila earthquake would be:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">project_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">project_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span>
 </pre></div>
 </div>
 <p>This command downloads the available data for the event at time 2009-04-06 01:32:39 in a
@@ -427,13 +433,13 @@ based on data quality and separation of stations. The option –nstations-wanted
 weeding and tries to find a suitable subset of stations close to the number provided. The actual resulting
 station number might vary based on station distribution and quality. For the above
 example we might want to use around 60 stations, so the command line for that would look like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">home_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">nstations</span><span class="o">-</span><span class="n">wanted</span><span class="o">=</span><span class="mi">60</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beatdown</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">home_directory</span> <span class="s2">&quot;2009-04-06 01:32:39&quot;</span> <span class="mf">1000.</span> <span class="mf">0.001</span> <span class="mf">5.</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">nstations</span><span class="o">-</span><span class="n">wanted</span><span class="o">=</span><span class="mi">60</span>
 </pre></div>
 </div>
 <p>To convert a distance in degree, e.g. 30 and 90 degrees for minimum and maximum data retrieval
 radii (rmin and rmax), you can use pyrockos cake function inbuilt converter factor d2m.
 The conversion than could look like this to retrieve rmin and rmax radii in km:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">cake</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">cake</span>
 <span class="n">km</span> <span class="o">=</span> <span class="mf">1000.</span>
 <span class="n">rmin</span> <span class="o">=</span> <span class="mf">30.</span><span class="o">*</span><span class="n">cake</span><span class="o">.</span><span class="n">d2m</span><span class="o">/</span><span class="n">km</span>
 <span class="n">rmax</span> <span class="o">=</span> <span class="mf">90.</span><span class="o">*</span><span class="n">cake</span><span class="o">.</span><span class="n">d2m</span><span class="o">/</span><span class="n">km</span>
@@ -445,12 +451,12 @@ The conversion than could look like this to retrieve rmin and rmax radii in km:<
 <p>The output of <a class="reference external" href="https://github.com/emolch/kiwi">autokiwi</a> is supported for automatic import of seismic data.</p>
 <p>To see a list of the supported data types ($ending) please see: <a class="reference external" href="https://pyrocko.org/docs/current/library/examples/trace_handling.html">Trace Handeling</a>
 or type.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="o">--</span><span class="n">help</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 <p>The traces should be named in the format ‘network.station..channel.$ending’
 In addition to these an ascii text file with the station information is needed of the format:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#network_name.station_name.location_name latitude[deg] longitude[deg] elevation[m] depth[m]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#network_name.station_name.location_name latitude[deg] longitude[deg] elevation[m] depth[m]</span>
 <span class="n">IU</span><span class="o">.</span><span class="n">TSUM</span><span class="o">.</span><span class="mi">10</span>            <span class="o">-</span><span class="mf">19.20220</span>       <span class="mf">17.58380</span>         <span class="mf">1260.0</span>            <span class="mf">0.0</span>
   <span class="n">BHE</span>             <span class="mi">90</span>              <span class="mi">0</span>              <span class="mi">1</span>   <span class="c1"># channel name azimuth[deg] dip[deg] gain \n</span>
   <span class="n">BHN</span>              <span class="mi">0</span>              <span class="mi">0</span>              <span class="mi">1</span>
@@ -475,7 +481,7 @@ How to do this based on some examples is shown <a class="reference external" hre
 pyrocko module to convert your obspy data into pyrocko data and obspy inventories to pyrocko stations.
 Once you have done this the standard pyrocko traces will need to be converted to beat trace objects, this is done simply, assuming that “traces”
 is a list of pyrocko trace objects, by:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">heart</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">heart</span>
 <span class="n">traces_beat</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">traces</span><span class="p">:</span>
     <span class="n">tr_beat</span><span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">SeismicDataset</span><span class="o">.</span><span class="n">from_pyrocko_trace</span><span class="p">(</span><span class="n">tr</span><span class="p">)</span>
@@ -483,7 +489,7 @@ is a list of pyrocko trace objects, by:</p>
 </pre></div>
 </div>
 <p>Once a list of traces and station objects exists it may be exported to the project directory (here path from example):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">utility</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">utility</span>
 
 <span class="n">seismic_outpath</span><span class="o">=</span><span class="s1">&#39;/home/vasyurhm/BEATS/LandersEQ/seismic_data.pkl&#39;</span>
 <span class="n">utility</span><span class="o">.</span><span class="n">dump_objects</span><span class="p">(</span><span class="n">seismic_outpath</span><span class="p">,</span> <span class="n">outlist</span><span class="o">=</span><span class="p">[</span><span class="n">stations</span><span class="p">,</span> <span class="n">data_traces</span><span class="p">])</span>
@@ -499,7 +505,7 @@ the structure in the configuration file changes. Thus after a code base upgrade 
 older configuration files cannot be read anymore. The program will raise an Error with the message
 that the configuration file has to be updated and how this can be done. However, it may be of interest to know
 before the actual update what is going to change. These changes can be displayed with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">update</span> <span class="o">&lt;</span><span class="n">project_directory</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">diff</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">update</span> <span class="o">&lt;</span><span class="n">project_directory</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">diff</span>
 </pre></div>
 </div>
 <p>An update screen that appears may look like this.</p>
@@ -509,7 +515,7 @@ before the actual update what is going to change. These changes can be displayed
 <p>Where omitting the “–diff” option will update the configuration file right away.</p>
 <p>An update of the configuration file is also necessary, if some of the hierarchical parameters are affected by some changes in the configuration file. For example by enabling temporal “station_corrections” in seismic setups or enabling “fit_ramp”
 for residual ramp estimation in the InSAR data.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">update</span> <span class="o">&lt;</span><span class="n">project_directory</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">diff</span> <span class="o">--</span><span class="n">parameters</span><span class="o">=</span><span class="s1">&#39;hierarchicals, hypers&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">update</span> <span class="o">&lt;</span><span class="n">project_directory</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">diff</span> <span class="o">--</span><span class="n">parameters</span><span class="o">=</span><span class="s1">&#39;hierarchicals, hypers&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -518,7 +524,7 @@ for residual ramp estimation in the InSAR data.:</p>
 <p>This section covers how to generate a custom Greens Function store for seismic data at a location of choice.
 First a new model project has to be created to generate the configuration file. As we have no specific event in mind
 we skip the catalog search by not specifiying the date.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">Cascadia</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span> <span class="o">--</span><span class="n">use_custom</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">Cascadia</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span> <span class="o">--</span><span class="n">use_custom</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -528,19 +534,19 @@ we skip the catalog search by not specifiying the date.:</p>
 <p>This will create a beat project folder named ‘Cascadia’ and a configuration file ‘config_geometry.yaml’.
 In this configuration file we may now edit the reference location and the velocity model to the specific model we
 received from a colleague or found in the literature.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">Cascadia</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">Cascadia</span>
 <span class="n">vi</span> <span class="n">config_geometry</span><span class="o">.</span><span class="n">yaml</span>
 </pre></div>
 </div>
 <p>This will open the configuration file in the vi editor.
 In lines 4-6 we find the reference event:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>event: !pf.Event
+<div class="highlight-default"><div class="highlight"><pre><span></span>event: !pf.Event
   lat: 0.0
   lon: 0.0
 </pre></div>
 </div>
 <p>In lines 160-165 we find the reference location:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>reference_location: !beat.heart.ReferenceLocation
+<div class="highlight-default"><div class="highlight"><pre><span></span>reference_location: !beat.heart.ReferenceLocation
   lat: 10.0
   lon: 10.0
   elevation: 0.0
@@ -552,7 +558,7 @@ In lines 4-6 we find the reference event:</p>
 For our example we set the reference location close to Vancouver, Canada as we want to study the Cascadia subduction zone.
 We ignore the ‘elevation’ and ‘depth’ attributes but we set the ‘station’ attribute, which determines the prefix of the name of the
 Greens Function store.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>reference_location: !beat.heart.ReferenceLocation
+<div class="highlight-default"><div class="highlight"><pre><span></span>reference_location: !beat.heart.ReferenceLocation
   lat: 49.28098
   lon: -123.12244
   elevation: 0.0
@@ -561,14 +567,14 @@ Greens Function store.</p>
 </pre></div>
 </div>
 <p>The events we want to study are going to be around Vancouver island, and we set the reference event coordinates accordingly:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>event: !pf.Event
+<div class="highlight-default"><div class="highlight"><pre><span></span>event: !pf.Event
   lat: 49.608839
   lon: -125.647683
 </pre></div>
 </div>
 <p>So far we determined the general location of the store, but now we need to specify the spatial dimensions of the grid.
 In lines 154-158 we find the respective parameters:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source_depth_min</span><span class="p">:</span> <span class="mf">0.0</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source_depth_min</span><span class="p">:</span> <span class="mf">0.0</span>
 <span class="n">source_depth_max</span><span class="p">:</span> <span class="mf">10.0</span>
 <span class="n">source_depth_spacing</span><span class="p">:</span> <span class="mf">1.0</span>
 <span class="n">source_distance_radius</span><span class="p">:</span> <span class="mf">20.0</span>
@@ -576,7 +582,7 @@ In lines 154-158 we find the respective parameters:</p>
 </pre></div>
 </div>
 <p>We are going to have stations in a distance of 500km and the events we are going to study are going to be located in a depth range of 5-40km depth so we update these values accordingly.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source_depth_min</span><span class="p">:</span> <span class="mf">5.0</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source_depth_min</span><span class="p">:</span> <span class="mf">5.0</span>
 <span class="n">source_depth_max</span><span class="p">:</span> <span class="mf">40.0</span>
 <span class="n">source_depth_spacing</span><span class="p">:</span> <span class="mf">1.0</span>
 <span class="n">source_distance_radius</span><span class="p">:</span> <span class="mf">500.0</span>
@@ -587,11 +593,11 @@ In lines 154-158 we find the respective parameters:</p>
 A description of the corner points to have in mind is <a class="reference external" href="https://pyrocko.org/docs/current/apps/fomosto/tutorial.html#considerations-for-real-world-applications">here</a>
 For example for a regional Full Moment Tensor inversion we want to optimize data up to 0.2 Hz. So a source grid of 1. km step size and 1. Hz ‘sample_rate’ seems a safe way to go.
 As we are in a regional setup we use QSEIS for the calculation of the Greens Functions, which we have to specify in line 166.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">code</span><span class="p">:</span> <span class="n">qseis</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">code</span><span class="p">:</span> <span class="n">qseis</span>
 </pre></div>
 </div>
 <p>In the lines 144-153 is the velocity model defined for which the Greens Functions are going to be calculated.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">custom_velocity_model</span><span class="p">:</span> <span class="o">|</span><span class="mi">2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">custom_velocity_model</span><span class="p">:</span> <span class="o">|</span><span class="mi">2</span>
       <span class="mf">0.</span>             <span class="mf">5.8</span>            <span class="mf">3.46</span>           <span class="mf">2.6</span>         <span class="mf">1264.</span>           <span class="mf">600.</span>
      <span class="mf">20.</span>             <span class="mf">5.8</span>            <span class="mf">3.46</span>           <span class="mf">2.6</span>         <span class="mf">1264.</span>           <span class="mf">600.</span>
      <span class="mf">20.</span>             <span class="mf">6.5</span>            <span class="mf">3.85</span>           <span class="mf">2.9</span>         <span class="mf">1283.</span>           <span class="mf">600.</span>
@@ -605,7 +611,7 @@ As we are in a regional setup we use QSEIS for the calculation of the Greens Fun
 </div>
 <p>The columns are ‘depth’, ‘p-wave velocity’, ‘s-wave velocity’, ‘density’, ‘Qp’, ‘Qs’. Here the values may be changed to a custom velociy.
 For example if we want to add another layer (from 20-25 km depth) between 20 and 35 km depth we would write:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">custom_velocity_model</span><span class="p">:</span> <span class="o">|</span><span class="mi">2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">custom_velocity_model</span><span class="p">:</span> <span class="o">|</span><span class="mi">2</span>
       <span class="mf">0.</span>             <span class="mf">5.8</span>            <span class="mf">3.46</span>           <span class="mf">2.6</span>         <span class="mf">1264.</span>           <span class="mf">600.</span>
      <span class="mf">20.</span>             <span class="mf">5.8</span>            <span class="mf">3.46</span>           <span class="mf">2.6</span>         <span class="mf">1264.</span>           <span class="mf">600.</span>
      <span class="mf">20.</span>             <span class="mf">6.1</span>            <span class="mf">3.54</span>           <span class="mf">2.7</span>         <span class="mf">1280.</span>           <span class="mf">600.</span>
@@ -624,7 +630,7 @@ For example if we want to add another layer (from 20-25 km depth) between 20 and
 <p class="first admonition-title">Note</p>
 <p>In case the standard earth-model should be used rather than a custom model the ‘custom_velocity_model’ attribute may be deleted.
 For the shallow crust one may decide to use the implemented crust2 model and to remove (potential) water layers. Lines 141-143:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">earth_model_name</span><span class="p">:</span> <span class="n">ak135</span><span class="o">-</span><span class="n">f</span><span class="o">-</span><span class="n">average</span><span class="o">.</span><span class="n">m</span>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">earth_model_name</span><span class="p">:</span> <span class="n">ak135</span><span class="o">-</span><span class="n">f</span><span class="o">-</span><span class="n">average</span><span class="o">.</span><span class="n">m</span>
 <span class="n">use_crust2</span><span class="p">:</span> <span class="n">false</span>
 <span class="n">replace_water</span><span class="p">:</span> <span class="n">false</span>
 </pre></div>
@@ -633,36 +639,36 @@ For the shallow crust one may decide to use the implemented crust2 model and to 
 <p>Then, we have to specify under line 135 ‘store_superdir’ the path to the directory where to save the GreensFunction store on disk.
 One should have in mind that for large grids with high sample-rate the stores might become several GigaBytes in size and may calculate a very long time!</p>
 <p>Lastly, we start the store calculation with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Cascadia</span> <span class="o">--</span><span class="n">execute</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Cascadia</span> <span class="o">--</span><span class="n">execute</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="how-to-setup-a-finite-fault-optimization">
 <h2>How to setup a Finite Fault Optimization<a class="headerlink" href="#how-to-setup-a-finite-fault-optimization" title="Permalink to this headline">¶</a></h2>
-<p>In a finite fault optimization (ffo) in beat a pre-defined RectangularSource (reference fault) is discretized into sub-patches.
+<p>In a finite fault optimization (ffi) in beat a pre-defined RectangularSource (reference fault) is discretized into sub-patches.
 Each of these sub-patches may have up to 4 parameters to be optimized for. In the static case (geodetic data) these are two slip-parameters
 perpendicular and parallel to the rake direction of the reference fault. In the kinematic case there is the temporal evolution of the rupture
 considered as well. So there are additional parameters: (1) the rupture nucleation point from which the rupture originates and propagates accross the fault
 following the eikonal equation, (2) the slip-duration and the rupture velocity accross each sub-patch. Each sub-patch is considered to be active only once.
 Optimizing for the rupture nucleation point makes the problem non-linear.</p>
 <p>The finite fault optimization in beat is considered to be a follow-up step of the geometry optimization for a RectangularSource. Which is why first, a new project directory to solve for the geometry of a RectangularSource has to be created. If the reader has setup such a problem already and finished the optimization for a the geometry the next command can be skipped.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">FFOproject</span> <span class="o">&lt;</span><span class="n">date</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">source_type</span><span class="o">=</span><span class="s1">&#39;RectangularSource&#39;</span> <span class="o">--</span><span class="n">n_sources</span><span class="o">=</span><span class="mi">1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">FFIproject</span> <span class="o">&lt;</span><span class="n">date</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">source_type</span><span class="o">=</span><span class="s1">&#39;RectangularSource&#39;</span> <span class="o">--</span><span class="n">n_sources</span><span class="o">=</span><span class="mi">1</span>
 </pre></div>
 </div>
 <p>If an optimization for the geometry of another source has been done or setup (e.g. MTSource), one can clone this project folder and replace the source object. This saves
 time for specification of the inputs. How to setup the configurations for a “geometry” optimization is discussed
 <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#regional-full-moment-tensor">here</a> exemplary on a MomentTensor for regional seismic data.
 The “source_type” argument will replace any existing source with the specified source for the new project. With the next project we replace the old source with a RectangularSource.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">clone</span> <span class="n">MTproject</span> <span class="n">FFOproject</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">source_type</span><span class="o">=</span><span class="s1">&#39;RectangularSource&#39;</span> <span class="o">--</span><span class="n">copy_data</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">clone</span> <span class="n">MTproject</span> <span class="n">FFIproject</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">source_type</span><span class="o">=</span><span class="s1">&#39;RectangularSource&#39;</span> <span class="o">--</span><span class="n">copy_data</span>
 </pre></div>
 </div>
 <p>Now the Green’s Functions store(s) have to be calculated for the “geometry” problem if not done so yet. Instructions on this and what to keep in mind are given <a class="reference external" href="https://hvasbath.github.io/beat/examples.html#calculate-greens-functions">here</a>. For illustration, the user might have done a MomentTensor optimization already on teleseismic data using Green’s Functions depth and distance sampling of 1km with 1Hz sampling. This may be accurate enough for this type of optimization, however for a finite fault optimization the aim is to resolve details of the rupture propagation and the slip distribution. So the setup parameters of the “geometry” Green’s Functions would need to be changed to higher resolution. A depth and distance sampling of 250m and 4Hz sample rate might be precise enough, if waveforms up to 1Hz are to be used in the optimization. Of course, these parameters depend on the problem setup and have to be adjusted individually for each problem!</p>
 <p>If the Green’s Functions for the “geometry” have been calculated previously with sufficient accuracy one can continue initialysing the configuration file for the finite fault optimization.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">FFOproject</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffo&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">init</span> <span class="n">FFIproject</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffi&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span>
 </pre></div>
 </div>
-<p>This will load the parameters from the “geometry” problem and import them to the “ffo” setup. The configuration file for the “ffo” mode is called “config_ffo.yaml” and should be in the same directory as the “config_geometry.yaml”. The parameters that are different in the “ffo” mode are under the “seismic_config.gf_config” of the mentioned configuration file.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>gf_config: !beat.SeismicLinearGFConfig
+<p>This will load the parameters from the “geometry” problem and import them to the “ffi” setup. The configuration file for the “ffi” mode is called “config_ffi.yaml” and should be in the same directory as the “config_geometry.yaml”. The parameters that are different in the “ffi” mode are under the “seismic_config.gf_config” of the mentioned configuration file.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>gf_config: !beat.SeismicLinearGFConfig
   store_superdir: ./
   reference_model_idx: 0
   n_variations: [0, 1]
@@ -703,14 +709,14 @@ The “source_type” argument will replace any existing source with the specifi
 </pre></div>
 </div>
 <p>In the next step again Green’s Functions have to be calculated. What? Again? That’s right! This time the geometry of the source needs to be specified. This is defined under the “reference_sources” attribute (see above). The distance units are [m], the angles [deg] and the slip [m]. If an optimization for these “geometry” parameters has been completed, the maximum likelihood result may be imported with.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">FFOproject</span> <span class="o">--</span><span class="n">results</span><span class="o">=/</span><span class="n">path_to_geometry_project</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">FFIproject</span> <span class="o">--</span><span class="n">results</span><span class="o">=/</span><span class="n">path_to_geometry_project</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span>
 </pre></div>
 </div>
 <p>If not, the parameters would need to be adjusted manually based on a-priori information from structural geology, literature or …
 Additionally, the discretization of the subpatches along this reference fault has to be set. The parameters “patch_width” and “patch_length” [km] determine these. So far only square patches are supported. “extension_width” and “extension_length” determine by how much the refernce fault is extended in EACH direction. If this would result in a fault that cuts the surface the intersection with the surface at zero depth is used. Example: 0.1 means that the fault is extended by 10% of its with/length value in each direction and 0. means no extension.</p>
 <p>The “store_superdir” to the “geometry” Green’s Functions needs to be correct and the “sample_rate” needs to be set likely higher than from the “geometry” setup.
 The last two parameters are “duration_sampling” and “starttime_sampling” for the sampling of the source-time-function (STF) for each patch. For efficiency during sampling the STF is convolved for each source patch with the synthetic seismogram. The upper and lower bound for the STF duration and the STF (rupture) starttimes are determined by the optimization parameters in the “priors” under “problem_config”.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>priors:
+<div class="highlight-default"><div class="highlight"><pre><span></span>priors:
   durations: !beat.heart.Parameter
     name: durations
     form: Uniform
@@ -753,14 +759,14 @@ The last two parameters are “duration_sampling” and “starttime_sampling”
 The sampling has to be consistent with the start and end durations. For example a duration lower: 0.5, duration upper: 3., with a sampling of 0.4 would result in an error as the sampling steps would be: 0.5, 0.9, 1.3, 1.7, 2.1, 2.5, 2.9 but 3. is not included.
 The “velocities” parameter is referring to the rupture velocity, which is often considered to be propagating with S-wave velocity. Depending on the velocity model that has been used during the setup of the “geometry” Green’s Functions these parameter bounds may be adjusted.</p>
 <p>With the following command the reference fault is set up and discretized into patches.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">FFOproject</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffo&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">FFIproject</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffi&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span>
 </pre></div>
 </div>
 <p>The output might look like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ffo          - INFO     Discretizing seismic source(s)
-ffo          - INFO     uparr slip component
+<div class="highlight-default"><div class="highlight"><pre><span></span>ffi          - INFO     Discretizing seismic source(s)
+ffi          - INFO     uparr slip component
 sources      - INFO     Fault extended to length=12500.000000, width=5000.000000!
-ffo          - INFO     Extended fault(s):
+ffi          - INFO     Extended fault(s):
  --- !beat.sources.RectangularSource
 lat: 50.410785
 lon: -150.305465
@@ -780,9 +786,9 @@ length: 12500.0
 slip: 1.0
 opening: 0.0
 
-ffo          - INFO     uperp slip component
+ffi          - INFO     uperp slip component
 sources      - INFO     Fault extended to length=12500.000000, width=5000.000000!
-ffo          - INFO     Extended fault(s):
+ffi          - INFO     Extended fault(s):
  --- !beat.sources.RectangularSource
 lat: 50.410785
 lon: -150.305465
@@ -802,7 +808,7 @@ length: 12500.0
 slip: 1.0
 opening: 0.0
 
-beat         - INFO     Storing discretized fault geometry to: /home/vasyurhm/BEATS/Waskahigan2Rect/ffo/linear_gfs/fault_geometry.pkl
+beat         - INFO     Storing discretized fault geometry to: /home/vasyurhm/BEATS/Waskahigan2Rect/ffi/linear_gfs/fault_geometry.pkl
 beat         - INFO     Updating problem_config:
 beat         - INFO
 Complex Fault Geometry
@@ -814,7 +820,7 @@ number of patches: 10
 Also we see here the rake directions of the slip parallel and slip perpendicular directions.
 The hypocentral location bounds have been adjusted to be within the bounds of the extended fault dimensions! To allow for potential rupture nucleation all along the reference fault in the example, the priors of “nucleation_strike” and “nucleation_dip” were set to be between (0, 12.5)[km] and (0,5)[km], respectively! Of course, the bounds may be set manually to custom values within the fault dimensions!</p>
 <p>Finally, we need to pay attention to the “waveforms” under “seismic_config”.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>waveforms:
+<div class="highlight-default"><div class="highlight"><pre><span></span>waveforms:
 - !beat.WaveformFitConfig
   include: true
   name: any_P
@@ -833,13 +839,13 @@ The hypocentral location bounds have been adjusted to be within the bounds of th
 </pre></div>
 </div>
 <p>“Name” specifies the seismic phase; “channels” the component of the observations to include, “filterer” the bandpass filter the synthetics are filtered to; “distances” the receiver-source interval of receivers to include; and the “arrival_taper” the part of the synthetics with respect to the theoretical arrival time (from ray-tracing).</p>
-<p>Once satisfied with the set-up the “nworkers” parameter in “config_ffo.yaml” may be set to make use of parallel calculation of the Green’s Functions. Depending on the specifications the amount of Green’s Functions to be calculated may-be significant. The resulting matrix will be of size: number_receivers * number_patches * number_durations * number_starttimes * number_trace_samples * float64 (8bytes).</p>
+<p>Once satisfied with the set-up the “nworkers” parameter in “config_ffi.yaml” may be set to make use of parallel calculation of the Green’s Functions. Depending on the specifications the amount of Green’s Functions to be calculated may-be significant. The resulting matrix will be of size: number_receivers * number_patches * number_durations * number_starttimes * number_trace_samples * float64 (8bytes).</p>
 <p>The calculation of the Green’s Functions, which may take some hours (depending on the setup and computer hardware) may be started with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">FFOproject</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffo&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">execute</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">FFIproject</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffi&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">execute</span>
 </pre></div>
 </div>
 <p>For visual inspection of the resulting seismic traces in the “snuffler” waveform browser:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">check</span> <span class="n">FFOproject</span> <span class="o">--</span><span class="n">what</span><span class="o">=</span><span class="s1">&#39;library&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffo&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">check</span> <span class="n">FFIproject</span> <span class="o">--</span><span class="n">what</span><span class="o">=</span><span class="s1">&#39;library&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffi&#39;</span>
 </pre></div>
 </div>
 <p>This will load the seismic traces for the first receiver, for all patches, durations, starttimes.</p>
@@ -906,7 +912,7 @@ The hypocentral location bounds have been adjusted to be within the bounds of th
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Hannes Vasyura-Bathke.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>
