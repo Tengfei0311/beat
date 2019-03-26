@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Example 3: static finite-fault optimization" href="FFI_static.html" />
+    <link rel="next" title="Example 3: Static finite-fault estimation" href="FFI_static.html" />
     <link rel="prev" title="Example 1: Regional Full Moment Tensor" href="FullMT_regional.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
@@ -334,28 +334,26 @@ h_SAR: !beat.heart.Parameter
 </div>
 <p>At this point the bounds could be relaxed again as well by manually editing the configuration file, or the step could be entirely skipped.
 Now that we have an initial guess on the hyperparameters we can run the optimization using the default sampling algorithm, a Sequential Monte Carlo sampler.
-The sampler can effectively exploit the parallel architecture of nowadays computers. The ‘n_jobs’ number should be set to as many CPUs as possible in the configuration file.</p>
+The sampler can effectively exploit the parallel architecture of nowadays computers. The ‘n_jobs’ number should be set to as many CPUs as possible in the configuration file.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>sampler_config: !beat.SamplerConfig
+  name: SMC
+  progressbar: true
+  parameters: !beat.SMCConfig
+    n_chains: 500
+    n_steps: 100
+    n_jobs: 1
+    tune_interval: 10
+    coef_variation: 1.0
+    stage: 0
+    proposal_dist: MultivariateNormal
+    check_bnd: true
+    update_covariances: false
+    rm_flag: true
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>‘n_chains’ divided by ‘n_jobs’ MUST yield a whole number! An error is going to be thrown if this is not the case!:</p>
-<dl class="last docutils">
-<dt>sampler_config: !beat.SamplerConfig</dt>
-<dd><p class="first">name: SMC
-progressbar: true
-parameters: !beat.SMCConfig</p>
-<blockquote class="last">
-<div>n_chains: 500
-n_steps: 100
-n_jobs: 1
-tune_interval: 10
-coef_variation: 1.0
-stage: 0
-proposal_dist: MultivariateNormal
-check_bnd: true
-update_covariances: false
-rm_flag: true</div></blockquote>
-</dd>
-</dl>
+<p class="last">‘n_chains’ divided by ‘n_jobs’ MUST yield a whole number! An error is going to be thrown if this is not the case!</p>
 </div>
 <p>Dependend on the hardware, sampler specifications and number of jobs that have been defined, this calculation is going to take few hours.
 Therefore, in order to avoid crashes or in the case of remote connection via ssh it is very much recommended to use something like ‘screen’
@@ -514,8 +512,8 @@ For a comparison between data, synthetic displacements and residuals for the two
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 3: static finite-fault optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 4: kinematic finite-fault optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 3: Static finite-fault estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 4: Kinematic finite-fault estimation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>
@@ -537,7 +535,7 @@ For a comparison between data, synthetic displacements and residuals for the two
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="FFI_static.html" title="Example 3: static finite-fault optimization"
+          <a href="FFI_static.html" title="Example 3: Static finite-fault estimation"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="FullMT_regional.html" title="Example 1: Regional Full Moment Tensor"
