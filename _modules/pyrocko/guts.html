@@ -905,6 +905,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
 
+<span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get dict of guts object attributes.</span>
+
+<span class="sd">    :param obj: :py:class`Object` object</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">inamevals</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+
+
 <span class="k">class</span> <span class="nc">SObject</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
 
     <span class="k">class</span> <span class="nc">__T</span><span class="p">(</span><span class="n">TBase</span><span class="p">):</span>

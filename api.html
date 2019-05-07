@@ -555,6 +555,12 @@ station functionality.</p>
 <em class="property">class </em><code class="descclassname">heart.</code><code class="descname">GeodeticResult</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#GeodeticResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.GeodeticResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Result object assembling different geodetic data.</p>
 <dl class="gattribute">
+<dt id="heart.GeodeticResult.point">
+<em class="property">♦ </em><code class="descname">point</code><a class="headerlink" href="#heart.GeodeticResult.point" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#heart.ResultPoint" title="heart.ResultPoint"><code class="xref py py-class docutils literal"><span class="pre">ResultPoint</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;heart.ResultPoint</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febddb39cf8&gt;</span></code></p>
+</dd></dl>
+
+<dl class="gattribute">
 <dt id="heart.GeodeticResult.processed_obs">
 <em class="property">♦ </em><code class="descname">processed_obs</code><a class="headerlink" href="#heart.GeodeticResult.processed_obs" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#heart.GeodeticDataset" title="heart.GeodeticDataset"><code class="xref py py-class docutils literal"><span class="pre">GeodeticDataset</span></code></a>, <em>optional</em></p>
@@ -721,6 +727,26 @@ station functionality.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="heart.ResultPoint">
+<em class="property">class </em><code class="descclassname">heart.</code><code class="descname">ResultPoint</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#ResultPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.ResultPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Containing point in solution space.</p>
+<dl class="gattribute">
+<dt id="heart.ResultPoint.post_llk">
+<em class="property">♦ </em><code class="descname">post_llk</code><a class="headerlink" href="#heart.ResultPoint.post_llk" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">str</span></code>, <em>optional</em></p>
+<p>describes which posterior likelihood value the point belongs to</p>
+</dd></dl>
+
+<dl class="gattribute">
+<dt id="heart.ResultPoint.point">
+<em class="property">♦ </em><code class="descname">point</code><a class="headerlink" href="#heart.ResultPoint.point" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">dict</span></code> of <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.16)"><code class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></code></a> (<code class="xref py py-class docutils literal"><span class="pre">pyrocko.guts_array.Array</span></code>) objects, <em>default:</em> <code class="docutils literal"><span class="pre">{}</span></code></p>
+<p>Point in Solution space for which result is produced.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="heart.ResultReport">
 <em class="property">class </em><code class="descclassname">heart.</code><code class="descname">ResultReport</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#ResultReport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.ResultReport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Undocumented.</p>
@@ -758,6 +784,12 @@ station functionality.</p>
 <dt id="heart.SeismicResult">
 <em class="property">class </em><code class="descclassname">heart.</code><code class="descname">SeismicResult</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#SeismicResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.SeismicResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Result object assembling different traces of misfit.</p>
+<dl class="gattribute">
+<dt id="heart.SeismicResult.point">
+<em class="property">♦ </em><code class="descname">point</code><a class="headerlink" href="#heart.SeismicResult.point" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#heart.ResultPoint" title="heart.ResultPoint"><code class="xref py py-class docutils literal"><span class="pre">ResultPoint</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;heart.ResultPoint</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febddb25ef0&gt;</span></code></p>
+</dd></dl>
+
 <dl class="gattribute">
 <dt id="heart.SeismicResult.processed_obs">
 <em class="property">♦ </em><code class="descname">processed_obs</code><a class="headerlink" href="#heart.SeismicResult.processed_obs" title="Permalink to this definition">¶</a></dt>
@@ -844,6 +876,12 @@ station functionality.</p>
 <dt id="heart.WaveformMapping.get_station_names">
 <code class="descname">get_station_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/heart.html#WaveformMapping.get_station_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#heart.WaveformMapping.get_station_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns list of strings of station names</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="heart.WaveformMapping.hypersize">
+<code class="descname">hypersize</code><a class="headerlink" href="#heart.WaveformMapping.hypersize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the size of the related hyperparameters as an integer.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1561,7 +1599,7 @@ generation, optimization algorithm and the data being used.</p>
 <dl class="gattribute">
 <dt id="config.BEATconfig.problem_config">
 <em class="property">♦ </em><code class="descname">problem_config</code><a class="headerlink" href="#config.BEATconfig.problem_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.ProblemConfig" title="config.ProblemConfig"><code class="xref py py-class docutils literal"><span class="pre">ProblemConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.ProblemConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a4004a160&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.ProblemConfig" title="config.ProblemConfig"><code class="xref py py-class docutils literal"><span class="pre">ProblemConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.ProblemConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69fbc18&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -1579,13 +1617,13 @@ generation, optimization algorithm and the data being used.</p>
 <dl class="gattribute">
 <dt id="config.BEATconfig.sampler_config">
 <em class="property">♦ </em><code class="descname">sampler_config</code><a class="headerlink" href="#config.BEATconfig.sampler_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal"><span class="pre">SamplerConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a4004a160&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal"><span class="pre">SamplerConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69fbc18&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
 <dt id="config.BEATconfig.hyper_sampler_config">
 <em class="property">♦ </em><code class="descname">hyper_sampler_config</code><a class="headerlink" href="#config.BEATconfig.hyper_sampler_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal"><span class="pre">SamplerConfig</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a4004a128&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SamplerConfig" title="config.SamplerConfig"><code class="xref py py-class docutils literal"><span class="pre">SamplerConfig</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SamplerConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69fbb70&gt;</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -1684,7 +1722,7 @@ hierarchical parameters.</p>
 <dl class="gattribute">
 <dt id="config.GFLibaryConfig.event">
 <em class="property">♦ </em><code class="descname">event</code><a class="headerlink" href="#config.GFLibaryConfig.event" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal"><span class="pre">pyrocko.model.event.Event</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;pyrocko.model.event.Event</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a401fa4a8&gt;</span></code></p>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">pyrocko.model.event.Event</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;pyrocko.model.event.Event</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69e8518&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -1769,7 +1807,7 @@ hierarchical parameters.</p>
 <dl class="gattribute">
 <dt id="config.GeodeticConfig.gf_config">
 <em class="property">♦ </em><code class="descname">gf_config</code><a class="headerlink" href="#config.GeodeticConfig.gf_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.GeodeticGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a403deeb8&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.GeodeticGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd6962c50&gt;</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -1809,7 +1847,7 @@ hierarchical parameters.</p>
 <dl class="gattribute">
 <dt id="config.GeodeticGFConfig.medium_distance_spacing">
 <em class="property">♦ </em><code class="descname">medium_distance_spacing</code><a class="headerlink" href="#config.GeodeticGFConfig.medium_distance_spacing" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">float</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">1.0</span></code></p>
+<dd><p><code class="docutils literal"><span class="pre">float</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">10.0</span></code></p>
 <p>Distance spacing [km] for GF medium grid.</p>
 </dd></dl>
 
@@ -2309,7 +2347,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SamplerConfig.parameters">
 <em class="property">♦ </em><code class="descname">parameters</code><a class="headerlink" href="#config.SamplerConfig.parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SamplerParameters" title="config.SamplerParameters"><code class="xref py py-class docutils literal"><span class="pre">SamplerParameters</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SMCConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a401faa90&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SamplerParameters" title="config.SamplerParameters"><code class="xref py py-class docutils literal"><span class="pre">SamplerParameters</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SMCConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd6a9a470&gt;</span></code></p>
 <p>Sampler dependend Parameters</p>
 </dd></dl>
 
@@ -2362,7 +2400,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SeismicConfig.noise_estimator">
 <em class="property">♦ </em><code class="descname">noise_estimator</code><a class="headerlink" href="#config.SeismicConfig.noise_estimator" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.SeismicNoiseAnalyserConfig" title="config.SeismicNoiseAnalyserConfig"><code class="xref py py-class docutils literal"><span class="pre">SeismicNoiseAnalyserConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SeismicNoiseAnalyserConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a395606d8&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.SeismicNoiseAnalyserConfig" title="config.SeismicNoiseAnalyserConfig"><code class="xref py py-class docutils literal"><span class="pre">SeismicNoiseAnalyserConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SeismicNoiseAnalyserConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd6962588&gt;</span></code></p>
 <p>Determines the structure of the data-covariance matrix.</p>
 </dd></dl>
 
@@ -2403,7 +2441,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SeismicConfig.gf_config">
 <em class="property">♦ </em><code class="descname">gf_config</code><a class="headerlink" href="#config.SeismicConfig.gf_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SeismicGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a39560f98&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.GFConfig" title="config.GFConfig"><code class="xref py py-class docutils literal"><span class="pre">GFConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.SeismicGFConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd6962550&gt;</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -2455,7 +2493,7 @@ Influences yet only the RectangularSource.</p>
 <dl class="gattribute">
 <dt id="config.SeismicGFLibraryConfig.wave_config">
 <em class="property">♦ </em><code class="descname">wave_config</code><a class="headerlink" href="#config.SeismicGFLibraryConfig.wave_config" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#config.WaveformFitConfig" title="config.WaveformFitConfig"><code class="xref py py-class docutils literal"><span class="pre">WaveformFitConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.WaveformFitConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a4005f978&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#config.WaveformFitConfig" title="config.WaveformFitConfig"><code class="xref py py-class docutils literal"><span class="pre">WaveformFitConfig</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;config.WaveformFitConfig</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69e8400&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -2525,7 +2563,7 @@ Influences yet only the RectangularSource.</p>
 <dt id="config.SeismicNoiseAnalyserConfig.structure">
 <em class="property">♦ </em><code class="descname">structure</code><a class="headerlink" href="#config.SeismicNoiseAnalyserConfig.structure" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="xref py py-class docutils literal"><span class="pre">builtins.str</span></code> (<code class="xref py py-class docutils literal"><span class="pre">pyrocko.guts.StringChoice</span></code>), <em>default:</em> <code class="docutils literal"><span class="pre">'identity'</span></code></p>
-<p>Determines data-covariance matrix structure. Choices: “identity”, “exponential”, “import”, “non-toeplitz”</p>
+<p>Determines data-covariance matrix structure. Choices: “variance”, “exponential”, “import”, “non-toeplitz”</p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -2578,7 +2616,7 @@ a specific type of waveform and calculate the misfit.</p>
 <dl class="gattribute">
 <dt id="config.WaveformFitConfig.filterer">
 <em class="property">♦ </em><code class="descname">filterer</code><a class="headerlink" href="#config.WaveformFitConfig.filterer" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal"><span class="pre">beat.heart.FilterBase</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;beat.heart.Filter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a404e9ba8&gt;</span></code></p>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">beat.heart.FilterBase</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;beat.heart.Filter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69932b0&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -2597,7 +2635,7 @@ a specific type of waveform and calculate the misfit.</p>
 <dl class="gattribute">
 <dt id="config.WaveformFitConfig.arrival_taper">
 <em class="property">♦ </em><code class="descname">arrival_taper</code><a class="headerlink" href="#config.WaveformFitConfig.arrival_taper" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal"><span class="pre">pyrocko.trace.Taper</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;beat.heart.ArrivalTaper</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a404e9ba8&gt;</span></code></p>
+<dd><p><code class="xref py py-class docutils literal"><span class="pre">pyrocko.trace.Taper</span></code>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;beat.heart.ArrivalTaper</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febd69932b0&gt;</span></code></p>
 <p>Taper a,b/c,d time [s] before/after wave arrival</p>
 </dd></dl>
 
@@ -2606,7 +2644,7 @@ a specific type of waveform and calculate the misfit.</p>
 <dl class="function">
 <dt id="config.dump_config">
 <code class="descclassname">config.</code><code class="descname">dump_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#dump_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.dump_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load configuration file.</p>
+<dd><p>Dump configuration file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4484,7 +4522,7 @@ library and may be removed from the beat repository in the future.</p>
 <dl class="gattribute">
 <dt id="pscmp.PsCmpConfig.observation">
 <em class="property">♦ </em><code class="descname">observation</code><a class="headerlink" href="#pscmp.PsCmpConfig.observation" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#pscmp.PsCmpObservation" title="pscmp.PsCmpObservation"><code class="xref py py-class docutils literal"><span class="pre">PsCmpObservation</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;pscmp.PsCmpScatter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a29ed7ac8&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#pscmp.PsCmpObservation" title="pscmp.PsCmpObservation"><code class="xref py py-class docutils literal"><span class="pre">PsCmpObservation</span></code></a>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;pscmp.PsCmpScatter</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febc422bf60&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -4514,7 +4552,7 @@ library and may be removed from the beat repository in the future.</p>
 <dl class="gattribute">
 <dt id="pscmp.PsCmpConfig.rectangular_source_patches">
 <em class="property">♦ </em><code class="descname">rectangular_source_patches</code><a class="headerlink" href="#pscmp.PsCmpConfig.rectangular_source_patches" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal"><span class="pre">pyrocko.guts.Any</span></code> objects, <em>default:</em> <code class="docutils literal"><span class="pre">[&lt;pscmp.PsCmpRectangularSource</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a29ed7b38&gt;]</span></code></p>
+<dd><p><code class="docutils literal"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal"><span class="pre">pyrocko.guts.Any</span></code> objects, <em>default:</em> <code class="docutils literal"><span class="pre">[&lt;pscmp.PsCmpRectangularSource</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febc422bf60&gt;]</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -4538,7 +4576,7 @@ library and may be removed from the beat repository in the future.</p>
 <dl class="gattribute">
 <dt id="pscmp.PsCmpConfigFull.coulomb_master_field">
 <em class="property">♦ </em><code class="descname">coulomb_master_field</code><a class="headerlink" href="#pscmp.PsCmpConfigFull.coulomb_master_field" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#pscmp.PsCmpCoulombStress" title="pscmp.PsCmpCoulombStress"><code class="xref py py-class docutils literal"><span class="pre">PsCmpCoulombStress</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;pscmp.PsCmpCoulombStressMasterFault</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f0a29edd0b8&gt;</span></code></p>
+<dd><p><a class="reference internal" href="#pscmp.PsCmpCoulombStress" title="pscmp.PsCmpCoulombStress"><code class="xref py py-class docutils literal"><span class="pre">PsCmpCoulombStress</span></code></a>, <em>optional</em>, <em>default:</em> <code class="docutils literal"><span class="pre">&lt;pscmp.PsCmpCoulombStressMasterFault</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7febc41fc5c0&gt;</span></code></p>
 </dd></dl>
 
 <dl class="gattribute">
@@ -5949,7 +5987,7 @@ the numbers!</p>
 
 <dl class="function">
 <dt id="utility.positions2idxs">
-<code class="descclassname">utility.</code><code class="descname">positions2idxs</code><span class="sig-paren">(</span><em>positions</em>, <em>cell_size</em>, <em>min_pos=0.0</em>, <em>backend=&lt;module 'numpy' from '/home/vasyurhm/.local/lib/python3.6/site-packages/numpy-1.16.1-py3.6-linux-x86_64.egg/numpy/__init__.py'&gt;</em>, <em>dtype='int16'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utility.html#positions2idxs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utility.positions2idxs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">utility.</code><code class="descname">positions2idxs</code><span class="sig-paren">(</span><em>positions</em>, <em>cell_size</em>, <em>min_pos=0.0</em>, <em>backend=&lt;module 'numpy' from '/home/vasyurhm/.local/lib/python3.6/site-packages/numpy/__init__.py'&gt;</em>, <em>dtype='int16'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utility.html#positions2idxs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utility.positions2idxs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return index to a grid with a given cell size.npatches</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -6554,6 +6592,12 @@ be created.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="plotting.histplot_op">
+<code class="descclassname">plotting.</code><code class="descname">histplot_op</code><span class="sig-paren">(</span><em>ax</em>, <em>data</em>, <em>reference=None</em>, <em>alpha=0.35</em>, <em>color=None</em>, <em>bins=None</em>, <em>ntickmarks=5</em>, <em>tstd=None</em>, <em>kwargs={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plotting.html#histplot_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotting.histplot_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified from pymc3. Additional color argument.</p>
 </dd></dl>
 
 </div>

@@ -487,10 +487,10 @@
                     <span class="k">if</span> <span class="n">composite</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>   <span class="c1"># only data composites</span>
                         <span class="k">if</span> <span class="n">composite</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_specific_residual_noise_estimation</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">datatype</span> <span class="o">==</span> <span class="s1">&#39;seismic&#39;</span><span class="p">:</span>
-                                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Not fully implemented!&#39;</span><span class="p">)</span>
-                                <span class="c1"># TODO: fix this needs to be wavemap stations specific</span>
+                                <span class="n">wmap</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">hyper2wavemap</span><span class="p">(</span><span class="n">hp_name</span><span class="p">)</span>
+                                <span class="n">ndata</span> <span class="o">=</span> <span class="n">wmap</span><span class="o">.</span><span class="n">hypersize</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">ndata</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">get_unique_stations</span><span class="p">())</span>
+                                <span class="n">ndata</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">get_all_station_names</span><span class="p">())</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">ndata</span> <span class="o">=</span> <span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>

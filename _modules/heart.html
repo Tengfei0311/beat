@@ -405,10 +405,27 @@
              <span class="s1">&#39; ends of trace.&#39;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="ResultPoint"><a class="viewcode-back" href="../api.html#heart.ResultPoint">[docs]</a><span class="k">class</span> <span class="nc">ResultPoint</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Containing point in solution space.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">post_llk</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;describes which posterior likelihood value the point belongs to&#39;</span><span class="p">)</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+            <span class="n">serialize_as</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Point in Solution space for which result is produced.&#39;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="SeismicResult"><a class="viewcode-back" href="../api.html#heart.SeismicResult">[docs]</a><span class="k">class</span> <span class="nc">SeismicResult</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Result object assembling different traces of misfit.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="n">ResultPoint</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">ResultPoint</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
     <span class="n">processed_obs</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">filtered_obs</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">processed_syn</span> <span class="o">=</span> <span class="n">Trace</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -637,17 +654,14 @@
 <span class="sd">            containing :class:`pyrocko.gf.seismosizer.Source` Objects</span>
 <span class="sd">        taperer : :class:`pyrocko.trace.CosTaper`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">times</span> <span class="o">=</span> <span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">time</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">]</span>
-        <span class="n">min_t</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
-        <span class="n">max_t</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">sources</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">taperer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tmin</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tmax</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tolerance</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">taperer</span><span class="o">.</span><span class="n">b</span> <span class="o">-</span> <span class="n">taperer</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tmin</span> <span class="o">=</span> <span class="n">taperer</span><span class="o">.</span><span class="n">a</span> <span class="o">-</span> <span class="n">tolerance</span> <span class="o">-</span> <span class="n">max_t</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tmax</span> <span class="o">=</span> <span class="n">taperer</span><span class="o">.</span><span class="n">d</span> <span class="o">+</span> <span class="n">tolerance</span> <span class="o">-</span> <span class="n">min_t</span></div></div>
+            <span class="n">tolerance</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">taperer</span><span class="o">.</span><span class="n">b</span> <span class="o">-</span> <span class="n">taperer</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tmin</span> <span class="o">=</span> <span class="n">taperer</span><span class="o">.</span><span class="n">a</span> <span class="o">-</span> <span class="n">tolerance</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tmax</span> <span class="o">=</span> <span class="n">taperer</span><span class="o">.</span><span class="n">d</span> <span class="o">+</span> <span class="n">tolerance</span></div></div>
 
 
 <div class="viewcode-block" id="SeismicDataset"><a class="viewcode-back" href="../api.html#heart.SeismicDataset">[docs]</a><span class="k">class</span> <span class="nc">SeismicDataset</span><span class="p">(</span><span class="n">trace</span><span class="o">.</span><span class="n">Trace</span><span class="p">):</span>
@@ -1043,6 +1057,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Result object assembling different geodetic data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="n">ResultPoint</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">ResultPoint</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
     <span class="n">processed_obs</span> <span class="o">=</span> <span class="n">GeodeticDataset</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">processed_syn</span> <span class="o">=</span> <span class="n">GeodeticDataset</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">processed_res</span> <span class="o">=</span> <span class="n">GeodeticDataset</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2240,6 +2255,19 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_t</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hypersize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the size of the related hyperparameters as an integer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nhyp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_t</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nhyp</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">nhyp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;hyperparameter size is not integer &#39;</span>
+                <span class="s1">&#39;for wavemap </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapid</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -101,6 +101,7 @@
 <span class="kn">from</span> <span class="nn">beat.heart</span> <span class="k">import</span> <span class="n">Filter</span><span class="p">,</span> <span class="n">FilterBase</span><span class="p">,</span> <span class="n">ArrivalTaper</span><span class="p">,</span> <span class="n">Parameter</span>
 <span class="kn">from</span> <span class="nn">beat.heart</span> <span class="k">import</span> <span class="n">ReferenceLocation</span>
 <span class="kn">from</span> <span class="nn">beat.sources</span> <span class="k">import</span> <span class="n">RectangularSource</span><span class="p">,</span> <span class="n">MTSourceWithMagnitude</span><span class="p">,</span> <span class="n">MTQTSource</span>
+<span class="kn">from</span> <span class="nn">beat.covariance</span> <span class="k">import</span> <span class="n">available_noise_structures</span>
 
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">utility</span>
 
@@ -281,7 +282,7 @@
 
 
 <span class="n">_interpolation_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nearest_neighbor&#39;</span><span class="p">,</span> <span class="s1">&#39;multilinear&#39;</span><span class="p">]</span>
-<span class="n">_structure_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;identity&#39;</span><span class="p">,</span> <span class="s1">&#39;exponential&#39;</span><span class="p">,</span> <span class="s1">&#39;import&#39;</span><span class="p">,</span> <span class="s1">&#39;non-toeplitz&#39;</span><span class="p">]</span>
+<span class="n">_structure_choices</span> <span class="o">=</span> <span class="n">available_noise_structures</span><span class="p">()</span>
 <span class="n">_mode_choices</span> <span class="o">=</span> <span class="p">[</span><span class="n">geometry_mode_str</span><span class="p">,</span> <span class="n">ffi_mode_str</span><span class="p">]</span>
 <span class="n">_regularization_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;laplacian&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]</span>
 <span class="n">_initialization_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="s1">&#39;lsq&#39;</span><span class="p">]</span>
@@ -433,7 +434,7 @@
         <span class="n">default</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Depth spacing [km] for GF medium grid.&#39;</span><span class="p">)</span>
     <span class="n">medium_distance_spacing</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">10.</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Distance spacing [km] for GF medium grid.&#39;</span><span class="p">)</span></div>
 
 
@@ -1524,7 +1525,7 @@
 
 <div class="viewcode-block" id="dump_config"><a class="viewcode-back" href="../api.html#config.dump_config">[docs]</a><span class="k">def</span> <span class="nf">dump_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Load configuration file.</span>
+<span class="sd">    Dump configuration file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

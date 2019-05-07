@@ -113,6 +113,11 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyrocko.gf.meta&#39;</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">fmt_choices</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="s2">&quot;``&#39;</span><span class="si">%s</span><span class="s2">&#39;``&quot;</span> <span class="o">%</span> <span class="n">choice</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span>
+
+
 <span class="k">class</span> <span class="nc">InterpolationMethod</span><span class="p">(</span><span class="n">StringChoice</span><span class="p">):</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nearest_neighbor&#39;</span><span class="p">,</span> <span class="s1">&#39;multilinear&#39;</span><span class="p">]</span>
 
@@ -146,16 +151,6 @@
                            <span class="n">deltat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">deltat</span><span class="p">,</span>
                            <span class="n">tmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmin</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_pyrocko_trace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">codes</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">nslc_id</span><span class="p">,</span>
-            <span class="n">tmin</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">tmin</span><span class="p">,</span>
-            <span class="n">deltat</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">deltat</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
-
 
 <span class="k">class</span> <span class="nc">SeismosizerResult</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
     <span class="n">n_records_stacked</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -175,6 +170,49 @@
 <span class="k">class</span> <span class="nc">GNSSCampaignResult</span><span class="p">(</span><span class="n">StaticResult</span><span class="p">):</span>
     <span class="n">campaign</span> <span class="o">=</span> <span class="n">gnss</span><span class="o">.</span><span class="n">GNSSCampaign</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SatelliteResult</span><span class="p">(</span><span class="n">StaticResult</span><span class="p">):</span>
+
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+    <span class="n">nrows</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ncols</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">kite_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;displacement.los&#39;</span><span class="p">,</span> <span class="n">scene_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">kite</span> <span class="k">import</span> <span class="n">Scene</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;Kite not installed&#39;</span><span class="p">)</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">Scene</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">nrows</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="ow">is</span> <span class="kc">None</span>\
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Scene parameters not given&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sc</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span>
+            <span class="n">sc</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span>
+            <span class="k">if</span> <span class="n">scene_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sc</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">frame</span>
+                <span class="n">sc</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">meta</span>
+                <span class="n">sc</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">theta</span>
+                <span class="n">sc</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">phi</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+            <span class="n">disp</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="n">component</span><span class="p">]</span>
+            <span class="n">disp</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">disp</span><span class="p">,</span>
+                               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">))</span>
+            <span class="n">sc</span><span class="o">.</span><span class="n">displacement</span> <span class="o">=</span> <span class="n">disp</span>
+
+            <span class="k">return</span> <span class="n">sc</span>
 
 
 <span class="k">class</span> <span class="nc">ComponentSchemeDescription</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -308,7 +346,7 @@
     <span class="p">]</span>
 
 
-<span class="k">class</span> <span class="nc">WaveformType</span><span class="p">(</span><span class="n">StringChoice</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">WaveType</span><span class="p">(</span><span class="n">StringChoice</span><span class="p">):</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;full waveform&#39;</span><span class="p">,</span>
         <span class="s1">&#39;bodywave&#39;</span><span class="p">,</span>
@@ -750,7 +788,7 @@
     <span class="sd">&#39;&#39;&#39;Base class for discretized sources.</span>
 
 <span class="sd">    To compute synthetic seismograms, the parameterized source models (see of</span>
-<span class="sd">    :py:class:`pyrocko.gf.seismosizer.Source` derived classes) are first</span>
+<span class="sd">    :py:class:`~pyrocko.gf.seismosizer.Source` derived classes) are first</span>
 <span class="sd">    discretized into a number of point sources. These spacio-temporal point</span>
 <span class="sd">    source distributions are represented by subclasses of the</span>
 <span class="sd">    :py:class:`DiscretizedSource`. For elastodynamic problems there is the</span>
@@ -1465,11 +1503,11 @@
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Green&#39;s function store meta information.</span>
 
-<span class="sd">    Currently implemented :py:class:`pyrocko.gf.store.Store` configurations</span>
-<span class="sd">    are:</span>
+<span class="sd">    Currently implemented :py:class:`~pyrocko.gf.store.Store`</span>
+<span class="sd">    configuration types are:</span>
 
-<span class="sd">    * :py:class:`pyrocko.gf.meta.ConfigTypeA` - cylindrical symmetry,</span>
-<span class="sd">      1D earth model, single receiver depth</span>
+<span class="sd">    * :py:class:`~pyrocko.gf.meta.ConfigTypeA` - cylindrical or</span>
+<span class="sd">      spherical symmetry, 1D earth model, single receiver depth</span>
 
 <span class="sd">      * Problem is invariant to horizontal translations and rotations around</span>
 <span class="sd">        vertical axis.</span>
@@ -1477,51 +1515,137 @@
 <span class="sd">      * High level index variables: ``(source_depth, receiver_distance,</span>
 <span class="sd">        component)``</span>
 
-<span class="sd">    * :py:class:`pyrocko.gf.meta.ConfigTypeB` - cylindrical symmetry, 1D earth</span>
-<span class="sd">      model, variable receiver depth</span>
+<span class="sd">    * :py:class:`~pyrocko.gf.meta.ConfigTypeB` - cylindrical or</span>
+<span class="sd">      spherical symmetry, 1D earth model, variable receiver depth</span>
 
 <span class="sd">      * Symmetries like in Type A but has additional index for receiver depth</span>
 <span class="sd">      * High level index variables: ``(source_depth, receiver_distance,</span>
 <span class="sd">        receiver_depth, component)``</span>
 
-<span class="sd">    * :py:class:`pyrocko.gf.meta.ConfigTypeC` - no symmetrical constraints but</span>
-<span class="sd">      fixed receiver positions</span>
+<span class="sd">    * :py:class:`~pyrocko.gf.meta.ConfigTypeC` - no symmetrical</span>
+<span class="sd">      constraints but fixed receiver positions</span>
 
 <span class="sd">      * Cartesian source volume around a reference point</span>
 <span class="sd">      * High level index variables: ``(ireceiver, source_depth,</span>
 <span class="sd">        source_east_shift, source_north_shift, component)``</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">StringID</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">StringID</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the store. May consist of upper and lower-case letters, &#39;</span>
+             <span class="s1">&#39;digits, dots and underscores. The name must start with a &#39;</span>
+             <span class="s1">&#39;letter.&#39;</span><span class="p">)</span>
 
-    <span class="n">derived_from_id</span> <span class="o">=</span> <span class="n">StringID</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;1.0&#39;</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">modelling_code_id</span> <span class="o">=</span> <span class="n">StringID</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">author</span> <span class="o">=</span> <span class="n">Unicode</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">author_email</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">created_time</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">regions</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">Region</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
-    <span class="n">scope_type</span> <span class="o">=</span> <span class="n">ScopeType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">waveform_type</span> <span class="o">=</span> <span class="n">WaveformType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">nearfield_terms</span> <span class="o">=</span> <span class="n">NearfieldTermsType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">references</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">Reference</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">derived_from_id</span> <span class="o">=</span> <span class="n">StringID</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the original store, if this store has been derived from &#39;</span>
+             <span class="s1">&#39;another one (e.g. extracted subset).&#39;</span><span class="p">)</span>
 
-    <span class="n">earthmodel_1d</span> <span class="o">=</span> <span class="n">Earthmodel1D</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">earthmodel_receiver_1d</span> <span class="o">=</span> <span class="n">Earthmodel1D</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;1.0&#39;</span><span class="p">,</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;User-defined version string. Use &lt;major&gt;.&lt;minor&gt; format.&#39;</span><span class="p">)</span>
 
-    <span class="n">can_interpolate_source</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">can_interpolate_receiver</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">frequency_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">frequency_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">factor</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">component_scheme</span> <span class="o">=</span> <span class="n">ComponentScheme</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;elastic10&#39;</span><span class="p">)</span>
-    <span class="n">tabulated_phases</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">TPDef</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
-    <span class="n">ncomponents</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">uuid</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">reference</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">modelling_code_id</span> <span class="o">=</span> <span class="n">StringID</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Identifier of the backend used to compute the store.&#39;</span><span class="p">)</span>
+
+    <span class="n">author</span> <span class="o">=</span> <span class="n">Unicode</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Comma-separated list of author names.&#39;</span><span class="p">)</span>
+
+    <span class="n">author_email</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Author&#39;s contact email address.&quot;</span><span class="p">)</span>
+
+    <span class="n">created_time</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Time of creation of the store.&#39;</span><span class="p">)</span>
+
+    <span class="n">regions</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Region</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Geographical regions for which the store is representative.&#39;</span><span class="p">)</span>
+
+    <span class="n">scope_type</span> <span class="o">=</span> <span class="n">ScopeType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Distance range scope of the store &#39;</span>
+             <span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="n">fmt_choices</span><span class="p">(</span><span class="n">ScopeType</span><span class="p">))</span>
+
+    <span class="n">waveform_type</span> <span class="o">=</span> <span class="n">WaveType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Wave type stored (</span><span class="si">%s</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="n">fmt_choices</span><span class="p">(</span><span class="n">WaveType</span><span class="p">))</span>
+
+    <span class="n">nearfield_terms</span> <span class="o">=</span> <span class="n">NearfieldTermsType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Information about the inclusion of near-field terms in the &#39;</span>
+             <span class="s1">&#39;modelling (</span><span class="si">%s</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="n">fmt_choices</span><span class="p">(</span><span class="n">NearfieldTermsType</span><span class="p">))</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Free form textual description of the GF store.&#39;</span><span class="p">)</span>
+
+    <span class="n">references</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Reference</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Reference list to cite the modelling code, earth model or &#39;</span>
+             <span class="s1">&#39;related work.&#39;</span><span class="p">)</span>
+
+    <span class="n">earthmodel_1d</span> <span class="o">=</span> <span class="n">Earthmodel1D</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Layered earth model in ND (named discontinuity) format.&#39;</span><span class="p">)</span>
+
+    <span class="n">earthmodel_receiver_1d</span> <span class="o">=</span> <span class="n">Earthmodel1D</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Receiver-side layered earth model in ND format.&#39;</span><span class="p">)</span>
+
+    <span class="n">can_interpolate_source</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Hint to indicate if the spatial sampling of the store is dense &#39;</span>
+             <span class="s1">&#39;enough for multi-linear interpolation at the source.&#39;</span><span class="p">)</span>
+
+    <span class="n">can_interpolate_receiver</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Hint to indicate if the spatial sampling of the store is dense &#39;</span>
+             <span class="s1">&#39;enough for multi-linear interpolation at the receiver.&#39;</span><span class="p">)</span>
+
+    <span class="n">frequency_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Hint to indicate the lower bound of valid frequencies [Hz].&#39;</span><span class="p">)</span>
+
+    <span class="n">frequency_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Hint to indicate the upper bound of valid frequencies [Hz].&#39;</span><span class="p">)</span>
+
+    <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sample rate of the GF store [Hz].&#39;</span><span class="p">)</span>
+
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Gain value, factored out of the stored GF samples. &#39;</span>
+             <span class="s1">&#39;(may not work properly, keep at 1.0).&#39;</span><span class="p">,</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">component_scheme</span> <span class="o">=</span> <span class="n">ComponentScheme</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;elastic10&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;GF component scheme (</span><span class="si">%s</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="n">fmt_choices</span><span class="p">(</span><span class="n">ComponentScheme</span><span class="p">))</span>
+
+    <span class="n">tabulated_phases</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">TPDef</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Mapping of phase names to phase definitions, for which travel &#39;</span>
+             <span class="s1">&#39;time tables are available in the GF store.&#39;</span><span class="p">)</span>
+
+    <span class="n">ncomponents</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of GF components. Use :gattr:`component_scheme` instead.&#39;</span><span class="p">)</span>
+
+    <span class="n">uuid</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Heuristic hash value which can be used to uniquely identify the &#39;</span>
+             <span class="s1">&#39;GF store for practical purposes.&#39;</span><span class="p">)</span>
+
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Store reference name composed of the store</span><span class="se">\&#39;</span><span class="s1">s :gattr:`id` and &#39;</span>
+             <span class="s1">&#39;the first six letters of its :gattr:`uuid`.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_do_auto_updates</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1768,17 +1892,34 @@
 <span class="sd">      vertical axis.</span>
 
 <span class="sd">    * All receivers must be at the same depth (e.g. at the surface)</span>
-<span class="sd">      High level index variables: ``(source_depth, receiver_distance,</span>
+<span class="sd">      High level index variables: ``(source_depth, distance,</span>
 <span class="sd">      component)``</span>
+
+<span class="sd">    * The ``distance`` is the surface distance between source and receiver</span>
+<span class="sd">      points.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">receiver_depth</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="n">source_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">distance_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">distance_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">distance_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+    <span class="n">receiver_depth</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fixed receiver depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum source depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum source depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Grid spacing of source depths [m]&#39;</span><span class="p">)</span>
+
+    <span class="n">distance_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum source-receiver surface distance [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">distance_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum source-receiver surface distance [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">distance_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Grid spacing of source-receiver surface distance [m].&#39;</span><span class="p">)</span>
 
     <span class="n">short_type</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
 
@@ -1945,15 +2086,32 @@
 <span class="sd">      receiver_depth, component)``</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">receiver_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">receiver_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">receiver_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">distance_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">distance_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">distance_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+    <span class="n">receiver_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum receiver depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">receiver_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum receiver depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">receiver_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Grid spacing of receiver depths [m]&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum source depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum source depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Grid spacing of source depths [m]&#39;</span><span class="p">)</span>
+
+    <span class="n">distance_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum source-receiver surface distance [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">distance_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum source-receiver surface distance [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">distance_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Grid spacing of source-receiver surface distances [m].&#39;</span><span class="p">)</span>
 
     <span class="n">short_type</span> <span class="o">=</span> <span class="s1">&#39;B&#39;</span>
 
@@ -2160,18 +2318,39 @@
 <span class="sd">      source_east_shift, source_north_shift, component)``</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">receivers</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">Receiver</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
+    <span class="n">receivers</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Receiver</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of fixed receivers.&#39;</span><span class="p">)</span>
 
-    <span class="n">source_origin</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_east_shift_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_east_shift_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_east_shift_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_north_shift_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_north_shift_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
-    <span class="n">source_north_shift_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+    <span class="n">source_origin</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Origin of the source volume grid.&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum source depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum source depth [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_depth_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Source depth grid spacing [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_east_shift_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum easting of source grid [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_east_shift_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum easting of source grid [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_east_shift_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Source volume grid spacing in east direction [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_north_shift_min</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum northing of source grid [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_north_shift_max</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum northing of source grid [m].&#39;</span><span class="p">)</span>
+
+    <span class="n">source_north_shift_delta</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Source volume grid spacing in north direction [m].&#39;</span><span class="p">)</span>
 
     <span class="n">short_type</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span>
 

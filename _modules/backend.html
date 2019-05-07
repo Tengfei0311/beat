@@ -364,11 +364,14 @@
 
         <span class="nb">super</span><span class="p">(</span><span class="n">MemoryChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">chain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">draws</span> <span class="o">=</span> <span class="n">draws</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chain</span> <span class="o">=</span> <span class="n">chain</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="MemoryChain.write"><a class="viewcode-back" href="../api.html#backend.MemoryChain.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">):</span>
@@ -678,12 +681,10 @@
 
         <span class="c1"># creating data type as float</span>
         <span class="n">data_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f8&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">)</span>
-
-        <span class="c1"># get the size of each array within varnames</span>
-        <span class="n">data_size</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">]</span>
+        <span class="n">data_size</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">]</span>
         <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">size</span> <span class="o">+</span> <span class="n">data_type</span> <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="n">data_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data_size</span><span class="p">,</span> <span class="n">data_types</span><span class="p">)]</span>
+
         <span class="c1"># set data structure</span>
         <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">dtype</span><span class="p">({</span><span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="s1">&#39;formats&#39;</span><span class="p">:</span> <span class="n">formats</span><span class="p">})</span></div>
 

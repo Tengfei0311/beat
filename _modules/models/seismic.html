@@ -97,9 +97,10 @@
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">bconfig</span>
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">heart</span><span class="p">,</span> <span class="n">covariance</span> <span class="k">as</span> <span class="n">cov</span>
 <span class="kn">from</span> <span class="nn">beat.models.base</span> <span class="k">import</span> <span class="n">ConfigInconsistentError</span><span class="p">,</span> <span class="n">Composite</span>
-<span class="kn">from</span> <span class="nn">beat.models.distributions</span> <span class="k">import</span> <span class="n">multivariate_normal_chol</span>
+<span class="kn">from</span> <span class="nn">beat.models.distributions</span> <span class="k">import</span> <span class="n">multivariate_normal_chol</span><span class="p">,</span> <span class="n">get_hyper_name</span>
 
 <span class="kn">from</span> <span class="nn">pymc3</span> <span class="k">import</span> <span class="n">Uniform</span><span class="p">,</span> <span class="n">Deterministic</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;seismic&#39;</span><span class="p">)</span>
@@ -183,6 +184,16 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_llks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">shared</span><span class="p">(</span>
                         <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;seis_llk_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">t</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">hyper2wavemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hypername</span><span class="p">):</span>
+
+        <span class="n">dummy</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hypername</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">wmap</span><span class="o">.</span><span class="n">_mapid</span> <span class="o">==</span> <span class="n">dummy</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">wmap</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;No waveform mapping found for hyperparameter! </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">hypername</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">close_cashed_stores</span><span class="p">()</span>
@@ -398,6 +409,7 @@
                     <span class="nb">float</span><span class="p">(</span><span class="n">obs_tr</span><span class="o">.</span><span class="n">tmin</span> <span class="o">-</span> <span class="n">at</span><span class="o">.</span><span class="n">a</span><span class="p">))</span>
 
                 <span class="n">wmap_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heart</span><span class="o">.</span><span class="n">SeismicResult</span><span class="p">(</span>
+                    <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">,</span>
                     <span class="n">processed_obs</span><span class="o">=</span><span class="n">obs_tr</span><span class="p">,</span>
                     <span class="n">processed_syn</span><span class="o">=</span><span class="n">syn_proc_traces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span>
                     <span class="n">processed_res</span><span class="o">=</span><span class="n">dtrace_proc</span><span class="p">,</span>
@@ -433,6 +445,39 @@
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">choli</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">processed_res</span><span class="o">.</span><span class="n">ydata</span><span class="p">)</span>
             <span class="n">_llk</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">num</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_llks</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">_llk</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_standardized_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        point : dict</span>
+<span class="sd">            with parameters to point in solution space to calculate standardized</span>
+<span class="sd">            residuals for</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of arrays of standardized residuals,</span>
+<span class="sd">        following order of self.datasets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span>
+            <span class="n">point</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="n">chop_bounds</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_weights</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+
+        <span class="n">counter</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">Counter</span><span class="p">()</span>
+        <span class="n">hp_specific</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_specific_residual_noise_estimation</span>
+        <span class="n">stdz_res</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">data_trc</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+            <span class="n">hp_name</span> <span class="o">=</span> <span class="n">get_hyper_name</span><span class="p">(</span><span class="n">data_trc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">hp_specific</span><span class="p">:</span>
+                <span class="n">hp</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">hp_name</span><span class="p">][</span><span class="n">counter</span><span class="p">(</span><span class="n">hp_name</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">hp</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">hp_name</span><span class="p">]</span>
+
+            <span class="n">choli</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span>
+                <span class="n">data_trc</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">chol</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">hp</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
+            <span class="n">stdz_res</span><span class="p">[</span><span class="n">data_trc</span><span class="o">.</span><span class="n">nslc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">choli</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">filtered_res</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">stdz_res</span>
 
 
 <div class="viewcode-block" id="SeismicGeometryComposite"><a class="viewcode-back" href="../../api.html#models.seismic.SeismicGeometryComposite">[docs]</a><span class="k">class</span> <span class="nc">SeismicGeometryComposite</span><span class="p">(</span><span class="n">SeismicComposite</span><span class="p">):</span>
