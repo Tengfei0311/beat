@@ -484,6 +484,10 @@ total number of patches: %i ''' % (
             return [0. for _ in range(self.nsubfaults)]
 
     @property
+    def cum_subfault_npatches(self):
+        return num.cumsum([0] + self.subfault_npatches)
+
+    @property
     def npatches(self):
         return sum(self.subfault_npatches)
 
@@ -729,7 +733,6 @@ def discretize_sources(
     return fault
 
 
-
 def optimize_discretization(
         config, fault, datasets, varnames, crust_ind,
         engine, targets, event, force, nworkers):
@@ -774,8 +777,11 @@ def optimize_discretization(
     data_coords = num.vstack(
         [num.hstack(east_shifts), num.hstack(north_shifts)]).T
 
+    old_patches = {}
+    gfs_array = None
     patch_widths, patch_lengths = config.get_patch_dimensions()
     for component in varnames:
+        old_patches[component] = []
         for index, sf in enumerate(
                 fault.iter_subfaults(datatype, component)):
             npw = sf.get_n_patches(patch_widths[index] * km, 'width')
@@ -785,7 +791,7 @@ def optimize_discretization(
             fault.set_subfault_patches(index, patches, datatype, component)
 
     logger.info('Initial number of patches: %i' % fault.npatches)
-    tobedivided = fault.npatches
+    tot_n_patches = tobedivided = fault.npatches
 
     sf_div_idxs = []
     for i, sf in enumerate(fault.iter_subfaults()):
@@ -798,17 +804,22 @@ def optimize_discretization(
     while tobedivided:
         for component in varnames:
             logger.info('Component %s' % component)
-            gfs_array = []
+            current_gfs = []
+            full_idxs = list(range(tot_n_patches))
             # iterate over subfaults and divide patches
             for sf_idx, div_idxs in zip(range(fault.nsubfaults), sf_div_idxs):
                 logger.info(
                     'Subfault %i division indexes %s' % (
                         sf_idx, list2string(div_idxs)))
-                patches = fault.get_subfault_patches(sf_idx, datatype, component)
+                current_patches = fault.get_subfault_patches(
+                    sf_idx, datatype, component)
+                patches = old_patches[component] + current_patches
+                new_patches = []
                 for idx in div_idxs:
-
                     # pull out patch to be divided
                     patch = patches.pop(idx)
+                    print('fidxs', full_idxs)
+                    full_idxs.pop(idx + fault.cum_subfault_npatches[sf_idx])
                     if patch.length >= patch.width:
                         div_patches = patch.patches(
                             nl=2, nw=1, datatype=datatype, type='beat')
@@ -818,14 +829,19 @@ def optimize_discretization(
 
                     # insert back divided patches
                     for i, dpatch in enumerate(div_patches):
-                        patches.insert(idx + i, dpatch)
+                        new_patches.append(dpatch)
+                        #patches.insert(idx + i, dpatch)
 
-                # register newly diveded patches with fault
+                # register newly divided patches with fault
                 fault.set_subfault_patches(
-                    sf_idx, patches, datatype, component, replace=True)
+                    sf_idx, new_patches, datatype, component, replace=True)
+                old_patches[component].extend(patches)
+            else:
+                new_patches = []
 
             #source_geometry(fault, list(fault.iter_subfaults()))
-
+            # keep track of all patch indexes
+            tot_n_patches = len(old_patches[component]) + len(new_patches)
             logger.info("Calculating Green's Functions for %i "
                         "patches." % fault.npatches)
 
@@ -834,10 +850,21 @@ def optimize_discretization(
                 engine=engine, outdirectory='', crust_ind=crust_ind,
                 datasets=datasets, targets=targets, fault=fault,
                 varnames=[component], force=force, event=event, nworkers=nworkers)
-            gfs_array.append(gfs.T)
+            current_gfs.append(gfs.T)
+
+        if gfs_array:
+            old_gfs_array = gfs_array[:, full_idxs]
+        else:
+            old_gfs_array = num.array([])
+
+        current_gfs_array = num.vstack(current_gfs)
+        if old_gfs_array.size:
+            gfs_array = num.hstack([old_gfs_array, current_gfs_array])
+        else:
+            gfs_array = current_gfs_array
 
         # U data-space, L singular values, V model space
-        U, l, V = num.linalg.svd(num.vstack(gfs_array), full_matrices=True)
+        U, l, V = num.linalg.svd(gfs_array, full_matrices=True)
 
         # apply singular value damping
         ldamped_inv = 1. / (l + config.epsilon ** 2)
@@ -857,24 +884,22 @@ def optimize_discretization(
         width_idxs_min = []
         length_idxs_max = []
         length_idxs_min = []
-        total_patches = 0
         for i, sf in enumerate(fault.iter_subfaults()):
             widths, lengths = fault.get_subfault_patch_attributes(
                 i, datatype, attributes=['width', 'length'])
 
             width_idxs_max += (num.argwhere(
                 widths > config.patch_widths_max[i]).ravel()
-                              + total_patches).tolist()
+                               + fault.cum_subfault_npatches[i]).tolist()
             length_idxs_max += (num.argwhere(
                 lengths > config.patch_lengths_max[i]).ravel()
-                               + total_patches).tolist()
+                                + fault.cum_subfault_npatches[i]).tolist()
             width_idxs_min += (num.argwhere(
                 widths < config.patch_widths_min[i]).ravel()
-                              + total_patches).tolist()
+                               + fault.cum_subfault_npatches[i]).tolist()
             length_idxs_min += (num.argwhere(
                 lengths < config.patch_lengths_min[i]).ravel()
-                                + total_patches).tolist()
-            total_patches += fault.subfault_npatches[i]
+                                + fault.cum_subfault_npatches[i]).tolist()
 
         # patches that fulfill both size thresholds
         patch_size_ids = set(width_idxs_min).intersection(set(length_idxs_min))
@@ -938,10 +963,9 @@ def optimize_discretization(
             tobedivided = len(idxs)
 
             # re-arrange indexes to subfaults
-            cum_n_patches = num.cumsum([0] + fault.subfault_npatches)
             for i in range(fault.nsubfaults):
-                start = cum_n_patches[i]
-                end = cum_n_patches[i + 1]
+                start = fault.cum_subfault_npatches[i]
+                end = fault.cum_subfault_npatches[i + 1]
                 div_idxs = idxs[(idxs >= start) & (idxs < end)] - start
                 # append indexes in descending sorted order
                 div_idxs[::-1].sort()
