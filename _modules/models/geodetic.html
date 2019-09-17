@@ -186,7 +186,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sodws</span> <span class="o">=</span> <span class="n">shared</span><span class="p">(</span><span class="n">odws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;odws&#39;</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">gc</span><span class="o">.</span><span class="n">calc_data_cov</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Covariance estimation not implemented (yet)!&#39;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Covariance estimation not implemented (yet)!&#39;</span>
                         <span class="s1">&#39; Using imported covariances!&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;No data-covariance estimation! Using imported&#39;</span>
@@ -849,9 +849,64 @@
 
         <span class="k">return</span> <span class="n">synths</span></div>
 
-    <span class="k">def</span> <span class="nf">update_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Cp updating not implemented yet!&#39;</span><span class="p">)</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="GeodeticDistributerComposite.update_weights"><a class="viewcode-back" href="../../api.html#models.geodetic.GeodeticDistributerComposite.update_weights">[docs]</a>    <span class="k">def</span> <span class="nf">update_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates weighting matrixes (in place) with respect to the point in the</span>
+<span class="sd">        solution space.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        point : dict</span>
+<span class="sd">            with numpy array-like items and variable name keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">crust_inds</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">gc</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">)</span>
+        <span class="n">thresh</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">crust_inds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">thresh</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Updating geodetic velocity model-covariances ...&#39;</span><span class="p">)</span>
+
+            <span class="n">crust_inds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">n_variations</span><span class="p">))</span>
+            <span class="n">n_variations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">crust_inds</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_variations</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading geodetic linear GF matrixes ...&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_gfs</span><span class="p">(</span>
+                    <span class="n">crust_inds</span><span class="o">=</span><span class="n">crust_inds</span><span class="p">,</span>
+                    <span class="n">make_shared</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="n">crust_displacements</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">n_variations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bij</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">crust_ind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">crust_inds</span><span class="p">):</span>
+                <span class="n">mu</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Bij</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slip_varnames</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gflibrary_key</span><span class="p">(</span>
+                        <span class="n">crust_ind</span><span class="o">=</span><span class="n">crust_ind</span><span class="p">,</span>
+                        <span class="n">wavename</span><span class="o">=</span><span class="s1">&#39;static&#39;</span><span class="p">,</span>
+                        <span class="n">component</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+                    <span class="n">mu</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">stack_all</span><span class="p">(</span><span class="n">slips</span><span class="o">=</span><span class="n">point</span><span class="p">[</span><span class="n">var</span><span class="p">])</span>
+
+                <span class="n">crust_displacements</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mu</span>
+
+            <span class="n">crust_synths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bij</span><span class="o">.</span><span class="n">a_nd2l</span><span class="p">(</span><span class="n">crust_displacements</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">crust_synths</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_t</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Number of datasets </span><span class="si">%i</span><span class="s1"> and number of synthetics </span><span class="si">%i</span><span class="s1"> &#39;</span>
+                    <span class="s1">&#39;inconsistent!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_t</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">crust_synths</span><span class="p">)))</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Track </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">cov_pv</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">crust_synths</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rowvar</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                <span class="n">cov_pv</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">ensure_cov_psd</span><span class="p">(</span><span class="n">cov_pv</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">pred_v</span> <span class="o">=</span> <span class="n">cov_pv</span>
+                <span class="n">choli</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">chol_inverse</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">choli</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">update_slog_pdet</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Not updating geodetic velocity model-covariances because &#39;</span>
+                <span class="s1">&#39;number of model variations is too low! &lt; </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">thresh</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

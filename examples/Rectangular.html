@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Example 2: Rectangular source &#8212; beat 1.0beta documentation</title>
+    <title>Example 3: Rectangular source &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,8 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Example 3: Static finite-fault estimation" href="FFI_static.html" />
-    <link rel="prev" title="Example 1: Regional Full Moment Tensor" href="FullMT_regional.html" />
+    <link rel="next" title="Example 4: Static finite-fault estimation" href="FFI_static.html" />
+    <link rel="prev" title="Example 2: Teleseismic Double Couple" href="dc_teleseismic.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
     <meta name="viewport" content="width=device-width,initial-scale=0.8">
@@ -78,8 +78,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="example-2-rectangular-source">
-<h1>Example 2: Rectangular source<a class="headerlink" href="#example-2-rectangular-source" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="example-3-rectangular-source">
+<h1>Example 3: Rectangular source<a class="headerlink" href="#example-3-rectangular-source" title="Permalink to this headline">¶</a></h1>
 <p>In this example we will explore the parameter space of a Rectangular Source <a class="reference internal" href="#okada1985" id="id1">[Okada1985]</a> for the L’aquila 2009 earthquake.
 It is up to the user to decide, which data is going to be used in the optimization, teleseismic waveforms and/or geodetic data.</p>
 <p>The geodetic data consists of two static displacements data sets from the 06.04.2009 Mw6.3 L’Aquila earthquake. The data are InSAR displacement maps from ascending
@@ -91,7 +91,7 @@ The data has been pre-processed with <a class="reference external" href="https:/
 <h2>Clone project<a class="headerlink" href="#clone-project" title="Permalink to this headline">¶</a></h2>
 <p>To copy the example (including the data) to a directory outside of the package source directory, please edit the ‘&amp;beat_models_path’ and depending on which datatypes you want to use in the optimization fill the datatypes argument. For both datatypes (if only selected datatypes are of interest please delete either):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>cd /path/to/beat/data/examples/
-beat clone Rectangular $beat_models_path/Laquila --datatypes=seismic,geodetic --copy_data
+beat clone Laquila $beat_models_path/Laquila --datatypes=seismic,geodetic --copy_data
 </pre></div>
 </div>
 <dl class="docutils">
@@ -432,8 +432,8 @@ For a comparison between data, synthetic displacements and residuals for the two
 </pre></div>
 </div>
 <img alt="../_images/Laquila_scenes_-1_max_latlon_0.png" src="../_images/Laquila_scenes_-1_max_latlon_0.png" />
-<p>To plot waveform fits:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">Laquila</span> <span class="n">waveform_fits</span>
+<p>To plot waveform fits with an ensemble of 100 draws from the PPD:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">Laquila</span> <span class="n">waveform_fits</span> <span class="o">--</span><span class="n">nensemble</span><span class="o">=</span><span class="mi">100</span>
 </pre></div>
 </div>
 <img alt="../_images/Laquila_waveforms_-1_max_0.png" src="../_images/Laquila_waveforms_-1_max_0.png" />
@@ -444,11 +444,11 @@ For a comparison between data, synthetic displacements and residuals for the two
 <img alt="../_images/Laquila_stage_-1_max.png" src="../_images/Laquila_stage_-1_max.png" />
 <p>Here h_SAR are the noise scaling parameters for the two InSAR scenes and h_any_P_0_Z is the noise scaling for the P-phases.</p>
 <p>For a correlation plot of the parameter marginals please run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">LaquilaJointPonlyUPDATE</span> <span class="n">correlation_hist</span> <span class="o">--</span><span class="nb">format</span><span class="o">=</span><span class="n">png</span> <span class="o">--</span><span class="n">varnames</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span><span class="n">north_shift</span><span class="p">,</span><span class="n">dip</span><span class="p">,</span><span class="n">east_shift</span><span class="p">,</span><span class="n">slip</span><span class="p">,</span><span class="n">width</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">nucleation_x</span><span class="p">,</span><span class="n">rake</span><span class="p">,</span><span class="n">nucleation_y</span><span class="p">,</span><span class="n">strike</span><span class="p">,</span><span class="n">length</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">LaquilaJointPonlyUPDATE</span> <span class="n">correlation_hist</span> <span class="o">--</span><span class="nb">format</span><span class="o">=</span><span class="n">png</span> <span class="o">--</span><span class="n">varnames</span><span class="o">=</span><span class="n">east_shift</span><span class="p">,</span><span class="n">north_shift</span><span class="p">,</span><span class="n">depth</span><span class="p">,</span><span class="n">length</span><span class="p">,</span><span class="n">width</span><span class="p">,</span><span class="n">strike</span><span class="p">,</span><span class="n">dip</span><span class="p">,</span><span class="n">rake</span><span class="p">,</span><span class="n">slip</span>
 </pre></div>
 </div>
 <img alt="../_images/Laquila_corr_hist_-1_max.png" src="../_images/Laquila_corr_hist_-1_max.png" />
-<p>Here the “varnames” argument determines the order of the plotted variables and which variable to plot. The kinematic source parameters are only resolved by using seismic data. So for optimization results that include only <strong>geodetic</strong> data, the parameters time, duration, nucleation_x and nucleation_y have to be omitted.</p>
+<p>The “varnames” argument determines the order of the plotted variables and which variable to plot. The kinematic source parameters are only resolved by using seismic data. So for optimization results that include only <strong>geodetic</strong> data, the parameters time, duration, nucleation_x and nucleation_y have to be omitted.</p>
 <p>These plots are stored under your Laquila folder under geometry/figures.</p>
 </div>
 <div class="section" id="references">
@@ -502,7 +502,8 @@ For a comparison between data, synthetic displacements and residuals for the two
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html">Example 1: Regional Full Moment Tensor</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 2: Rectangular source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dc_teleseismic.html">Example 2: Teleseismic Double Couple</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 3: Rectangular source</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#clone-project">Clone project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-greens-functions">Calculate Greens Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optimization-setup">Optimization setup</a></li>
@@ -512,8 +513,8 @@ For a comparison between data, synthetic displacements and residuals for the two
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 3: Static finite-fault estimation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 4: Kinematic finite-fault estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 4: Static finite-fault estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 5: Kinematic finite-fault estimation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>
@@ -535,10 +536,10 @@ For a comparison between data, synthetic displacements and residuals for the two
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="FFI_static.html" title="Example 3: Static finite-fault estimation"
+          <a href="FFI_static.html" title="Example 4: Static finite-fault estimation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="FullMT_regional.html" title="Example 1: Regional Full Moment Tensor"
+          <a href="dc_teleseismic.html" title="Example 2: Teleseismic Double Couple"
              accesskey="P">previous</a> |</li>
       </ul>
     </div>

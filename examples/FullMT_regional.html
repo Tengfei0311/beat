@@ -22,7 +22,7 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Example 2: Rectangular source" href="Rectangular.html" />
+    <link rel="next" title="Example 2: Teleseismic Double Couple" href="dc_teleseismic.html" />
     <link rel="prev" title="Examples" href="index.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
@@ -84,18 +84,18 @@
 <h2>Clone project<a class="headerlink" href="#clone-project" title="Permalink to this headline">¶</a></h2>
 <p>This setup is comprised of 20 seismic stations that are randomly distributed within distances of 40 to 1000 km compared to a reference event.
 We will explore the solution space of a Full Moment Tensor .
-To copy the Example (including the data) to a directory outside of the package source directory, please edit the ‘model path’ (referred to as $beat_models now on) and execute:</p>
+To copy the Example (including the data) to a directory outside of the package source directory, please edit the <em>model path</em> (referred to as $beat_models now on) and execute:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">beat</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span>
 <span class="n">beat</span> <span class="n">clone</span> <span class="n">FullMT</span> <span class="o">/</span><span class="s1">&#39;model path&#39;</span><span class="o">/</span><span class="n">FullMT</span> <span class="o">--</span><span class="n">copy_data</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">seismic</span>
 </pre></div>
 </div>
-<p>This will create a BEAT project directory named ‘FullMT’ with a configuration file (config_geometry.yaml) and some synthetic example data (seismic_data.pkl).
-This directory is going to be referred to as ‘$project_directory’ in the following.</p>
+<p>This will create a BEAT project directory named <em>FullMT</em> with a configuration file (config_geometry.yaml) and some synthetic example data (seismic_data.pkl).
+This directory is going to be referred to as <em>$project_directory</em> in the following.</p>
 </div>
 <div class="section" id="calculate-greens-functions">
 <h2>Calculate Greens Functions<a class="headerlink" href="#calculate-greens-functions" title="Permalink to this headline">¶</a></h2>
 <p>The station-event geometry determines the grid of Greens Functions (GFs) that will need to be calculated next.</p>
-<p>Please open $project_directory/config_geometry.yaml with any text editor (e.g. vi) and search for “store_superdir”. Here, it is written for now /home/vasyurhm/BEATS/GF, which is an example path to the directory of Greens Functions.
+<p>Please open $project_directory/config_geometry.yaml with any text editor (e.g. vi) and search for <em>store_superdir</em>. Here, it is written for now /home/vasyurhm/BEATS/GF, which is an example path to the directory of Greens Functions.
 This path needs to be replaced with the path to where the GFs are supposed to be stored on your computer. This directory is referred to as the $GF_path in the rest of the text. It is strongly recommended to use a separate directory apart from the beat source directory and the $project_directory as the GF databases can become very large, depending on the problem! For real examples, the GF databases may require up to several Gigabyte of free disc space. For our example the database that we are going to create is only around 30 Megabyte.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>cd $beat_models
 beat build_gfs FullMT --datatypes=&#39;seismic&#39;
@@ -143,9 +143,10 @@ Below are the grid definitions of the GFs. In this example the source depth grid
 As we have stations up to a distance of 970km distance to the event, the distance grid is accordingly extending up to 1000km.
 These grid sampling parameters as well as the sample rate are of major importance for the overall optimization. How to adjust these parameters
 according to individual case studies is described <a class="reference external" href="https://pyrocko.org/docs/current/apps/fomosto/tutorial.html#considerations-for-real-world-applications">here</a>.</p>
-<p>The ‘nworkers’ variable defines the number of CPUs to use in parallel for the GF calculations. As these calculations may become very expensive and time-consuming it is of advantage to use as many CPUs as available. To be still able to navigate in your Operating System without crashing the system it is good to leave one CPU work-less. Please edit the ‘nworkers’ parameter now!</p>
+<p>The <em>nworkers</em> variable defines the number of CPUs to use in parallel for the GF calculations. As these calculations may become very expensive and time-consuming it is of advantage to use as many CPUs as available. To be still able to navigate in your Operating System without crashing the system it is good to leave one CPU work-less.
+Please edit the <em>nworkers</em> parameter now!</p>
 <p>For our use-case the grid specifications are fine for now.</p>
-<p>The seismic phases for which the GFs are going to be calculated are defined under ‘waveforms’ in the $project_directory/config_geometry.yaml there are</p>
+<p>The seismic phases for which the GFs are going to be calculated are defined under <em>waveforms</em> in the $project_directory/config_geometry.yaml there are</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>- !beat.WaveformFitConfig
   include: true
   name: any_P
@@ -164,7 +165,7 @@ according to individual case studies is described <a class="reference external" 
     d: 270.0
 </pre></div>
 </div>
-<p>In this case the GFs are going to be calculated for the P body waves. We can add additional WaveformFitConfig(s) if we want to include more phases. Like in our case of a regional setup we would like to include surface waves. For the build_GFs command only the existence of the WaveformFitConfig and the name are of importance and we can ignore the other parameters so far. So lets add to the $project_directory/config_geometry.yaml file, the following config. Please copy ..</p>
+<p>In this case the GFs are going to be calculated for the P body waves. We can add additional <em>WaveformFitConfig*(s) if we want to include more phases. Like in our case of a regional setup we would like to include surface waves. For the build_GFs command only the existence of the *WaveformFitConfig</em> and the name are of importance and we can ignore the other parameters so far. So lets add to the $project_directory/config_geometry.yaml file, the following config. Please copy ..</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>- !beat.WaveformFitConfig
   include: true
   name: slowest
@@ -183,7 +184,7 @@ according to individual case studies is described <a class="reference external" 
     d: 55.0
 </pre></div>
 </div>
-<p>and paste it below the ‘any_P’ WaveformFitConfig. Note: You should be having 2 WaveformFitConfig entries and both entries MUST have the same indentation!
+<p>and paste it below the ‘any_P’ <em>WaveformFitConfig</em>. Note: You should be having 2 <em>WaveformFitConfig</em> entries and both entries MUST have the same indentation!
 Your seismic_config within the $project_directory/config_geometry.yaml should look like this:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>seismic_config: !beat.SeismicConfig
   datadir: ./
@@ -244,7 +245,7 @@ Your seismic_config within the $project_directory/config_geometry.yaml should lo
 </pre></div>
 </div>
 <p>Depending on the number of CPUs that have been assigned to the job this may take few minutes.</p>
-<p>Next we can use the ‘fomosto’ tool together with ‘snuffler’ to inspect if the GFs look reasonable. To plot the 10 elementary GF components in a depth of 8km at a distance of 500km:</p>
+<p>Next we can use the <strong>fomosto</strong> tool together with <strong>snuffler</strong> to inspect if the GFs look reasonable. To plot the 10 elementary GF components in a depth of 8km at a distance of 500km:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>fomosto view $GF_path/AqabaMT_ak135_1.000Hz_0 --extract=&#39;8k,500k&#39;
 </pre></div>
 </div>
@@ -256,10 +257,10 @@ Your seismic_config within the $project_directory/config_geometry.yaml should lo
 <div class="section" id="data-windowing-and-optimization-setup">
 <h2>Data windowing and optimization setup<a class="headerlink" href="#data-windowing-and-optimization-setup" title="Permalink to this headline">¶</a></h2>
 <p>Once we are confident that the GFs are reasonable we may continue to define the optimization specific setup variables.
-First of all we check again the WaveformFitConfig for the waves we want to optimize.
+First of all we check again the <em>WaveformFitConfig</em> for the waves we want to optimize.
 In this case we want to optimize the whole waveform from P until the end of the surface waves.
-As the wavetrains are very close in the very near field we do not want to have overlapping time windows, which is why we deactivate one of the WaveformFitConfigs, by setting
-include=False on the <cite>slowest</cite> WaveformfitConfig. So please open again $project_directory/config_geometry.yaml (if you did close the file again) and edit the respective parameter!</p>
+As the wavetrains are very close in the very near field we do not want to have overlapping time windows, which is why we deactivate one of the <em>WaveformFitConfigs</em>, by setting
+<em>include*=False on the `slowest` *WaveformfitConfig</em>. So please open again $project_directory/config_geometry.yaml (if you did close the file again) and edit the respective parameter!</p>
 <p>Also there we may define a distance range of stations taken into account,
 define a bandpass filter and a time window with respect to the arrival time of the respective wave.
 Therefore, stations that are used to optimize the P-wave do not necessarily need to be used to optimize the surface waves by defining different distance ranges.
@@ -267,8 +268,8 @@ Similarly, different filters and arrival time windows maybe defined as well. The
 <p>The optimization is done in the R, T, Z rotated coordinate system to better tune, which part of the waves are optimized. That is particularly important if the S-wave
 is going to be used, as one would typically use only SH waves which are the S-waves in the T-component.
 For P-waves one would like to use the Z(vertical) component and for surface waves both components.
-So please make sure that in $project_directory/config_geometry.yaml under the WaveformFitConfig (name ‘any_P’) the channels list contains [Z, T] (including the brackets!)!</p>
-<p>Finally, we fix the depth prior to 8km (upper and lower) as we only calculated GFs for that depth. $project_directory/config_geometry.yaml under the point ‘priors’:</p>
+So please make sure that in $project_directory/config_geometry.yaml under the <em>WaveformFitConfig</em> (name ‘any_P’) the channels list contains [Z, T] (including the brackets!)!</p>
+<p>Finally, we fix the depth prior to 8km (upper and lower) as we only calculated GFs for that depth. $project_directory/config_geometry.yaml under the point <em>priors</em>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>priors:
   depth: !beat.heart.Parameter
     name: depth
@@ -284,18 +285,18 @@ We may inspect the raw data together with the processed data that is going to be
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">check</span> <span class="n">FullMT</span> <span class="o">--</span><span class="n">what</span><span class="o">=</span><span class="s1">&#39;traces&#39;</span>
 </pre></div>
 </div>
-<p>This should open again the ‘snuffler’ window and you can interactively scroll through the traces zoom in and out, filter the traces and much more.
+<p>This should open again the <strong>snuffler</strong> window and you can interactively scroll through the traces zoom in and out, filter the traces and much more.
 A detailed tutorial about handeling the browser is given <a class="reference external" href="https://pyrocko.org/docs/current/apps/snuffler/tutorial.html">here</a>.</p>
 <blockquote>
 <div><img alt="../_images/FullMT_data.png" src="../_images/FullMT_data.png" />
 </div></blockquote>
-<p>To better sort the displayed traces and to inspect the processed data we may use snufflers display options.
-Please right click in the window and see a menu that pops up. There, please select: “Sort by Distance” to sort the traces by distance to get a better picture of the setup. To see, which traces actually belong to the same station and component, please open the menu again and select “Subsort by Network, Station, Channel (Grouped by Location)” and “Common Scale per Component”. To distinguish better between the overlapping traces please select as well “Color Traces” and deselect “Show Boxes”.
+<p>To better sort the displayed traces and to inspect the processed data we may use <strong>snufflers</strong> display options.
+Please right click in the window and see a menu that pops up. There, please select: <em>Sort by Distance</em> to sort the traces by distance to get a better picture of the setup. To see, which traces actually belong to the same station and component, please open the menu again and select <em>Subsort by Network, Station, Channel (Grouped by Location)</em> and <em>Common Scale per Component</em>. To distinguish better between the overlapping traces please select as well <em>Color Traces</em> and deselect <em>Show Boxes</em>.
 Your display should look something like this.</p>
 <blockquote>
 <div><img alt="../_images/FullMT_windowed.png" src="../_images/FullMT_windowed.png" />
 </div></blockquote>
-<p>In red we see the raw data traces as stored under $project_directory/seismic_data.pkl; and in blue we see the processed data where the WaveformFitConfig parameters (see above) have been applied. The blue traces are going to be used in this form throughout the optimization. For this setup here we are good, but for future problems the user may now adjust the configuration and repeatedly check if the data windowing is satisfying. For example, the user may widen the arrival_taper times to make sure that a respective wave train is completely included in case it is cut at the taper boundary. Or in case of noisy or bad quality data a station may be completely excluded by putting its name in the “blacklist” parameter.</p>
+<p>In red we see the raw data traces as stored under $project_directory/seismic_data.pkl; and in blue we see the processed data where the <em>WaveformFitConfig</em> parameters (see above) have been applied. The blue traces are going to be used in this form throughout the optimization. For this setup here we are good, but for future problems the user may now adjust the configuration and repeatedly check if the data windowing is satisfying. For example, the user may widen the arrival_taper times to make sure that a respective wave train is completely included in case it is cut at the taper boundary. Or in case of noisy or bad quality data a station may be completely excluded by putting its name in the <em>blacklist</em> parameter.</p>
 <p>Now that we checked the optimization setup we are good to go.</p>
 </div>
 <div class="section" id="sample-the-solution-space">
@@ -319,9 +320,9 @@ The configuration of the hyper parameter sampling, is determined by the hyper_sa
 </pre></div>
 </div>
 <p>Here we use an adaptive Metropolis algorithm to sample the solution space.
-How many different random source parameters are chosen and how often the sampling is repeated is controlled by ‘n_chains’ (default:20).
-In case there are several CPUs available the ‘n_jobs’ parameter determines how many processes (Markov Chains (MCs)) are sampled in parallel.
-Each MC will contain 25k samples (‘n_steps’) and every 50 samples the step-size will be adjusted (‘tune_interval’).
+How many different random source parameters are chosen and how often the sampling is repeated is controlled by <em>n_chains</em> (default:20).
+In case there are several CPUs available the <em>n_jobs</em> parameter determines how many processes (Markov Chains (MCs)) are sampled in parallel.
+Each MC will contain 25k samples (<em>n_steps</em>) and every 50 samples the step-size will be adjusted (<em>tune_interval</em>).
 You may want to increase that now! To start the sampling please run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">FullMT</span> <span class="o">--</span><span class="n">hypers</span>
 </pre></div>
@@ -343,30 +344,32 @@ the HPs parameter bounds show something like:</p>
     testvalue: [-0.5]
 </pre></div>
 </div>
-<p>Now that we have determined the noise scalings we want to sample the full problem. The sampler to be used can be configured under ‘sampler_config’.:</p>
+<p>Now that we have an initial guess on the hyperparameters we can run the optimization using the default sampling algorithm, a Sequential Monte Carlo sampler.
+The sampler can effectively exploit the parallel architecture of nowadays computers. The <em>n_jobs</em> number should be set to as many CPUs as possible in the configuration file.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>sampler_config: !beat.SamplerConfig
-  name: PT
+  name: SMC
   progressbar: true
-  buffer_size: 1000
-  parameters: !beat.ParallelTemperingConfig
+  buffer_size: 5000
+  buffer_thinning: 10
+  parameters: !beat.SMCConfig
+    n_chains: 500
+    n_steps: 100
+    n_jobs: 4
     tune_interval: 10
+    coef_variation: 1.0
+    stage: 0
     proposal_dist: MultivariateNormal
     check_bnd: true
-    rm_flag: false
-    n_samples: 50000
-    n_chains: 8
-    swap_interval: [10, 30]
-    beta_tune_interval: 1000
-    n_chains_posterior: 3
-    resample: false
-    thin: 1
-    burn: 0.6
+    update_covariances: false
+    rm_flag: true
 </pre></div>
 </div>
-<p>Here we use a Parallel Tempering algorithm (please see the paper and references therein for details). The sampler should stop after the chains that sample from the posterior have collected 50k samples (‘n_samples’).
-The total number of MCs used for sampling and the ones that sample from the posterior, can be adjusted with the parameters ‘n_chains’ and ‘n_chains_posterior’, respectively.
-We propose to swap chain states randomly every 10 to 30 samples (‘swap_interval’) between random chains. We also adaptively tune the tempering parameters of each chain based on the swap acceptance every ‘beta_tune_interval’.</p>
-<p>Finally, we sample the solution space with:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><em>n_chains</em> divided by <em>n_jobs</em> MUST yield a whole number! An error is going to be thrown if this is not the case!</p>
+</div>
+<p>Here we use 4 cpus (n_jobs) - you can change this according to your systems specifications.
+Finally, we sample the solution space with:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">FullMT</span>
 </pre></div>
 </div>
@@ -401,12 +404,13 @@ If you check the summary.txt file (path then also printed to the screen):</p>
 <h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
 <p>Now to the point that you all have been waiting for ;) the result in pictures.
 To see the waveform fit of the posterior maximum likelihood solution. In the $beat_models run:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT</span> <span class="n">waveform_fits</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT</span> <span class="n">waveform_fits</span> <span class="o">--</span><span class="n">nensemble</span><span class="o">=</span><span class="mi">100</span>
 </pre></div>
 </div>
 <p>If it worked it will produce a pdf with several pages output for all the components for each station that have been used in the optimization.
 The black waveforms are the unfiltered data. Red are the best fitting synthetic traces. Light grey and light red are the filtered, untapered data and synthetic traces respectively. The red data trace below are the residual traces between data and synthetics.
-The Z-components from our stations should look something like this.</p>
+The Z-components from our stations should look something like this. The <em>nensemble</em> parameter defines the number of draws that are taken from the
+posterior probability density to forward calculate an ensemble of synthetic waveforms.</p>
 <blockquote>
 <div><img alt="../_images/FullMT_waveforms_max.png" src="../_images/FullMT_waveforms_max.png" />
 </div></blockquote>
@@ -415,7 +419,7 @@ in the Prior distributions of the config file. Here, these values got already se
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT</span> <span class="n">waveform_fits</span>  <span class="o">--</span><span class="n">reference</span>
 </pre></div>
 </div>
-<p>Again looking at the Z-components of the traces shows that our estimate is almost identical to the true test value.</p>
+<p>Again looking at the Z-components of the traces shows that our estimate is far off to the true test value.</p>
 <blockquote>
 <div><img alt="../_images/FullMT_waveforms_ref.png" src="../_images/FullMT_waveforms_ref.png" />
 </div></blockquote>
@@ -425,36 +429,92 @@ in the Prior distributions of the config file. Here, these values got already se
 </div>
 <p>It may look like this.</p>
 <blockquote>
-<div><img alt="../_images/FullMT_stage_-1_max.png" src="../_images/FullMT_stage_-1_max.png" />
+<div><img alt="../_images/FullMT_stage_-1_max_variance.png" src="../_images/FullMT_stage_-1_max_variance.png" />
+</div></blockquote>
 <p>The vertical black lines are the true values and the vertical red lines are the maximum likelihood values.
 We see that the true solution is not comprised within the marginals of all parameters. This may have several reasons. In the next section we will discuss and investigate the influence of the noise characteristics.</p>
 <p>To get an image of parameter correlations (including the true reference value in red) of moment tensor components, the location and the magnitude. In the $beat_models run:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT</span> <span class="n">correlation_hist</span> <span class="o">--</span><span class="n">reference</span> <span class="o">--</span><span class="n">stage_number</span><span class="o">=-</span><span class="mi">1</span> <span class="o">--</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span> <span class="o">--</span><span class="n">varnames</span><span class="o">=</span><span class="s1">&#39;mee, med, mdd, mnn, mnd, mne, north_shift, east_shift, magnitude&#39;</span>
 </pre></div>
 </div>
-</div></blockquote>
 <p>This will show an image like that.</p>
 <blockquote>
-<div><img alt="../_images/FullMT_corr_hist_max.png" src="../_images/FullMT_corr_hist_max.png" />
+<div><img alt="../_images/FullMT_corr_hist_ref_variance.png" src="../_images/FullMT_corr_hist_ref_variance.png" />
 </div></blockquote>
 <p>This shows 2d kernel density estimates (kde) and histograms of the specified model parameters. The darker the 2d kde the higher the probability of the model parameter.
 The red dot and the vertical red lines show the true values of the target source in the kde plots and histograms, respectively.</p>
-<p>The ‘varnames’ option may take any parameter that has been optimized for. For example one might als want to try –varnames=’duration, time, magnitude, north_shift, east_shift’.
+<p>The <em>varnames</em> option may take any parameter that has been optimized for. For example one might als want to try –varnames=’duration, time, magnitude, north_shift, east_shift’.
 If it is not specified all sampled parameters are taken into account.</p>
 </div>
 <div class="section" id="seismic-noise-estimation">
 <h2>Seismic noise estimation<a class="headerlink" href="#seismic-noise-estimation" title="Permalink to this headline">¶</a></h2>
-<p>If we have poor knowledge of the noise in the data, the model parameter estimates may be poor and the true parameters are not covered by the distributions (as was the case above). In the previous run we used a data covariance matrix of the form of an identity matrix with only the noise variance in the diagonal. Under the seismic_config you find the configuration for the noise analyser, which looks like that:</p>
+<p>If we have poor knowledge of the noise in the data, the model parameter estimates may be poor and the true parameters
+are not covered by the distributions (as was the case above). In the previous run we used a data covariance matrix of the
+form of an identity matrix with only the noise variance in the diagonal. Under the seismic_config you find the configuration
+for the noise analyser, which looks like that:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>noise_estimator: !beat.SeismicNoiseAnalyserConfig
   structure: variance
   pre_arrival_time: 3.0
 </pre></div>
 </div>
-<p>The “structure” argument refers to the structure of the covariance matrix that is estimated on the data, prior to the synthetic P-wave arrival. The argument “pre_arrival_time” refers to the time before the P-wave arrival. 3.0 means that the noise is estimated on each data trace up to 3. seconds before the synthetic P-wave arrival.
-Obviously, in the previos run the white-noise assumption was not working well. So we may set the structure to “exponential” to also estimate noise covariances depending on the shortest wavelength in the data, following <a class="reference internal" href="#duputel2012" id="id1">[Duputel2012]</a>.</p>
-<p>Other options are to “import” to use the covariance matrixes that have been imported with the data
-Also the option “non-toeplitz” to estimate non-stationary, correlated noise on the residuals following <a class="reference internal" href="#dettmer2007" id="id2">[Dettmer2007]</a>
-in this case the values from the priors and hypers “testvalues” are used as reference to calculate the residuals.</p>
+<p>The <em>structure</em> argument refers to the structure of the covariance matrix that is estimated on the data, prior to the
+synthetic P-wave arrival. The argument <em>pre_arrival_time</em> refers to the time before the P-wave arrival.
+3.0 means that the noise is estimated on each data trace up to 3. seconds before the synthetic P-wave arrival.
+Obviously, in the previous run the white-noise assumption was not working well.
+So we may set the structure to <em>exponential</em> to also estimate noise covariances depending on the shortest
+wavelength in the data, following <a class="reference internal" href="#duputel2012" id="id1">[Duputel2012]</a>.</p>
+<p>Other options are to <em>import</em> to use the covariance matrices that have been imported with the data
+Also the option <em>non-toeplitz</em> to estimate non-stationary, correlated noise on the residuals following <a class="reference internal" href="#dettmer2007" id="id2">[Dettmer2007]</a>.</p>
+</div>
+<div class="section" id="clone-setup-into-new-project">
+<h2>Clone setup into new project<a class="headerlink" href="#clone-setup-into-new-project" title="Permalink to this headline">¶</a></h2>
+<p>Now we want to repeat the sampling with the noise structure set to <em>non-toeplitz</em>, but we want to keep the previous results
+as well as the configuration files unchanged for keeping track of our work. So we can use again the clone function to clone
+the current setup into a new directory.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">clone</span> <span class="n">FullMT</span> <span class="n">FullMT_nont</span> <span class="o">--</span><span class="n">copy_data</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">seismic</span>
+</pre></div>
+</div>
+<p>Now we can change the noise_estimator to use <em>non-toeplitz</em> structured covariance matrices in the new project directory <em>FullMT_nont</em>
+keeping all the other configurations identical.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>noise_estimator: !beat.SeismicNoiseAnalyserConfig
+  structure: non-toeplitz
+  pre_arrival_time: 3.0
+</pre></div>
+</div>
+<p>In this case the values from the priors and hypers <em>testvalues</em> are used as reference to calculate the initial residuals,
+which are being used to estimate the covariance matrices. This may produce heavily biased results in case these values
+are far off the true source parameters. Therefore, we have to update the non-Toeplitz covariance estimates in the course of the samping!
+We can do this by setting the <em>update_covariances</em> parameter in the SMC parameters to true.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>sampler_config: !beat.SamplerConfig
+  name: SMC
+  progressbar: true
+  buffer_size: 5000
+  buffer_thinning: 10
+  parameters: !beat.SMCConfig
+    n_chains: 500
+    n_steps: 100
+    n_jobs: 4
+    tune_interval: 10
+    coef_variation: 1.0
+    stage: 0
+    proposal_dist: MultivariateNormal
+    check_bnd: true
+    update_covariances: true    % &lt;-- HERE! ;)
+    rm_flag: true
+</pre></div>
+</div>
+<p>Please go ahead and repeat the run with the steps from above using this configuration!</p>
+<p>Again plotting the parameter marginals with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">FullMT_nont</span> <span class="n">stage_posteriors</span> <span class="o">--</span><span class="n">reference</span> <span class="o">--</span><span class="n">stage_number</span><span class="o">=-</span><span class="mi">1</span> <span class="o">--</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span>
+</pre></div>
+</div>
+<p>This will show an image like that.</p>
+<blockquote>
+<div><img alt="../_images/FullMT_stage_-1_max_nont.png" src="../_images/FullMT_stage_-1_max_nont.png" />
+</div></blockquote>
+<p>Now we are doing much better regarding the moment tensor components. However, the magnitude is still overestimated,
+but there is not much we can do about that so far with such data.</p>
+<p>Please also go ahead and check out the other plots like the <em>hudson</em> or <em>fuzzy_beachball</em>.</p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
@@ -496,12 +556,14 @@ in this case the values from the priors and hypers “testvalues” are used as 
 <li class="toctree-l3"><a class="reference internal" href="#summarize-the-results">Summarize the results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#seismic-noise-estimation">Seismic noise estimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clone-setup-into-new-project">Clone setup into new project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 2: Rectangular source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 3: Static finite-fault estimation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 4: Kinematic finite-fault estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dc_teleseismic.html">Example 2: Teleseismic Double Couple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 3: Rectangular source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 4: Static finite-fault estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 5: Kinematic finite-fault estimation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>
@@ -523,7 +585,7 @@ in this case the values from the priors and hypers “testvalues” are used as 
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Rectangular.html" title="Example 2: Rectangular source"
+          <a href="dc_teleseismic.html" title="Example 2: Teleseismic Double Couple"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Examples"

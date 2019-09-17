@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Example 4: Kinematic finite-fault estimation &#8212; beat 1.0beta documentation</title>
+    <title>Example 5: Kinematic finite-fault estimation &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Frequently asked questions" href="../faq.html" />
-    <link rel="prev" title="Example 3: Static finite-fault estimation" href="FFI_static.html" />
+    <link rel="prev" title="Example 4: Static finite-fault estimation" href="FFI_static.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
     <meta name="viewport" content="width=device-width,initial-scale=0.8">
@@ -78,19 +78,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="example-4-kinematic-finite-fault-estimation">
-<h1>Example 4: Kinematic finite-fault estimation<a class="headerlink" href="#example-4-kinematic-finite-fault-estimation" title="Permalink to this headline">¶</a></h1>
-<p>It is a requirement to have Example 2 and 3 completed in order to follow the instructions and commands given in this Example.
+  <div class="section" id="example-5-kinematic-finite-fault-estimation">
+<h1>Example 5: Kinematic finite-fault estimation<a class="headerlink" href="#example-5-kinematic-finite-fault-estimation" title="Permalink to this headline">¶</a></h1>
+<p>It is a requirement to have Example 3 and 4 completed in order to follow the instructions and commands given in this Example.
 The data is the exact same from <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#">Example 2</a>, where the overall geometry of the fault plane was estimated.
-In <a class="reference external" href="https://hvasbath.github.io/beat/examples/FFI_static.html#">Example 3</a> we solved for variable slip on the optimum fault geometry from Example 2 by using static InSAR data.
-We will use the posterior marginals from Example 3 and use them as priors in this Example. Here we will determine a kinematic variable slip distribution including rupture propagation for the L’aquila 2009 earthquake by using static InSAR data <strong>jointly</strong> with teleseismic displacement waveforms.</p>
+In <a class="reference external" href="https://hvasbath.github.io/beat/examples/FFI_static.html#">Example 4</a> we solved for variable slip on the optimum fault geometry from Example 3 by using static InSAR data.
+We will use the posterior marginals from Example 4 and use them as priors in this Example. Here we will determine a kinematic variable slip distribution including rupture propagation for the L’Aquila 2009 earthquake by using static InSAR data <strong>jointly</strong> with teleseismic displacement waveforms.</p>
 <p>Please make sure that you are one level above the Laquila project folder (created earlier).:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>cd $beat_models_path
 </pre></div>
 </div>
 <div class="section" id="clone-config">
 <h2>Clone config<a class="headerlink" href="#clone-config" title="Permalink to this headline">¶</a></h2>
-<p>We want to use the setup that we used for Example 3, but additionally we want to include the teleseismic data.
+<p>We want to use the setup that we used for Example 4, but additionally we want to include the teleseismic data.
 So we generate a new project folder Laquila_kinematic cloning the previous <em>config_ffi.yaml</em> from the <em>Laquila</em> project_directory with:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">clone</span> <span class="n">Laquila</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">geodetic</span><span class="p">,</span><span class="n">seismic</span>
 </pre></div>
@@ -100,7 +100,7 @@ So we generate a new project folder Laquila_kinematic cloning the previous <em>c
 <div class="section" id="import-results">
 <h2>Import results<a class="headerlink" href="#import-results" title="Permalink to this headline">¶</a></h2>
 <p>In this step we want to import the results from the previous two optimizations to the configuration file.
-Firstly, we want to import the results from Example 2(geometry optimization). But this time also the <em>seismic_config</em> is updated:</p>
+Firstly, we want to import the results from Example 3(geometry optimization). But this time also the <em>seismic_config</em> is updated:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">Laquila_kinematic</span> <span class="o">--</span><span class="n">results</span><span class="o">=</span><span class="n">Laquila</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">geometry</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">geodetic</span><span class="p">,</span><span class="n">seismic</span>
 </pre></div>
 </div>
@@ -148,12 +148,12 @@ gf_config: !beat.SeismicLinearGFConfig
 </div>
 <p>Editing the <em>reference_sources</em> this way ensures consistent geometry for all datatypes (maybe in the future there are more to be added…).
 Now please make sure that also the arguments <em>patch_widths</em> and <em>patch_lengths</em> as well as the <em>extension_widths</em> and <em>extension_lengths</em> are consistent!
-The discretization at this point could be changed of course. However, this would then not allow to import the results from Example 3(ffi optimization), which we want to do next:</p>
+The discretization at this point could be changed of course. However, this would then not allow to import the results from Example 4(ffi optimization), which we want to do next:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">Laquila_kinematic</span> <span class="o">--</span><span class="n">results</span><span class="o">=</span><span class="n">Laquila</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">geodetic</span><span class="p">,</span><span class="n">seismic</span>
 </pre></div>
 </div>
-<p>You will notice now that the lower and upper bounds of the slip parameters <em>uparr</em> and <em>uperp</em> have been updated. Each sub-patch has indiviudal bounds where the index in the array refers to the patch number in the geometry and discretization figure shown in Example 3. As a short recap here again.</p>
-<img alt="../_images/Laquila_FaultGeometry.png" src="../_images/Laquila_FaultGeometry.png" />
+<p>You will notice now that the lower and upper bounds of the slip parameters <em>uparr</em> and <em>uperp</em> have been updated. Each sub-patch has indiviudal bounds where the index in the array refers to the patch number in the geometry and discretization figure shown in Example 4. As a short recap here again.</p>
+<img alt="../_images/Laquila_FaultGeometry1.png" src="../_images/Laquila_FaultGeometry1.png" />
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">We could not reproduce the plot yet right away as we did not create the <em>fault_geometry.pkl</em> object yet.</p>
@@ -163,7 +163,7 @@ The discretization at this point could be changed of course. However, this would
 <h2>Calculate Green’s Functions<a class="headerlink" href="#calculate-green-s-functions" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="elementary-gfs">
 <h3>Elementary GFs<a class="headerlink" href="#elementary-gfs" title="Permalink to this headline">¶</a></h3>
-<p>Now the Green’s Functions store(s) have to be calculated again for the “geometry” problem with higher resolutions. Please remember <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#calculate-greens-functions">Example 2</a>. There the optimization was run using Green’s Functions depth and distance sampling of 4km with 0.5Hz sampling. This may be accurate enough for the <em>geometry</em> type of optimization, however, for a finite fault optimization the aim is to resolve details of the rupture propagation and the slip distribution. So the setup parameters of the “geometry” Green’s Functions would need to be changed to higher resolution. In this case we want to use wavelengths of up to 0.5Hz ergo a depth and distance sampling of 1 km and 2Hz sample rate may be precise enough. Of course, these parameters depend on the problem setup and have to be adjusted individually for each problem! So please open the <em>Laquila/config_geometry.yaml</em> and edit the parameters accordingly.
+<p>Now the Green’s Functions store(s) have to be calculated again for the <strong>geometry</strong> problem with higher resolutions. Please remember <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#calculate-greens-functions">Example 3</a>. There the optimization was run using Green’s Functions depth and distance sampling of 4km with 0.5Hz sampling. This may be accurate enough for the <em>geometry</em> type of optimization, however, for a finite fault optimization the aim is to resolve details of the rupture propagation and the slip distribution. So the setup parameters of the <strong>geometry</strong> Green’s Functions would need to be changed to higher resolution. In this case we want to use wavelengths of up to 0.5Hz ergo a depth and distance sampling of 1 km and 2Hz sample rate may be precise enough. Of course, these parameters depend on the problem setup and have to be adjusted individually for each problem! So please open the <em>Laquila/config_geometry.yaml</em> and edit the parameters accordingly.
 Running this calculation will take a long time depending on the number of CPUs at hand. (With 25 CPUs the calculation took approximately 15Hrs):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">execute</span>
 </pre></div>
@@ -219,7 +219,7 @@ The data that is used for the posterior likelihood calculation is defined by the
 </div>
 <div class="section" id="gf-library">
 <h3>GF Library<a class="headerlink" href="#gf-library" title="Permalink to this headline">¶</a></h3>
-<p>In the next step again Green’s Functions have to be calculated. What? Again? That’s right! Now they need to be calculated for the fixed fault geometry (remember Example 3). Firstly, we create the discretized fault, this time for seismic and geodetic data:</p>
+<p>In the next step again Green’s Functions have to be calculated. What? Again? That’s right! Now they need to be calculated for the fixed fault geometry (remember Example 4). Firstly, we create the discretized fault, this time for seismic and geodetic data:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">build_gfs</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">seismic</span><span class="p">,</span><span class="n">geodetic</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
 </pre></div>
 </div>
@@ -260,7 +260,7 @@ As the forward calculation has to be as fast as possible as much as possible has
 <p>These can be specified for <strong>all</strong> the patches under the <em>durations</em> prior. In order to keep the <em>library</em> at feasable sizes these values should be reasonable compared to the size of the earthquake. Example: For a magnitude Mw 6 earthquake we do not expect risetimes of 20s…
 Please set the lower and upper bounds of the durations to 0. and 4. seconds, respectively.</p>
 <p>Also we need to specify the bounds on the rupture velocities. The shear-wave velocity from the velocity model is a good proxy for that. So please set the lower and upper bounds on the velocities to 2.2 and 4.5 [km/s], respectively. These velocities are sampled for each patch individually and indirectly determine the rupture onset time of each patch depending on the hypocentral location (<em>nucleation_dip</em> and <em>nucleation_strike</em>). To assure causal rupture propagation starting from the hypocentre the Eikonal equation is solved each forward calculation, which then determines the rupture onset time on each patch <a class="reference internal" href="../api.html#minson2013" id="id1">[Minson2013]</a>.</p>
-<p>So far we defined everything with respect to the hypocentre, but we have to keep in mind that its location and the hypocentral time are unknowns as well. The time-shift with respect to the <em>event.time</em> has been determined in Example 2 before roughly assuming constant rupture velocity and uniform slip on the RectangularSource. Likely, the refined hypocentral time in this optimization will be converging to a similar time estimate as previously determined. This previously determined timing information has been imported as well in the “import results” - step. However, these bounds should be relaxed again as we are using different frequency content in the data and we allow for a much complexer optimization setup. Please set the lower and upper bounds for the <em>time</em> to -13. and 0., respectively.</p>
+<p>So far we defined everything with respect to the hypocentre, but we have to keep in mind that its location and the hypocentral time are unknowns as well. The time-shift with respect to the <em>event.time</em> has been determined in Example 3 before roughly assuming constant rupture velocity and uniform slip on the RectangularSource. Likely, the refined hypocentral time in this optimization will be converging to a similar time estimate as previously determined. This previously determined timing information has been imported as well in the ‘import results’ - step. However, these bounds should be relaxed again as we are using different frequency content in the data and we allow for a much complexer optimization setup. Please set the lower and upper bounds for the <em>time</em> to -13. and 0., respectively.</p>
 <p>Finally, we are left with specifying the <em>duration_sampling</em> and <em>starttime_sampling</em> under the <em>seismic_config.gf_config</em>. These determine the steps taken between the upper and lower bounds for the <em>durations</em> and the discrete starttime-shifts.
 Please set the <em>duration_sampling</em> to 0.25. As we are using GFs with 2Hz setting the <em>starttime_sampling</em> to full discrete time samples of 0.5 is reasonable.</p>
 <p>The <em>interpolation</em> attribute determines the interpolation method that is used to interpolate the GFs at values in between the pre-calculated waveforms. Please use <em>multilinear</em> for higher-precission and <em>nearest_neighbor</em> if the calculation has to be fast.</p>
@@ -281,7 +281,7 @@ Please set the <em>duration_sampling</em> to 0.25. As we are using GFs with 2Hz 
 </ul>
 </dd>
 </dl>
-<p>For visual inspection of the resulting seismic traces in the “snuffler” waveform browser:</p>
+<p>For visual inspection of the resulting seismic traces in the <strong>snuffler</strong> waveform browser:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">check</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">what</span><span class="o">=</span><span class="s1">&#39;library&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="s1">&#39;seismic&#39;</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;ffi&#39;</span>
 </pre></div>
 </div>
@@ -292,7 +292,7 @@ Please set the <em>duration_sampling</em> to 0.25. As we are using GFs with 2Hz 
 </div>
 <div class="section" id="sample-the-solution-space">
 <h2>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h2>
-<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">Example 2</a> Example for a more detailed description of the sampling and associated parameters.</p>
+<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">Example 3</a> Example for a more detailed description of the sampling and associated parameters.</p>
 <p>Firstly, we only optimize for the noise scaling or hyperparameters (HPs) including the laplacian smoothing weight:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">hypers</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
 </pre></div>
@@ -321,12 +321,12 @@ h_laplacian: !beat.heart.Parameter
 </div>
 <div class="section" id="markov-chain-initialization">
 <h3>Markov Chain initialization<a class="headerlink" href="#markov-chain-initialization" title="Permalink to this headline">¶</a></h3>
-<p>The <em>initialization</em> argument determines at which point in the solution space to initialize the Markov Chains. In Example 3 we set this argument to <em>lsq</em>.
-Here we are going to use <em>random</em> again, please set it now! We initially narrowed down the slip-parameters by importing the results from Example 3. Thus, we already have a pretty good estimate on how the slip-distribution should look like, explaining the geodetic data reasonably well.</p>
-<p>The ‘n_jobs’ number should be set to as many CPUs as the user can spare under the <em>sampler_config</em>. The number of sampled MarkovChains and the number of steps for each chain of the SMC sampler should be set to high values as we are optimizing now for ca 500 random variables (if the values from the tutorial haven’t been altered by the user); for example to 8000 and 400, respectively.</p>
+<p>The <em>initialization</em> argument determines at which point in the solution space to initialize the Markov Chains. In Example 4 we set this argument to <em>lsq</em>.
+Here we are going to use <em>random</em> again, please set it now! We initially narrowed down the slip-parameters by importing the results from Example 4. Thus, we already have a pretty good estimate on how the slip-distribution should look like, explaining the geodetic data reasonably well.</p>
+<p>The <em>n_jobs</em> number should be set to as many CPUs as the user can spare under the <em>sampler_config</em>. The number of sampled MarkovChains and the number of steps for each chain of the SMC sampler should be set to high values as we are optimizing now for ca 500 random variables (if the values from the tutorial haven’t been altered by the user); for example to 8000 and 400, respectively.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">With these sampler parameters a huge amount of samples are going to be stored to disk! Please see <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#summarize-and-plotting">Example 2</a> for an instruction on how to keep only the important samples to reduce the disk usage.</p>
+<p class="last">With these sampler parameters a huge amount of samples are going to be stored to disk! Please see <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#summarize-and-plotting">Example 3</a> for an instruction on how to keep only the important samples to reduce the disk usage.</p>
 </div>
 <p>Finally, we are set to run the full optimization for the static slip-distribution with:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
@@ -346,7 +346,7 @@ Here we are going to use <em>random</em> again, please set it now! We initially 
 </pre></div>
 </div>
 <img alt="../_images/slip_distribution_-1_max.png" src="../_images/slip_distribution_-1_max.png" />
-<p>Compared to Example 3 we also see here the location of the hypocentre (black star) as well as the fuzzy rupture fronts based on the posterior ensemble of solutions.</p>
+<p>Compared to Example 4 we also see here the location of the hypocentre (black star) as well as the fuzzy rupture fronts based on the posterior ensemble of solutions.</p>
 <p>To get histograms for the parameters of individual patches use the –source_idxs option(here: 15, 51 and 67) please run:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">Laquila_kinematic</span> <span class="n">stage_posteriors</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span> <span class="o">--</span><span class="n">force</span> <span class="o">--</span><span class="n">stage_number</span><span class="o">=-</span><span class="mi">1</span> <span class="o">--</span><span class="n">varnames</span><span class="o">=</span><span class="n">uparr</span><span class="p">,</span><span class="n">uperp</span><span class="p">,</span><span class="n">durations</span><span class="p">,</span><span class="n">velocities</span> <span class="o">--</span><span class="n">source_idxs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="mi">67</span>
 </pre></div>
@@ -367,12 +367,12 @@ Here we are going to use <em>random</em> again, please set it now! We initially 
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">Laquila_kinematic</span> <span class="n">waveform_fits</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
 </pre></div>
 </div>
-<img alt="../_images/waveforms_-1_max_0.png" src="../_images/waveforms_-1_max_0.png" />
+<img alt="../_images/waveforms_-1_max_100.png" src="../_images/waveforms_-1_max_100.png" />
 <p>For the fuzzy moment rate function:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">plot</span> <span class="n">Laquila_kinematic</span> <span class="n">moment_rate</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
 </pre></div>
 </div>
-<img alt="../_images/moment_rate_-1_0_max.png" src="../_images/moment_rate_-1_0_max.png" />
+<a class="reference internal image-reference" href="../_images/moment_rate_-1_0_max.png"><img alt="../_images/moment_rate_-1_0_max.png" src="../_images/moment_rate_-1_0_max.png" style="width: 494.8px; height: 350.0px;" /></a>
 <p>Here the MAP moment rate function is displayed by the black solid line.</p>
 </div>
 </div>
@@ -393,9 +393,10 @@ Here we are going to use <em>random</em> again, please set it now! We initially 
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html">Example 1: Regional Full Moment Tensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 2: Rectangular source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 3: Static finite-fault estimation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 4: Kinematic finite-fault estimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dc_teleseismic.html">Example 2: Teleseismic Double Couple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 3: Rectangular source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_static.html">Example 4: Static finite-fault estimation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 5: Kinematic finite-fault estimation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#clone-config">Clone config</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#import-results">Import results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-green-s-functions">Calculate Green’s Functions</a></li>
@@ -428,7 +429,7 @@ Here we are going to use <em>random</em> again, please set it now! We initially 
           <a href="../faq.html" title="Frequently asked questions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="FFI_static.html" title="Example 3: Static finite-fault estimation"
+          <a href="FFI_static.html" title="Example 4: Static finite-fault estimation"
              accesskey="P">previous</a> |</li>
       </ul>
     </div>

@@ -96,13 +96,16 @@
 
 <span class="kn">from</span> <span class="nn">pymc3.vartypes</span> <span class="k">import</span> <span class="n">discrete_types</span>
 <span class="kn">from</span> <span class="nn">pymc3.model</span> <span class="k">import</span> <span class="n">modelcontext</span><span class="p">,</span> <span class="n">Point</span>
-<span class="kn">from</span> <span class="nn">pymc3.step_methods.metropolis</span> <span class="k">import</span> <span class="n">tune</span><span class="p">,</span> <span class="n">metrop_select</span>
+<span class="kn">from</span> <span class="nn">pymc3.step_methods.metropolis</span> <span class="k">import</span> <span class="n">metrop_select</span>
+<span class="kn">from</span> <span class="nn">pymc3.step_methods.metropolis</span> <span class="k">import</span> <span class="n">tune</span> <span class="k">as</span> <span class="n">step_tune</span>
+
 <span class="kn">from</span> <span class="nn">pymc3.theanof</span> <span class="k">import</span> <span class="n">make_shared_replacements</span><span class="p">,</span> <span class="n">inputvars</span>
 <span class="kn">from</span> <span class="nn">pymc3.backends</span> <span class="k">import</span> <span class="n">text</span>
 
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">util</span>
 
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">backend</span><span class="p">,</span> <span class="n">utility</span>
+<span class="kn">from</span> <span class="nn">beat.covariance</span> <span class="k">import</span> <span class="n">init_proposal_covariance</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">iter_parallel_chains</span><span class="p">,</span> <span class="n">choose_proposal</span><span class="p">,</span> <span class="n">logp_forw</span><span class="p">,</span> \
     <span class="n">init_stage</span><span class="p">,</span> <span class="n">update_last_samples</span><span class="p">,</span> <span class="n">multivariate_proposals</span>
 
@@ -176,26 +179,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">scalar2floatX</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">scale</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">covariance</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">proposal_name</span> <span class="ow">in</span> <span class="n">multivariate_proposals</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">covariance</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">dsize</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">))</span>
-            <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">covariance</span>
-        <span class="k">elif</span> <span class="n">covariance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">scale</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">dsize</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">scale</span> <span class="o">=</span> <span class="n">covariance</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">tune</span> <span class="o">=</span> <span class="n">tune</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_bound</span> <span class="o">=</span> <span class="n">check_bound</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tune_interval</span> <span class="o">=</span> <span class="n">tune_interval</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps_until_tune</span> <span class="o">=</span> <span class="n">tune_interval</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">proposal_name</span> <span class="o">=</span> <span class="n">proposal_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">proposal_dist</span> <span class="o">=</span> <span class="n">choose_proposal</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">proposal_name</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">proposal_samples_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal_dist</span><span class="p">(</span><span class="n">n_chains</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cumulative_samples</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accepted</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="mf">1.</span>
@@ -229,6 +219,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">check_bnd</span> <span class="o">=</span> <span class="n">logp_forw</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">varlogpt</span><span class="p">],</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">shared</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">Metropolis</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">vars</span><span class="p">,</span> <span class="n">out_vars</span><span class="p">,</span> <span class="n">shared</span><span class="p">)</span>
+
+        <span class="c1"># init proposal</span>
+        <span class="k">if</span> <span class="n">covariance</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">proposal_name</span> <span class="ow">in</span> <span class="n">multivariate_proposals</span><span class="p">:</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">covariance</span> <span class="o">=</span> <span class="n">init_proposal_covariance</span><span class="p">(</span>
+                <span class="n">bij</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bij</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">vars</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">pop_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Time for proposal covariance init: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span><span class="p">))</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">covariance</span>
+        <span class="k">elif</span> <span class="n">covariance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">dsize</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">covariance</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proposal_name</span> <span class="o">=</span> <span class="n">proposal_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proposal_dist</span> <span class="o">=</span> <span class="n">choose_proposal</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proposal_name</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proposal_samples_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proposal_dist</span><span class="p">(</span><span class="n">n_chains</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">chain_previous_lpoint</span> <span class="o">=</span> <span class="p">[[]]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_chains</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tps</span> <span class="o">=</span> <span class="kc">None</span>
@@ -307,7 +315,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">scalar2floatX</span><span class="p">(</span>
-                    <span class="n">tune</span><span class="p">(</span>
+                    <span class="n">step_tune</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">scaling</span><span class="p">,</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">accepted</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tune_interval</span><span class="p">)))</span>
 
@@ -357,10 +365,10 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Select llk: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
 
+                    <span class="n">tempered_llk_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span>
+                            <span class="n">lp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">l0</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">])</span>
                     <span class="n">q_new</span><span class="p">,</span> <span class="n">accepted</span> <span class="o">=</span> <span class="n">metrop_select</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span>
-                            <span class="n">lp</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">l0</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_llk_index</span><span class="p">]),</span>
-                        <span class="n">q</span><span class="p">,</span> <span class="n">q0</span><span class="p">)</span>
+                        <span class="n">tempered_llk_ratio</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q0</span><span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">accepted</span><span class="p">:</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Accepted: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
@@ -404,6 +412,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">chain_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">steps_until_tune</span> <span class="o">-=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cumulative_samples</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="c1"># reset sample counter</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_sample</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span><span class="p">:</span>
@@ -448,7 +457,7 @@
 
 <div class="viewcode-block" id="metropolis_sample"><a class="viewcode-back" href="../../api.html#sampler.metropolis.metropolis_sample">[docs]</a><span class="k">def</span> <span class="nf">metropolis_sample</span><span class="p">(</span>
         <span class="n">n_steps</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">homepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span>
-        <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rm_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+        <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rm_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">burn</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">thin</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Execute Metropolis algorithm repeatedly depending on the number of chains.</span>
@@ -493,7 +502,7 @@
     <span class="n">chains</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">update</span> <span class="o">=</span> <span class="n">init_stage</span><span class="p">(</span>
         <span class="n">stage_handler</span><span class="o">=</span><span class="n">stage_handler</span><span class="p">,</span>
         <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
-        <span class="n">stage</span><span class="o">=</span><span class="n">stage</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>   <span class="c1"># needs zero otherwise tries to load stage_0 results</span>
+        <span class="n">stage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>   <span class="c1"># needs zero otherwise tries to load stage_0 results</span>
         <span class="n">progressbar</span><span class="o">=</span><span class="n">progressbar</span><span class="p">,</span>
         <span class="n">update</span><span class="o">=</span><span class="n">update</span><span class="p">,</span>
         <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
@@ -517,6 +526,7 @@
             <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
             <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="n">n_jobs</span><span class="p">,</span>
             <span class="s1">&#39;buffer_size&#39;</span><span class="p">:</span> <span class="n">buffer_size</span><span class="p">,</span>
+            <span class="s1">&#39;buffer_thinning&#39;</span><span class="p">:</span> <span class="n">buffer_thinning</span><span class="p">,</span>
             <span class="s1">&#39;chains&#39;</span><span class="p">:</span> <span class="n">chains</span><span class="p">}</span>
 
         <span class="n">mtrace</span> <span class="o">=</span> <span class="n">iter_parallel_chains</span><span class="p">(</span><span class="o">**</span><span class="n">sample_args</span><span class="p">)</span>

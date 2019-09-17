@@ -581,6 +581,8 @@
             <span class="s1">&#39;Seismic optimization on: </span><span class="se">\n</span><span class="s1"> &#39;</span>
             <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_rvs</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_rvs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fixed_rvs</span><span class="p">)</span>
+
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="n">wlogpts</span> <span class="o">=</span> <span class="p">[]</span>
 

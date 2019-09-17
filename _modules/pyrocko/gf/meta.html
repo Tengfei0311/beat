@@ -164,7 +164,9 @@
 
 
 <span class="k">class</span> <span class="nc">StaticResult</span><span class="p">(</span><span class="n">SeismosizerResult</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Dict</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">serialize_as</span><span class="o">=</span><span class="s1">&#39;base64&#39;</span><span class="p">))</span>
 
 
 <span class="k">class</span> <span class="nc">GNSSCampaignResult</span><span class="p">(</span><span class="n">StaticResult</span><span class="p">):</span>
@@ -176,43 +178,37 @@
 
     <span class="n">theta</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">serialize_as</span><span class="o">=</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
 
     <span class="n">phi</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">serialize_as</span><span class="o">=</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
 
-    <span class="n">nrows</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">ncols</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">KiteSceneResult</span><span class="p">(</span><span class="n">SatelliteResult</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">kite_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;displacement.los&#39;</span><span class="p">,</span> <span class="n">scene_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">Tuple</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;displacement.los&#39;</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">kite</span> <span class="k">import</span> <span class="n">Scene</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;Kite not installed&#39;</span><span class="p">)</span>
-        <span class="n">sc</span> <span class="o">=</span> <span class="n">Scene</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">nrows</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="ow">is</span> <span class="kc">None</span>\
-                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Scene parameters not given&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">sc</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span>
-            <span class="n">sc</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span>
-            <span class="k">if</span> <span class="n">scene_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">sc</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">frame</span>
-                <span class="n">sc</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">meta</span>
-                <span class="n">sc</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">theta</span>
-                <span class="n">sc</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">scene_config</span><span class="o">.</span><span class="n">phi</span>
-            <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
-            <span class="n">disp</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="n">component</span><span class="p">]</span>
-            <span class="n">disp</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">disp</span><span class="p">,</span>
-                               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nrows</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">ncols</span><span class="p">))</span>
-            <span class="n">sc</span><span class="o">.</span><span class="n">displacement</span> <span class="o">=</span> <span class="n">disp</span>
 
-            <span class="k">return</span> <span class="n">sc</span>
+        <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">displacement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="n">component</span><span class="p">]</span>
+
+        <span class="n">displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="n">reshape</span><span class="p">,</span> <span class="p">(</span><span class="n">displacement</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">))</span>
+
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">Scene</span><span class="p">(</span>
+            <span class="n">displacement</span><span class="o">=</span><span class="n">displacement</span><span class="p">,</span>
+            <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sc</span>
 
 
 <span class="k">class</span> <span class="nc">ComponentSchemeDescription</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -290,7 +286,7 @@
 <span class="sd">    Different Green&#39;s Function component schemes are available:</span>
 
 <span class="sd">    ================= =========================================================</span>
-<span class="sd">    \                 Description</span>
+<span class="sd">    Name              Description</span>
 <span class="sd">    ================= =========================================================</span>
 <span class="sd">    ``elastic10``     Elastodynamic for</span>
 <span class="sd">                      :py:class:`~pyrocko.gf.meta.ConfigTypeA` and</span>
@@ -841,10 +837,10 @@
         <span class="n">Object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_source_terms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">make_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">scheme</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">effective_latlons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1736,7 +1732,7 @@
         <span class="k">return</span> <span class="n">out</span>
 
     <span class="k">def</span> <span class="nf">short_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">(</span><span class="s1">&#39;should be implemented in subclass&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;should be implemented in subclass&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_shear_moduli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span>
                          <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

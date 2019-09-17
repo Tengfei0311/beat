@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Example 3: Static finite-fault estimation &#8212; beat 1.0beta documentation</title>
+    <title>Example 4: Static finite-fault estimation &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,8 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Example 4: Kinematic finite-fault estimation" href="FFI_kinematic.html" />
-    <link rel="prev" title="Example 2: Rectangular source" href="Rectangular.html" />
+    <link rel="next" title="Example 5: Kinematic finite-fault estimation" href="FFI_kinematic.html" />
+    <link rel="prev" title="Example 3: Rectangular source" href="Rectangular.html" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
     <meta name="viewport" content="width=device-width,initial-scale=0.8">
@@ -78,11 +78,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="example-3-static-finite-fault-estimation">
-<h1>Example 3: Static finite-fault estimation<a class="headerlink" href="#example-3-static-finite-fault-estimation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="example-4-static-finite-fault-estimation">
+<h1>Example 4: Static finite-fault estimation<a class="headerlink" href="#example-4-static-finite-fault-estimation" title="Permalink to this headline">¶</a></h1>
 <p>In this example we will determine a variable slip distribution for the L’aquila 2009 earthquake by using static InSAR data.
-The data is the exact same from <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#">Example 2</a>, where the overall geometry of the fault plane was estimated.
-It is a requirement to have Example 2 completed in order to follow the instructions and commands given in this example.</p>
+The data is the exact same from <a class="reference external" href="https://hvasbath.github.io/beat/examples/Rectangular.html#">Example 3</a>, where the overall geometry of the fault plane was estimated.
+It is a requirement to have Example 3 completed in order to follow the instructions and commands given in this example.</p>
 <p>Please make sure that you are one level above the Laquila project folder (created earlier).:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>cd $beat_models_path
 </pre></div>
@@ -135,7 +135,7 @@ The fault geometry needs to be defined in the <em>geodetic.gf_config.reference_s
   sample_rate: 1.1574074074074073e-05
 </pre></div>
 </div>
-<p>The values shown above are parts of the MAP solution from the optimization from Example 2. The results can been imported through the import command specifiying the –results option. We want to import the results from the <em>Laquila</em> project_directory from an optimization in <em>geometry</em> mode and we want to update the <em>geodetic</em> part of the <em>config_ffi.yaml</em>:</p>
+<p>The values shown above are parts of the MAP solution from the optimization from Example 3. The results can been imported through the import command specifiying the –results option. We want to import the results from the <em>Laquila</em> project_directory from an optimization in <em>geometry</em> mode and we want to update the <em>geodetic</em> part of the <em>config_ffi.yaml</em>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="kn">import</span> <span class="nn">Laquila</span> <span class="o">--</span><span class="n">results</span><span class="o">=</span><span class="n">Laquila</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometry&#39;</span> <span class="o">--</span><span class="n">datatypes</span><span class="o">=</span><span class="n">geodetic</span>
 </pre></div>
 </div>
@@ -155,7 +155,7 @@ We can inspect the geometry of the resulting extended discretized fault wrt. the
 </pre></div>
 </div>
 <p>This will open an interactive 3d plot of the fault geometry, which looks along the lines of</p>
-<img alt="../_images/Laquila_FaultGeometry.png" src="../_images/Laquila_FaultGeometry.png" />
+<img alt="../_images/Laquila_FaultGeometry1.png" src="../_images/Laquila_FaultGeometry1.png" />
 <p>The grey rectangle shows the geometry of the fault specified under <em>reference_sources</em> and the red rectangle(s) show the extended fault with the respective discretization of the sub-patches. The grey and red dots mark the centres of the <em>reference_fault(s)</em> and the extended faults, respectively.
 The numbers are the indexes of the repsective sub-patch in the Green’s Function matrix we are going to calculate next.</p>
 <div class="admonition note">
@@ -286,7 +286,7 @@ Adding the –diff option will display the changes to the config to screen inste
 </div>
 <div class="section" id="sample-the-solution-space">
 <h2>Sample the solution space<a class="headerlink" href="#sample-the-solution-space" title="Permalink to this headline">¶</a></h2>
-<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">example 2</a> example for a more detailed description of the sampling and associated parameters.</p>
+<p>Please refer to the ‘Sample the solution space section’ of <a class="reference external" href="https://hvasbath.github.io/beat/examples/FullMT_regional.html#sample-the-solution-space">example 3</a> example for a more detailed description of the sampling and associated parameters.</p>
 <p>Firstly, we only optimize for the noise scaling or hyperparameters (HPs) including the laplacian smoothing weight:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">sample</span> <span class="n">Laquila</span> <span class="o">--</span><span class="n">hypers</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
 </pre></div>
@@ -389,8 +389,9 @@ h_laplacian: !beat.heart.Parameter
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="FullMT_regional.html">Example 1: Regional Full Moment Tensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 2: Rectangular source</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 3: Static finite-fault estimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dc_teleseismic.html">Example 2: Teleseismic Double Couple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rectangular.html">Example 3: Rectangular source</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example 4: Static finite-fault estimation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#init">Init</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#calculate-greens-functions">Calculate Greens Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optimization-setup">Optimization setup</a></li>
@@ -399,7 +400,7 @@ h_laplacian: !beat.heart.Parameter
 <li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 4: Kinematic finite-fault estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FFI_kinematic.html">Example 5: Kinematic finite-fault estimation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently asked questions</a></li>
@@ -421,10 +422,10 @@ h_laplacian: !beat.heart.Parameter
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="FFI_kinematic.html" title="Example 4: Kinematic finite-fault estimation"
+          <a href="FFI_kinematic.html" title="Example 5: Kinematic finite-fault estimation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Rectangular.html" title="Example 2: Rectangular source"
+          <a href="Rectangular.html" title="Example 3: Rectangular source"
              accesskey="P">previous</a> |</li>
       </ul>
     </div>

@@ -105,8 +105,24 @@
 
 <span class="n">DataMap</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DataMap&#39;</span><span class="p">,</span> <span class="s1">&#39;list_ind, slc, shp, dtype, name&#39;</span><span class="p">)</span>
 
-<span class="n">kmtypes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;east_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;north_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span>
-               <span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="s1">&#39;delta_depth&#39;</span><span class="p">])</span>
+<span class="n">locationtypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;east_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;north_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;distance&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;delta_depth&#39;</span><span class="p">}</span>
+<span class="n">dimensiontypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">}</span>
+<span class="n">mttypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mnn&#39;</span><span class="p">,</span> <span class="s1">&#39;mee&#39;</span><span class="p">,</span> <span class="s1">&#39;mdd&#39;</span><span class="p">,</span> <span class="s1">&#39;mne&#39;</span><span class="p">,</span> <span class="s1">&#39;mnd&#39;</span><span class="p">,</span> <span class="s1">&#39;med&#39;</span><span class="p">}</span>
+<span class="n">degtypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;strike&#39;</span><span class="p">,</span> <span class="s1">&#39;dip&#39;</span><span class="p">,</span> <span class="s1">&#39;rake&#39;</span><span class="p">}</span>
+<span class="n">nucleationtypes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nucleation_x&#39;</span><span class="p">,</span> <span class="s1">&#39;nucleation_y&#39;</span><span class="p">}</span>
+
+<span class="n">kmtypes</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">locationtypes</span><span class="p">,</span> <span class="n">dimensiontypes</span><span class="p">)</span>
+<span class="n">grouped_vars</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+    <span class="n">kmtypes</span><span class="p">,</span> <span class="n">mttypes</span><span class="p">,</span> <span class="n">degtypes</span><span class="p">,</span> <span class="n">nucleationtypes</span><span class="p">)</span>
+
+<span class="n">unit_sets</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;locationtypes&#39;</span><span class="p">:</span> <span class="n">locationtypes</span><span class="p">,</span>
+    <span class="s1">&#39;dimensiontypes&#39;</span><span class="p">:</span> <span class="n">dimensiontypes</span><span class="p">,</span>
+    <span class="s1">&#39;mttypes&#39;</span><span class="p">:</span> <span class="n">mttypes</span><span class="p">,</span>
+    <span class="s1">&#39;degtypes&#39;</span><span class="p">:</span> <span class="n">degtypes</span><span class="p">,</span>
+    <span class="s1">&#39;nucleationtypes&#39;</span><span class="p">:</span> <span class="n">nucleationtypes</span><span class="p">,</span>
+<span class="p">}</span>
 
 <span class="n">seconds_str</span> <span class="o">=</span> <span class="s1">&#39;00:00:00&#39;</span>
 
@@ -322,6 +338,38 @@
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># variable does not exist in array use dummy</span>
                 <span class="n">a_list</span><span class="p">[</span><span class="n">list_ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span>
                     <span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">a_list</span></div>
+
+<div class="viewcode-block" id="ListToArrayBijection.a_nd2l"><a class="viewcode-back" href="../api.html#utility.ListToArrayBijection.a_nd2l">[docs]</a>    <span class="k">def</span> <span class="nf">a_nd2l</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maps value from ndarray space (ndims, data) to List space</span>
+<span class="sd">        Inverse operation of fmap. Nd</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        array : :class:`numpy.ndarray`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a_list : list</span>
+<span class="sd">            of :class:`numpy.ndarray`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">a_list</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_arrays</span><span class="p">)</span>
+        <span class="n">nd</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">if</span> <span class="n">nd</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Input array has wrong dimensions! Needed 2d array! Got </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">nd</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">list_ind</span><span class="p">,</span> <span class="n">slc</span><span class="p">,</span> <span class="n">shp</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">vmap</span><span class="p">:</span>
+            <span class="n">shpnd</span> <span class="o">=</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">)</span> <span class="o">+</span> <span class="n">shp</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">a_list</span><span class="p">[</span><span class="n">list_ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span>
+                    <span class="n">array</span><span class="p">)[:,</span> <span class="n">slc</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shpnd</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># variable does not exist in array use dummy</span>
+                <span class="n">a_list</span><span class="p">[</span><span class="n">list_ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span>
+                    <span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shpnd</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">a_list</span></div>
 
@@ -1063,8 +1111,7 @@
 
     <span class="n">eigval</span><span class="p">,</span> <span class="n">eigvec</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">eigval</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">)</span>
-    <span class="n">vec</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">eigvec</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">*</span> <span class="n">vec</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">eigvec</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">val</span><span class="p">))</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eigvec</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="running_window_rms"><a class="viewcode-back" href="../api.html#utility.running_window_rms">[docs]</a><span class="k">def</span> <span class="nf">running_window_rms</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">):</span>
@@ -1467,6 +1514,14 @@
             <span class="c1"># return func(*args, **kwargs)</span>
         <span class="k">return</span> <span class="n">wrap_func</span>
     <span class="k">return</span> <span class="n">timer_decorator</span>
+
+
+<span class="k">def</span> <span class="nf">is_odd</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">is_even</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 
           </div>

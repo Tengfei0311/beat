@@ -108,6 +108,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#utility.ListToArrayBijection.a2l">a2l() (utility.ListToArrayBijection method)</a>
 </li>
+      <li><a href="api.html#utility.ListToArrayBijection.a_nd2l">a_nd2l() (utility.ListToArrayBijection method)</a>
+</li>
       <li><a href="api.html#utility.adjust_fault_reference">adjust_fault_reference() (in module utility)</a>
 </li>
       <li><a href="api.html#utility.adjust_point_units">adjust_point_units() (in module utility)</a>
@@ -134,15 +136,17 @@
 </li>
       <li><a href="api.html#config.BEATconfig">BEATconfig (class in config)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#sampler.pt.TemperingManager.betas">betas (sampler.pt.TemperingManager attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#utility.biggest_common_divisor">biggest_common_divisor() (in module utility)</a>
 </li>
       <li><a href="api.html#parallel.borrow_all_memories">borrow_all_memories() (in module parallel)</a>
 </li>
       <li><a href="api.html#parallel.borrow_memory">borrow_memory() (in module parallel)</a>
+</li>
+      <li><a href="api.html#backend.BaseChain.buffer_write">buffer_write() (backend.BaseChain method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -354,7 +358,7 @@
 </li>
       <li><a href="api.html#utility.get_rotation_matrix">get_rotation_matrix() (in module utility)</a>
 </li>
-      <li><a href="api.html#backend.MemoryChain.get_sample_covariance">get_sample_covariance() (backend.MemoryChain method)</a>
+      <li><a href="api.html#backend.BaseChain.get_sample_covariance">get_sample_covariance() (backend.BaseChain method)</a>
 </li>
       <li><a href="api.html#sampler.metropolis.Metropolis.get_sampler_state">get_sampler_state() (sampler.metropolis.Metropolis method)</a>
 </li>
@@ -379,8 +383,6 @@
       <li><a href="api.html#backend.TextChain.get_values">get_values() (backend.TextChain method)</a>
 </li>
       <li><a href="api.html#heart.get_velocity_model">get_velocity_model() (in module heart)</a>
-</li>
-      <li><a href="api.html#sampler.pt.TemperingManager.get_workers">get_workers() (sampler.pt.TemperingManager method)</a>
 </li>
       <li><a href="api.html#sampler.pt.TemperingManager.get_workers_ge_beta">get_workers_ge_beta() (sampler.pt.TemperingManager method)</a>
 </li>
@@ -483,6 +485,8 @@
       <li><a href="api.html#inputf.load_and_blacklist_stations">load_and_blacklist_stations() (in module inputf)</a>
 </li>
       <li><a href="api.html#inputf.load_ascii_gnss">load_ascii_gnss() (in module inputf)</a>
+</li>
+      <li><a href="api.html#inputf.load_ascii_gnss_globk">load_ascii_gnss_globk() (in module inputf)</a>
 </li>
       <li><a href="api.html#config.load_config">load_config() (in module config)</a>
 </li>
@@ -820,6 +824,8 @@
 </li>
       <li><a href="api.html#module-theanof">theanof (module)</a>
 </li>
+      <li><a href="api.html#backend.thin_buffer">thin_buffer() (in module backend)</a>
+</li>
       <li><a href="api.html#parallel.TimeoutException">TimeoutException</a>
 </li>
   </ul></td>
@@ -854,19 +860,21 @@
 </li>
       <li><a href="api.html#heart.GeodeticDataset.update_local_coords">update_local_coords() (heart.GeodeticDataset method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#heart.IFG.update_los_vector">update_los_vector() (heart.IFG method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#heart.Covariance.update_slog_pdet">update_slog_pdet() (heart.Covariance method)</a>
 </li>
       <li><a href="api.html#utility.update_source">update_source() (in module utility)</a>
 </li>
       <li><a href="api.html#heart.DynamicTarget.update_target_times">update_target_times() (heart.DynamicTarget method)</a>
 </li>
-      <li><a href="api.html#models.seismic.SeismicDistributerComposite.update_weights">update_weights() (models.seismic.SeismicDistributerComposite method)</a>
+      <li><a href="api.html#models.geodetic.GeodeticDistributerComposite.update_weights">update_weights() (models.geodetic.GeodeticDistributerComposite method)</a>
 
       <ul>
+        <li><a href="api.html#models.seismic.SeismicDistributerComposite.update_weights">(models.seismic.SeismicDistributerComposite method)</a>
+</li>
         <li><a href="api.html#models.seismic.SeismicGeometryComposite.update_weights">(models.seismic.SeismicGeometryComposite method)</a>
 </li>
       </ul></li>
@@ -912,14 +920,12 @@
 </li>
       <li><a href="api.html#utility.weed_targets">weed_targets() (in module utility)</a>
 </li>
+      <li><a href="api.html#sampler.pt.TemperingManager.worker_a2l">worker_a2l() (sampler.pt.TemperingManager method)</a>
+</li>
       <li><a href="api.html#sampler.pt.TemperingManager.worker_beta_updated">worker_beta_updated() (sampler.pt.TemperingManager method)</a>
 </li>
       <li><a href="api.html#backend.FileChain.write">write() (backend.FileChain method)</a>
-
-      <ul>
-        <li><a href="api.html#backend.MemoryChain.write">(backend.MemoryChain method)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 

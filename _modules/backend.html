@@ -105,6 +105,8 @@
 <span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
 
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">num</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">pandas.errors</span> <span class="k">import</span> <span class="n">EmptyDataError</span>
@@ -122,6 +124,27 @@
     <span class="n">ListArrayOrdering</span><span class="p">,</span> <span class="n">ListToArrayBijection</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;backend&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="thin_buffer"><a class="viewcode-back" href="../api.html#backend.thin_buffer">[docs]</a><span class="k">def</span> <span class="nf">thin_buffer</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="p">,</span> <span class="n">ensure_last</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reduce a list of objects by a given value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    buffer : list</span>
+<span class="sd">        of objects to be thinned</span>
+<span class="sd">    buffer_thinning : int</span>
+<span class="sd">        every nth object in list is returned</span>
+<span class="sd">    ensure_last : bool</span>
+<span class="sd">        enable to ensure that last object in list is returned</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ensure_last</span><span class="p">:</span>
+        <span class="n">write_buffer</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">::</span><span class="o">-</span><span class="n">buffer_thinning</span><span class="p">]</span>
+        <span class="n">write_buffer</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_buffer</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[::</span><span class="n">buffer_thinning</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">write_buffer</span></div>
 
 
 <div class="viewcode-block" id="ArrayStepSharedLLK"><a class="viewcode-back" href="../api.html#backend.ArrayStepSharedLLK">[docs]</a><span class="k">class</span> <span class="nc">ArrayStepSharedLLK</span><span class="p">(</span><span class="n">BlockedStep</span><span class="p">):</span>
@@ -187,7 +210,8 @@
 <span class="sd">        `model.unobserved_RVs` is used.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                 <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="kc">None</span>
@@ -195,8 +219,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">chain</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">=</span> <span class="n">buffer_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer_thinning</span> <span class="o">=</span> <span class="n">buffer_thinning</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cov_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">modelcontext</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -208,15 +234,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="nb">vars</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">]</span>
-
             <span class="c1"># Get variable shapes. Most backends will need this</span>
             <span class="c1"># information.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">test_value</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">test_value</span><span class="o">.</span><span class="n">dtype</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">]</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes_list</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes_list</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">test_value</span><span class="o">.</span><span class="n">shape</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes</span><span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">test_value</span><span class="o">.</span><span class="n">dtype</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;No model or variables given!&#39;</span><span class="p">)</span>
 
@@ -235,9 +261,40 @@
     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
+<div class="viewcode-block" id="BaseChain.buffer_write"><a class="viewcode-back" href="../api.html#backend.BaseChain.buffer_write">[docs]</a>    <span class="k">def</span> <span class="nf">buffer_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write sampling results into buffer.</span>
+<span class="sd">        If buffer is full trow an error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">BufferError</span><span class="p">(</span>
+                <span class="s1">&#39;Buffer is full! Needs recording!!&#39;</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">empty_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="BaseChain.get_sample_covariance"><a class="viewcode-back" href="../api.html#backend.BaseChain.get_sample_covariance">[docs]</a>    <span class="k">def</span> <span class="nf">get_sample_covariance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return sample Covariance matrix from buffer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sample_difference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span>
+        <span class="k">if</span> <span class="n">sample_difference</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Covariance has been updated already!&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">sample_difference</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">BufferError</span><span class="p">(</span>
+                <span class="s1">&#39;Buffer is not full and sample covariance may be biased&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Evaluating sampled trace covariance of worker </span><span class="si">%i</span><span class="s1"> at &#39;</span>
+                <span class="s1">&#39;sample </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">cumulative_samples</span><span class="p">))</span>
+
+            <span class="n">cov</span> <span class="o">=</span> <span class="n">calc_sample_covariance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">lij</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">lij</span><span class="p">,</span> <span class="n">bij</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">bij</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">beta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cov_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">cov</span></div></div>
 
 
 <div class="viewcode-block" id="FileChain"><a class="viewcode-back" href="../api.html#backend.FileChain">[docs]</a><span class="k">class</span> <span class="nc">FileChain</span><span class="p">(</span><span class="n">BaseChain</span><span class="p">):</span>
@@ -248,29 +305,28 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-            <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">FileChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">vars</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="nb">vars</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span>
+            <span class="n">buffer_thinning</span><span class="o">=</span><span class="n">buffer_thinning</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span> <span class="o">=</span> <span class="n">dir_path</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">transd_vars_dist</span><span class="p">:</span>
                         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span><span class="p">,)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ttab</span><span class="o">.</span><span class="n">create_flat_names</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">ttab</span><span class="o">.</span><span class="n">create_flat_names</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-                                   <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ttab</span><span class="o">.</span><span class="n">create_flat_names</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
 
@@ -331,10 +387,10 @@
 <div class="viewcode-block" id="FileChain.write"><a class="viewcode-back" href="../api.html#backend.FileChain.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write sampling results into buffer.</span>
-<span class="sd">        If buffer is full write it out to file.</span>
+<span class="sd">        If buffer is full write samples to file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">record_buffer</span><span class="p">()</span></div>
 
@@ -343,10 +399,6 @@
 <span class="sd">        Clear the data loaded from file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_df</span> <span class="o">=</span> <span class="kc">None</span></div></div>
-
-
-<span class="k">class</span> <span class="nc">MemoryTraceError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="MemoryChain"><a class="viewcode-back" href="../api.html#backend.MemoryChain">[docs]</a><span class="k">class</span> <span class="nc">MemoryChain</span><span class="p">(</span><span class="n">BaseChain</span><span class="p">):</span>
@@ -374,28 +426,9 @@
         <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="MemoryChain.write"><a class="viewcode-back" href="../api.html#backend.MemoryChain.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write sampling results into buffer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lpoint</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">MemoryTraceError</span><span class="p">(</span><span class="s1">&#39;Trace is not setup!&#39;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="MemoryChain.get_sample_covariance"><a class="viewcode-back" href="../api.html#backend.MemoryChain.get_sample_covariance">[docs]</a>    <span class="k">def</span> <span class="nf">get_sample_covariance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lij</span><span class="p">,</span> <span class="n">bij</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return sample Covariance matrix from buffer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Covariance has been updated already!&#39;</span><span class="p">)</span>
-
-        <span class="n">cov</span> <span class="o">=</span> <span class="n">calc_sample_covariance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">lij</span><span class="o">=</span><span class="n">lij</span><span class="p">,</span> <span class="n">bij</span><span class="o">=</span><span class="n">bij</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">)</span>
-        <span class="c1"># reset buffer, keep last sample</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">return</span> <span class="n">cov</span></div></div>
+    <span class="k">def</span> <span class="nf">record_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Emptying buffer of trace </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">empty_buffer</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="TextChain"><a class="viewcode-back" href="../api.html#backend.TextChain">[docs]</a><span class="k">class</span> <span class="nc">TextChain</span><span class="p">(</span><span class="n">FileChain</span><span class="p">):</span>
@@ -416,6 +449,8 @@
 <span class="sd">    buffer_size : int</span>
 <span class="sd">        this is the number of samples after which the buffer is written to disk</span>
 <span class="sd">        or if the chain end is reached</span>
+<span class="sd">    buffer_thinning : int</span>
+<span class="sd">        every nth sample of the buffer is written to disk</span>
 <span class="sd">    progressbar : boolean</span>
 <span class="sd">        flag if a progressbar is active, if not a logmessage is printed</span>
 <span class="sd">        everytime the buffer is written to disk</span>
@@ -425,10 +460,11 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">TextChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">dir_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span> <span class="n">progressbar</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">dir_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span>
+            <span class="n">progressbar</span><span class="o">=</span><span class="n">progressbar</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="o">=</span><span class="n">buffer_thinning</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TextChain.setup"><a class="viewcode-back" href="../api.html#backend.TextChain.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -450,17 +486,14 @@
 
         <span class="n">cnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">fv</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="k">for</span> <span class="n">fv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span>
 
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found existing trace, appending!&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found existing trace, appending!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1"># writing header</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cnames</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="c1"># writing header</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cnames</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_write_data_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -476,7 +509,6 @@
         <span class="k">def</span> <span class="nf">lpoint2file</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">):</span>
             <span class="n">columns</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
                 <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">lpoint</span><span class="p">)</span>
-
             <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># Write binary</span>
@@ -486,7 +518,10 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">lpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+                    <span class="c1"># write out thinned buffer starting with last sample</span>
+                    <span class="n">write_buffer</span> <span class="o">=</span> <span class="n">thin_buffer</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_thinning</span><span class="p">,</span> <span class="n">ensure_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span> <span class="ow">in</span> <span class="n">write_buffer</span><span class="p">:</span>
                         <span class="n">lpoint2file</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
@@ -511,10 +546,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span> <span class="o">=</span> <span class="n">extract_variables_from_df</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
 <div class="viewcode-block" id="TextChain.get_values"><a class="viewcode-back" href="../api.html#backend.TextChain.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">burn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">thin</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -537,6 +572,7 @@
 <span class="sd">        :class:`numpy.array`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_df</span><span class="p">()</span>
+
         <span class="n">var_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">[</span><span class="n">varname</span><span class="p">]]</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">var_df</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -564,8 +600,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_df</span><span class="p">()</span>
         <span class="n">pt</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">:</span>
+            <span class="c1"># needs deepcopy otherwise reference to df is kept repetead calls</span>
+            <span class="c1"># lead to memory leak</span>
             <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">[</span><span class="n">varname</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-            <span class="n">pt</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">vals</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">varname</span><span class="p">])</span>
+            <span class="n">pt</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+                <span class="n">vals</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">varname</span><span class="p">]))</span>
+            <span class="k">del</span> <span class="n">vals</span>
         <span class="k">return</span> <span class="n">pt</span></div></div>
 
 
@@ -587,6 +627,8 @@
 <span class="sd">    buffer_size : int</span>
 <span class="sd">        this is the number of samples after which the buffer is written to disk</span>
 <span class="sd">        or if the chain end is reached</span>
+<span class="sd">    buffer_thinning : int</span>
+<span class="sd">        every nth sample of the buffer is written to disk</span>
 <span class="sd">    progressbar : boolean</span>
 <span class="sd">        flag if a progressbar is active, if not a logmessage is printed</span>
 <span class="sd">        everytime the buffer is written to disk</span>
@@ -596,15 +638,16 @@
 
     <span class="n">flat_names_tag</span> <span class="o">=</span> <span class="s2">&quot;flat_names&quot;</span>
     <span class="n">var_shape_tag</span> <span class="o">=</span> <span class="s2">&quot;var_shapes&quot;</span>
+    <span class="n">var_dtypes_tag</span> <span class="o">=</span> <span class="s2">&quot;var_dtypes&quot;</span>
     <span class="n">__data_structure</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-            <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">NumpyChain</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">dir_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">=</span><span class="n">progressbar</span><span class="p">,</span>
-            <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="o">=</span><span class="n">buffer_thinning</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
 
@@ -642,29 +685,36 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;SetupTrace: Chain_</span><span class="si">%i</span><span class="s1"> step_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">draws</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chain</span> <span class="o">=</span> <span class="n">chain</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">draws</span> <span class="o">=</span> <span class="n">draws</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span><span class="p">,</span> <span class="s1">&#39;chain-</span><span class="si">{}</span><span class="s1">.bin&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chain</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__data_structure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_data_structure</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Found existing trace, appending!&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found existing trace, appending!&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">data_type</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">data_type</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
                 <span class="n">header_data</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">flat_names_tag</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">var_shape_tag</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_shape_tag</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes_tag</span><span class="p">:</span> <span class="n">data_type</span><span class="p">}</span>
                 <span class="n">header</span> <span class="o">=</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">header_data</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
                 <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">extract_variables_from_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_header</span><span class="p">):</span>
-        <span class="n">header_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">file_header</span><span class="p">)</span>
+        <span class="n">header_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">file_header</span><span class="p">,</span> <span class="n">object_pairs_hook</span><span class="o">=</span><span class="n">OrderedDict</span><span class="p">)</span>
         <span class="n">flat_names</span> <span class="o">=</span> <span class="n">header_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_names_tag</span><span class="p">]</span>
-        <span class="n">var_shapes</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">header_data</span><span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">var_shape_tag</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="n">varnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">flat_names</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">flat_names</span><span class="p">,</span> <span class="n">var_shapes</span><span class="p">,</span> <span class="n">varnames</span>
+        <span class="n">var_shapes</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">header_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shape_tag</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">var_shapes</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">var_dtypes</span> <span class="o">=</span> <span class="n">header_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes_tag</span><span class="p">]</span>
+        <span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flat_names</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">flat_names</span><span class="p">,</span> <span class="n">var_shapes</span><span class="p">,</span> <span class="n">var_dtypes</span><span class="p">,</span> <span class="n">varnames</span>
 
 <div class="viewcode-block" id="NumpyChain.construct_data_structure"><a class="viewcode-back" href="../api.html#backend.NumpyChain.construct_data_structure">[docs]</a>    <span class="k">def</span> <span class="nf">construct_data_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -675,15 +725,14 @@
 <span class="sd">            A numpy.dtype</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> \
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrupted_flag</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flat_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">extract_variables_from_header</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_header</span><span class="p">)</span>
 
-        <span class="c1"># creating data type as float</span>
-        <span class="n">data_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;f8&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">)</span>
-        <span class="n">data_size</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">]</span>
         <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">size</span> <span class="o">+</span> <span class="n">data_type</span> <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="n">data_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data_size</span><span class="p">,</span> <span class="n">data_types</span><span class="p">)]</span>
+            <span class="s2">&quot;</span><span class="si">{shape}{dtype}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_dtypes</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">]</span>
 
         <span class="c1"># set data structure</span>
         <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">dtype</span><span class="p">({</span><span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="s1">&#39;formats&#39;</span><span class="p">:</span> <span class="n">formats</span><span class="p">})</span></div>
@@ -703,7 +752,7 @@
             <span class="k">for</span> <span class="n">names</span><span class="p">,</span> <span class="n">array</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">varnames</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">):</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">names</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span>
 
-            <span class="n">data</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="n">filehandle</span><span class="p">)</span>
 
         <span class="c1"># Write binary</span>
         <span class="k">if</span> <span class="n">lpoint</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -715,7 +764,9 @@
 
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;ab+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">lpoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+                    <span class="n">write_buffer</span> <span class="o">=</span> <span class="n">thin_buffer</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_thinning</span><span class="p">,</span> <span class="n">ensure_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">lpoint</span><span class="p">,</span> <span class="n">draw</span> <span class="ow">in</span> <span class="n">write_buffer</span><span class="p">:</span>
                         <span class="n">lpoint2file</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">lpoint2file</span><span class="p">(</span><span class="n">fh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">lpoint</span><span class="p">)</span>
@@ -741,7 +792,6 @@
 
     <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">burn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">thin</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_df</span><span class="p">()</span>
-
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
@@ -762,8 +812,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_df</span><span class="p">()</span>
-        <span class="n">pt</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="n">name</span><span class="p">)[</span><span class="n">idx</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">}</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_df</span><span class="p">[</span><span class="n">varname</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">pt</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_shapes</span><span class="p">[</span><span class="n">varname</span><span class="p">])</span>
+
         <span class="k">return</span> <span class="n">pt</span></div></div>
 
 
@@ -868,6 +921,9 @@
 
     <span class="k">def</span> <span class="nf">stage_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;stage_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stage</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">trans_stage_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;trans_stage_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stage</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">stage_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -988,7 +1044,25 @@
             <span class="n">dirname</span><span class="o">=</span><span class="n">dirname</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">,</span>
             <span class="n">varnames</span><span class="o">=</span><span class="n">varnames</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">recover_existing_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">varnames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">recover_existing_results</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span>
+            <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">varnames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">stage</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">stage</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">update</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">prev_stage_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans_stage_path</span><span class="p">(</span><span class="n">prev</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prev_stage_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_path</span><span class="p">(</span><span class="n">prev</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading end points of last completed stage: &#39;</span>
+                        <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">prev_stage_path</span><span class="p">)</span>
+            <span class="n">mtrace</span> <span class="o">=</span> <span class="n">load_multitrace</span><span class="p">(</span>
+                <span class="n">dirname</span><span class="o">=</span><span class="n">prev_stage_path</span><span class="p">,</span> <span class="n">varnames</span><span class="o">=</span><span class="n">varnames</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
+
+            <span class="n">step</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">array_population</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">likelihoods</span> <span class="o">=</span> \
+                <span class="n">step</span><span class="o">.</span><span class="n">select_end_points</span><span class="p">(</span><span class="n">mtrace</span><span class="p">)</span>
+
         <span class="n">stage_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_path</span><span class="p">(</span><span class="n">stage</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">stage_path</span><span class="p">):</span>
             <span class="c1"># load incomplete stage results</span>
@@ -998,7 +1072,8 @@
                 <span class="c1"># continue sampling if traces exist</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Checking for corrupted files ...&#39;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">check_multitrace</span><span class="p">(</span>
-                    <span class="n">mtrace</span><span class="p">,</span> <span class="n">draws</span><span class="o">=</span><span class="n">draws</span><span class="p">,</span> <span class="n">n_chains</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">n_chains</span><span class="p">)</span>
+                    <span class="n">mtrace</span><span class="p">,</span> <span class="n">draws</span><span class="o">=</span><span class="n">draws</span><span class="p">,</span> <span class="n">n_chains</span><span class="o">=</span><span class="n">step</span><span class="o">.</span><span class="n">n_chains</span><span class="p">,</span>
+                    <span class="n">buffer_thinning</span><span class="o">=</span><span class="n">buffer_thinning</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Init new trace!&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -1014,7 +1089,7 @@
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="load_multitrace"><a class="viewcode-back" href="../api.html#backend.load_multitrace">[docs]</a><span class="k">def</span> <span class="nf">load_multitrace</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">varnames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="load_multitrace"><a class="viewcode-back" href="../api.html#backend.load_multitrace">[docs]</a><span class="k">def</span> <span class="nf">load_multitrace</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">varnames</span><span class="o">=</span><span class="p">[],</span> <span class="n">chains</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load TextChain database.</span>
 
@@ -1068,7 +1143,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Loading trans-d trace is not implemented!&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="check_multitrace"><a class="viewcode-back" href="../api.html#backend.check_multitrace">[docs]</a><span class="k">def</span> <span class="nf">check_multitrace</span><span class="p">(</span><span class="n">mtrace</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">n_chains</span><span class="p">):</span>
+<div class="viewcode-block" id="check_multitrace"><a class="viewcode-back" href="../api.html#backend.check_multitrace">[docs]</a><span class="k">def</span> <span class="nf">check_multitrace</span><span class="p">(</span><span class="n">mtrace</span><span class="p">,</span> <span class="n">draws</span><span class="p">,</span> <span class="n">n_chains</span><span class="p">,</span> <span class="n">buffer_thinning</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check multitrace for incomplete sampling and return indexes from chains</span>
 <span class="sd">    that need to be resampled.</span>
@@ -1087,6 +1162,9 @@
 <span class="sd">    list of indexes for chains that need to be resampled</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">not_sampled_idx</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># apply buffer thinning</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">draws</span> <span class="o">/</span> <span class="n">buffer_thinning</span><span class="p">))</span>
+
     <span class="k">for</span> <span class="n">chain</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_chains</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">chain</span> <span class="ow">in</span> <span class="n">mtrace</span><span class="o">.</span><span class="n">chains</span><span class="p">:</span>
             <span class="n">chain_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mtrace</span><span class="o">.</span><span class="n">_straces</span><span class="p">[</span><span class="n">chain</span><span class="p">])</span>
@@ -1192,8 +1270,8 @@
     <span class="n">all_df_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">flatvar</span><span class="p">)</span> <span class="k">for</span> <span class="n">flatvar</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="n">varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">index</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">all_df_indexes</span><span class="p">]))</span>
 
-    <span class="n">flat_names</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">var_shapes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">flat_names</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">var_shapes</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="n">varnames</span><span class="p">:</span>
         <span class="n">indexes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">all_df_indexes</span><span class="p">:</span>
