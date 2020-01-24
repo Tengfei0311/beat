@@ -308,7 +308,7 @@
             <span class="n">initializer</span><span class="o">=</span><span class="n">initializer</span><span class="p">,</span>
             <span class="n">initargs</span><span class="o">=</span><span class="n">initargs</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Worker timeout after </span><span class="si">%i</span><span class="s1"> second(s)&#39;</span> <span class="o">%</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Worker timeout after </span><span class="si">%i</span><span class="s1"> second(s)&#39;</span> <span class="o">%</span> <span class="n">timeout</span><span class="p">)</span>
 
         <span class="n">workers</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">WatchedWorker</span><span class="p">(</span>
@@ -322,8 +322,8 @@
         <span class="k">if</span> <span class="n">pool_timeout</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="n">pool_timeout</span> <span class="o">=</span> <span class="mi">100</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Overseer timeout after </span><span class="si">%i</span><span class="s1"> second(s)&#39;</span> <span class="o">%</span> <span class="n">pool_timeout</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Chunksize: </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">chunksize</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Overseer timeout after </span><span class="si">%i</span><span class="s1"> second(s)&#39;</span> <span class="o">%</span> <span class="n">pool_timeout</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Chunksize: </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">chunksize</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">pool</span><span class="o">.</span><span class="n">map_async</span><span class="p">(</span>

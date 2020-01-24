@@ -174,10 +174,10 @@
 </li>
       <li><a href="api.html#heart.Covariance.chol_inverse">chol_inverse (heart.Covariance attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#heart.choose_backend">choose_backend() (in module heart)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#backend.FileChain.clear_data">clear_data() (backend.FileChain method)</a>
 </li>
       <li><a href="api.html#heart.concatenate_datasets">concatenate_datasets() (in module heart)</a>
@@ -187,6 +187,8 @@
       <li><a href="api.html#module-config">config (module)</a>
 </li>
       <li><a href="api.html#backend.NumpyChain.construct_data_structure">construct_data_structure() (backend.NumpyChain method)</a>
+</li>
+      <li><a href="api.html#config.CorrectionConfig">CorrectionConfig (class in config)</a>
 </li>
       <li><a href="api.html#plotting.correlation_plot">correlation_plot() (in module plotting)</a>
 </li>
@@ -211,6 +213,8 @@
       <li><a href="api.html#heart.DataWaveformCollection">DataWaveformCollection (class in heart)</a>
 </li>
       <li><a href="api.html#heart.DiffIFG">DiffIFG (class in heart)</a>
+</li>
+      <li><a href="api.html#config.DiscretizationConfig">DiscretizationConfig (class in config)</a>
 </li>
       <li><a href="api.html#pscmp.distributed_fault_patches_to_config">distributed_fault_patches_to_config() (in module pscmp)</a>
 </li>
@@ -240,8 +244,12 @@
 </li>
       <li><a href="api.html#utility.error_not_whole">error_not_whole() (in module utility)</a>
 </li>
+      <li><a href="api.html#theanof.EulerPole">EulerPole (class in theanof)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#config.EulerPoleConfig">EulerPoleConfig (class in config)</a>
+</li>
       <li><a href="api.html#parallel.exception_tracer">exception_tracer() (in module parallel)</a>
 </li>
       <li><a href="api.html#backend.extract_bounds_from_summary">extract_bounds_from_summary() (in module backend)</a>
@@ -292,9 +300,9 @@
 </li>
       <li><a href="api.html#covariance.geodetic_cov_velocity_models_pscmp">geodetic_cov_velocity_models_pscmp() (in module covariance)</a>
 </li>
-      <li><a href="api.html#plotting.geodetic_fits">geodetic_fits() (in module plotting)</a>
-</li>
       <li><a href="api.html#config.GeodeticConfig">GeodeticConfig (class in config)</a>
+</li>
+      <li><a href="api.html#config.GeodeticCorrectionsConfig">GeodeticCorrectionsConfig (class in config)</a>
 </li>
       <li><a href="api.html#heart.GeodeticDataset">GeodeticDataset (class in heart)</a>
 </li>
@@ -320,6 +328,14 @@
 </li>
       <li><a href="api.html#sampler.smc.SMC.get_chain_previous_lpoint">get_chain_previous_lpoint() (sampler.smc.SMC method)</a>
 </li>
+      <li><a href="api.html#heart.DiffIFG.get_correction">get_correction() (heart.DiffIFG method)</a>
+
+      <ul>
+        <li><a href="api.html#heart.GNSSCompoundComponent.get_correction">(heart.GNSSCompoundComponent method)</a>
+</li>
+        <li><a href="api.html#heart.GeodeticDataset.get_correction">(heart.GeodeticDataset method)</a>
+</li>
+      </ul></li>
       <li><a href="api.html#covariance.SeismicNoiseAnalyser.get_data_covariances">get_data_covariances() (covariance.SeismicNoiseAnalyser method)</a>
 </li>
       <li><a href="api.html#sampler.metropolis.get_final_stage">get_final_stage() (in module sampler.metropolis)</a>
@@ -334,13 +350,15 @@
         <li><a href="api.html#models.seismic.SeismicGeometryComposite.get_formula">(models.seismic.SeismicGeometryComposite method)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#backend.get_highest_sampled_stage">get_highest_sampled_stage() (in module backend)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#backend.get_highest_sampled_stage">get_highest_sampled_stage() (in module backend)</a>
+</li>
       <li><a href="api.html#sampler.smc.SMC.get_map_end_points">get_map_end_points() (sampler.smc.SMC method)</a>
 </li>
       <li><a href="api.html#sampler.pt.TemperingManager.get_package">get_package() (sampler.pt.TemperingManager method)</a>
+</li>
+      <li><a href="api.html#config.ResolutionDiscretizationConfig.get_patch_dimensions">get_patch_dimensions() (config.ResolutionDiscretizationConfig method)</a>
 </li>
       <li><a href="api.html#heart.get_phase_arrival_time">get_phase_arrival_time() (in module heart)</a>
 </li>
@@ -352,7 +370,11 @@
 </li>
       <li><a href="api.html#heart.ArrivalTaper.get_pyrocko_taper">get_pyrocko_taper() (heart.ArrivalTaper method)</a>
 </li>
+      <li><a href="api.html#heart.get_ramp_displacement">get_ramp_displacement() (in module heart)</a>
+</li>
       <li><a href="api.html#utility.get_random_uniform">get_random_uniform() (in module utility)</a>
+</li>
+      <li><a href="api.html#config.ProblemConfig.get_random_variables">get_random_variables() (config.ProblemConfig method)</a>
 </li>
       <li><a href="api.html#plotting.get_result_point">get_result_point() (in module plotting)</a>
 </li>
@@ -390,13 +412,7 @@
 </li>
       <li><a href="api.html#config.GFLibaryConfig">GFLibaryConfig (class in config)</a>
 </li>
-      <li><a href="api.html#heart.GNSSComponent">GNSSComponent (class in heart)</a>
-</li>
       <li><a href="api.html#heart.GNSSCompoundComponent">GNSSCompoundComponent (class in heart)</a>
-</li>
-      <li><a href="api.html#heart.GNSSDataset">GNSSDataset (class in heart)</a>
-</li>
-      <li><a href="api.html#heart.GNSSStation">GNSSStation (class in heart)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -425,6 +441,8 @@
       <li><a href="api.html#heart.init_datahandler">init_datahandler() (in module heart)</a>
 </li>
       <li><a href="api.html#heart.init_geodetic_targets">init_geodetic_targets() (in module heart)</a>
+</li>
+      <li><a href="api.html#config.init_reference_sources">init_reference_sources() (in module config)</a>
 </li>
       <li><a href="api.html#heart.init_seismic_targets">init_seismic_targets() (in module heart)</a>
 </li>
@@ -468,6 +486,8 @@
 </li>
       <li><a href="api.html#utility.ListToArrayBijection.l2d">l2d() (utility.ListToArrayBijection method)</a>
 </li>
+      <li><a href="api.html#config.LaplacianRegularizationConfig">LaplacianRegularizationConfig (class in config)</a>
+</li>
       <li><a href="api.html#utility.line_intersect">line_intersect() (in module utility)</a>
 </li>
       <li><a href="api.html#config.LinearGFConfig">LinearGFConfig (class in config)</a>
@@ -483,8 +503,6 @@
       <li><a href="api.html#inputf.load_and_blacklist_gnss">load_and_blacklist_gnss() (in module inputf)</a>
 </li>
       <li><a href="api.html#inputf.load_and_blacklist_stations">load_and_blacklist_stations() (in module inputf)</a>
-</li>
-      <li><a href="api.html#inputf.load_ascii_gnss">load_ascii_gnss() (in module inputf)</a>
 </li>
       <li><a href="api.html#inputf.load_ascii_gnss_globk">load_ascii_gnss_globk() (in module inputf)</a>
 </li>
@@ -577,6 +595,8 @@
       <li><a href="api.html#utility.DataMap.name">name (utility.DataMap attribute)</a>
 </li>
       <li><a href="api.html#utility.near_psd">near_psd() (in module utility)</a>
+</li>
+      <li><a href="api.html#config.NoneRegularizationConfig">NoneRegularizationConfig (class in config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -686,20 +706,26 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#config.RampConfig">RampConfig (class in config)</a>
+</li>
       <li><a href="api.html#heart.Parameter.random">random() (heart.Parameter method)</a>
 </li>
       <li><a href="api.html#heart.ReferenceLocation">ReferenceLocation (class in heart)</a>
+</li>
+      <li><a href="api.html#config.RegularizationConfig">RegularizationConfig (class in config)</a>
 </li>
       <li><a href="api.html#utility.repair_covariance">repair_covariance() (in module utility)</a>
 </li>
       <li><a href="api.html#sampler.smc.SMC.resample">resample() (sampler.smc.SMC method)</a>
 </li>
+      <li><a href="api.html#config.ResolutionDiscretizationConfig">ResolutionDiscretizationConfig (class in config)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#heart.ResultPoint">ResultPoint (class in heart)</a>
 </li>
       <li><a href="api.html#heart.ResultReport">ResultReport (class in heart)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#inputf.rotate_traces_and_stations">rotate_traces_and_stations() (in module inputf)</a>
 </li>
       <li><a href="api.html#utility.RS_center">RS_center() (in module utility)</a>
@@ -731,6 +757,8 @@
       <li><a href="api.html#config.SamplerConfig">SamplerConfig (class in config)</a>
 </li>
       <li><a href="api.html#config.SamplerParameters">SamplerParameters (class in config)</a>
+</li>
+      <li><a href="api.html#plotting.scene_fits">scene_fits() (in module plotting)</a>
 </li>
       <li><a href="api.html#utility.search_catalog">search_catalog() (in module utility)</a>
 </li>
@@ -784,6 +812,8 @@
         <li><a href="api.html#backend.TextChain.setup">(backend.TextChain method)</a>
 </li>
       </ul></li>
+      <li><a href="api.html#heart.DiffIFG.setup_correction">setup_correction() (heart.DiffIFG method)</a>
+</li>
       <li><a href="api.html#utility.setup_logging">setup_logging() (in module utility)</a>
 </li>
       <li><a href="api.html#inputf.setup_stations">setup_stations() (in module inputf)</a>
@@ -848,6 +878,8 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#config.UniformDiscretizationConfig">UniformDiscretizationConfig (class in config)</a>
+</li>
       <li><a href="api.html#utility.unique_list">unique_list() (in module utility)</a>
 </li>
       <li><a href="api.html#pscmp.PsCmpRectangularSource.update">update() (pscmp.PsCmpRectangularSource method)</a>
@@ -860,10 +892,10 @@
 </li>
       <li><a href="api.html#heart.GeodeticDataset.update_local_coords">update_local_coords() (heart.GeodeticDataset method)</a>
 </li>
-      <li><a href="api.html#heart.IFG.update_los_vector">update_los_vector() (heart.IFG method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#heart.IFG.update_los_vector">update_los_vector() (heart.IFG method)</a>
+</li>
       <li><a href="api.html#heart.Covariance.update_slog_pdet">update_slog_pdet() (heart.Covariance method)</a>
 </li>
       <li><a href="api.html#utility.update_source">update_source() (in module utility)</a>
@@ -890,13 +922,15 @@
 </li>
       <li><a href="api.html#config.ProblemConfig.validate_hierarchicals">validate_hierarchicals() (config.ProblemConfig method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#config.ProblemConfig.validate_hypers">validate_hypers() (config.ProblemConfig method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#config.ProblemConfig.validate_priors">validate_priors() (config.ProblemConfig method)</a>
 </li>
       <li><a href="api.html#heart.vary_model">vary_model() (in module heart)</a>
+</li>
+      <li><a href="api.html#heart.velocities_from_pole">velocities_from_pole() (in module heart)</a>
 </li>
   </ul></td>
 </tr></table>

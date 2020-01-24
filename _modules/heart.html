@@ -104,8 +104,7 @@
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">crust2x2</span><span class="p">,</span> <span class="n">gf</span><span class="p">,</span> <span class="n">cake</span><span class="p">,</span> <span class="n">orthodrome</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">util</span>
 <span class="kn">from</span> <span class="nn">pyrocko.cake</span> <span class="k">import</span> <span class="n">GradientLayer</span>
 <span class="kn">from</span> <span class="nn">pyrocko.fomosto</span> <span class="k">import</span> <span class="n">qseis</span><span class="p">,</span> <span class="n">qssp</span>
-
-<span class="kn">from</span> <span class="nn">pyrocko.model</span> <span class="k">import</span> <span class="n">Station</span>
+<span class="kn">from</span> <span class="nn">pyrocko.model</span> <span class="k">import</span> <span class="n">gnss</span>
 
 <span class="c1"># from pyrocko.fomosto import qseis2d</span>
 
@@ -528,7 +527,10 @@
     <span class="n">hypers</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span>
 
     <span class="n">ramp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span>
-    <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+    <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">lat</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">90.</span><span class="p">,</span> <span class="mf">90.</span><span class="p">),</span>
+    <span class="n">lon</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="mf">180.</span><span class="p">),</span>
+    <span class="n">omega</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../api.html#heart.Parameter">[docs]</a><span class="k">class</span> <span class="nc">Parameter</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -612,8 +614,14 @@
         <span class="k">if</span> <span class="n">dimension</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dimension</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span>
-            <span class="n">dimension</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span>
+                <span class="n">dimension</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Either use number of patches input vector size for variable </span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="s1">&#39; or only [1]]! Now the size is </span><span class="si">{}</span><span class="s1">!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">size</span><span class="p">))</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dimension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -726,9 +734,22 @@
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of geodetic data, e.g. SAR, GNSS, ...&#39;</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;e.g. GNSS station name or InSAR satellite track &#39;</span><span class="p">)</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;e.g. GNSS campaign name or InSAR satellite track &#39;</span><span class="p">)</span>
     <span class="n">utmn</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">utme</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_correction</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GeodeticDataset</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GeodeticDataset.get_correction"><a class="viewcode-back" href="../api.html#heart.GeodeticDataset.get_correction">[docs]</a>    <span class="k">def</span> <span class="nf">get_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hierarchicals</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Needs to be specified on inherited dataset classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="GeodeticDataset.update_local_coords"><a class="viewcode-back" href="../api.html#heart.GeodeticDataset.update_local_coords">[docs]</a>    <span class="k">def</span> <span class="nf">update_local_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -742,7 +763,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`numpy.ndarray` (n_points, 3)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
+        <span class="nb">print</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">north_shifts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">east_shifts</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">latlon_to_ne_numpy</span><span class="p">(</span>
             <span class="n">loc</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">loc</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lats</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lons</span><span class="p">)</span>
 
@@ -766,49 +787,74 @@
         <span class="k">return</span> <span class="n">n</span></div>
 
 
-<div class="viewcode-block" id="GNSSComponent"><a class="viewcode-back" href="../api.html#heart.GNSSComponent">[docs]</a><span class="k">class</span> <span class="nc">GNSSComponent</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+<div class="viewcode-block" id="velocities_from_pole"><a class="viewcode-back" href="../api.html#heart.velocities_from_pole">[docs]</a><span class="k">def</span> <span class="nf">velocities_from_pole</span><span class="p">(</span><span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">,</span> <span class="n">plat</span><span class="p">,</span> <span class="n">plon</span><span class="p">,</span> <span class="n">omega</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Object holding the GNSS data for a single station.</span>
+<span class="sd">    Return horizontal velocities at input locations for rotation around</span>
+<span class="sd">    given Euler pole</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lats: :class:`numpy.NdArray`</span>
+<span class="sd">        of geographic latitudes [deg] of points to calculate velocities for</span>
+<span class="sd">    lons: :class:`numpy.NdArray`</span>
+<span class="sd">        of geographic longitudes [deg] of points to calculate velocities for</span>
+<span class="sd">    plat: float</span>
+<span class="sd">        Euler pole latitude [deg]</span>
+<span class="sd">    plon: float</span>
+<span class="sd">        Euler pole longitude [deg]</span>
+<span class="sd">    omega: float</span>
+<span class="sd">        angle of rotation around Euler pole [deg / million yrs]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`numpy.NdArray` of velocities [m / yrs] npoints x 3 (NEU)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;direction of measurement, E/N/U&#39;</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Average velocity in [m/yr]&#39;</span><span class="p">)</span>
-    <span class="n">sigma</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;sigma measurement error (std) [m/yr]&#39;</span><span class="p">)</span>
-    <span class="n">unit</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;m/yr&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Unit of velocity v&#39;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">cartesian_to_local</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+        <span class="n">rlat</span> <span class="o">=</span> <span class="n">lat</span> <span class="o">*</span> <span class="n">d2r</span>
+        <span class="n">rlon</span> <span class="o">=</span> <span class="n">lon</span> <span class="o">*</span> <span class="n">d2r</span>
+        <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rlat</span><span class="p">)</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rlon</span><span class="p">),</span> <span class="o">-</span><span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rlat</span><span class="p">)</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rlon</span><span class="p">),</span>
+             <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rlat</span><span class="p">)],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rlon</span><span class="p">),</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rlon</span><span class="p">),</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">rlat</span><span class="p">)],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rlat</span><span class="p">)</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rlon</span><span class="p">),</span> <span class="o">-</span><span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rlat</span><span class="p">)</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rlon</span><span class="p">),</span>
+             <span class="o">-</span><span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rlat</span><span class="p">)]])</span>
+
+    <span class="n">latlons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">platlons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">plat</span><span class="p">,</span> <span class="n">plon</span><span class="p">])</span>
+    <span class="n">npoints</span> <span class="o">=</span> <span class="n">latlons</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">xyz_points</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">latlon_to_xyz</span><span class="p">(</span><span class="n">latlons</span><span class="p">)</span>
+    <span class="n">xyz_pole</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">latlon_to_xyz</span><span class="p">(</span><span class="n">platlons</span><span class="p">)</span>
+    <span class="n">xyz_poles</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">xyz_pole</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">omega_rad_yr</span> <span class="o">=</span> <span class="n">omega</span> <span class="o">*</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="n">d2r</span>
+    <span class="n">v_vecs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">xyz_poles</span><span class="p">,</span> <span class="n">xyz_points</span><span class="p">)</span>
+    <span class="n">vels_cartesian</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">earthradius</span> <span class="o">*</span> <span class="n">omega_rad_yr</span> <span class="o">*</span> <span class="n">v_vecs</span>
+
+    <span class="n">T</span> <span class="o">=</span> <span class="n">cartesian_to_local</span><span class="p">(</span><span class="n">latlons</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">latlons</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ijk-&gt;ik&#39;</span><span class="p">,</span> <span class="n">T</span> <span class="o">*</span> <span class="n">vels_cartesian</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
 
 
-<div class="viewcode-block" id="GNSSStation"><a class="viewcode-back" href="../api.html#heart.GNSSStation">[docs]</a><span class="k">class</span> <span class="nc">GNSSStation</span><span class="p">(</span><span class="n">Station</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ramp_displacement"><a class="viewcode-back" href="../api.html#heart.get_ramp_displacement">[docs]</a><span class="k">def</span> <span class="nf">get_ramp_displacement</span><span class="p">(</span><span class="n">locx</span><span class="p">,</span> <span class="n">locy</span><span class="p">,</span> <span class="n">azimuth_ramp</span><span class="p">,</span> <span class="n">range_ramp</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    GNSS station object, holds the displacment components and has all pyrocko</span>
-<span class="sd">    station functionality.</span>
+<span class="sd">    Get synthetic residual plane in azimuth and range direction of the</span>
+<span class="sd">    satellite.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    locx : shared array-like :class:`numpy.ndarray`</span>
+<span class="sd">        local coordinates [km] in east direction</span>
+<span class="sd">    locy : shared array-like :class:`numpy.ndarray`</span>
+<span class="sd">        local coordinates [km] in north direction</span>
+<span class="sd">    azimuth_ramp : :class:`theano.tensor.Tensor` or :class:`numpy.ndarray`</span>
+<span class="sd">        vector with ramp parameter in azimuth</span>
+<span class="sd">    range_ramp : :class:`theano.tensor.Tensor` or :class:`numpy.ndarray`</span>
+<span class="sd">        vector with ramp parameter in range</span>
+<span class="sd">    offset : :class:`theano.tensor.Tensor` or :class:`numpy.ndarray`</span>
+<span class="sd">        scalar of offset in [m]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">components</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">GNSSComponent</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
-
-    <span class="k">def</span> <span class="nf">set_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">components</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_component</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">get_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">get_component_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">remove_component_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="n">todel</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">todel</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">add_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remove_component_by_name</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">get_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">c</span></div>
+    <span class="k">return</span> <span class="n">locy</span> <span class="o">*</span> <span class="n">azimuth_ramp</span> <span class="o">+</span> <span class="n">locx</span> <span class="o">*</span> <span class="n">range_ramp</span> <span class="o">+</span> <span class="n">offset</span></div>
 
 
 <div class="viewcode-block" id="GNSSCompoundComponent"><a class="viewcode-back" href="../api.html#heart.GNSSCompoundComponent">[docs]</a><span class="k">class</span> <span class="nc">GNSSCompoundComponent</span><span class="p">(</span><span class="n">GeodeticDataset</span><span class="p">):</span>
@@ -818,8 +864,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">los_vector</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">displacement</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;direction of measurement, E/N/U&#39;</span><span class="p">)</span>
-    <span class="n">station_names</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">component</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;east&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;direction of measurement, north/east/up&#39;</span><span class="p">)</span>
+    <span class="n">stations</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">gnss</span><span class="o">.</span><span class="n">GNSSStation</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="n">covariance</span> <span class="o">=</span> <span class="n">Covariance</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;:py:class:`Covariance` that holds data&#39;</span>
@@ -831,12 +879,16 @@
              <span class="s1">&#39;dataset for overlaps with other datasets&#39;</span><span class="p">,</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_station2index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GNSSCompoundComponent</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">update_los_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">==</span> <span class="s1">&#39;east&#39;</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;N&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">==</span> <span class="s1">&#39;north&#39;</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;U&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">==</span> <span class="s1">&#39;up&#39;</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Component </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
@@ -846,83 +898,153 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;GNSS</span><span class="se">\n</span><span class="s1"> compound: </span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;  component: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;  component: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;  number of stations: </span><span class="si">%i</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
-        <span class="k">return</span> <span class="n">s</span></div>
+        <span class="k">return</span> <span class="n">s</span>
 
+    <span class="k">def</span> <span class="nf">to_kite_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">600</span><span class="p">)):</span>
+        <span class="kn">from</span> <span class="nn">kite.scene</span> <span class="k">import</span> <span class="n">Scene</span><span class="p">,</span> <span class="n">SceneConfig</span>
+        <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">binned_statistic_2d</span>
 
-<div class="viewcode-block" id="GNSSDataset"><a class="viewcode-back" href="../api.html#heart.GNSSDataset">[docs]</a><span class="k">class</span> <span class="nc">GNSSDataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Collecting many GNSS stations into one object. Easy managing and assessing</span>
-<span class="sd">    single stations and also merging all the stations components into compound</span>
-<span class="sd">    components for fast and easy modeling.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="n">bin_disp</span><span class="p">,</span> <span class="n">bin_lat</span><span class="p">,</span> <span class="n">bin_lon</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">binned_statistic_2d</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lats</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">displacement</span><span class="p">,</span>
+            <span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stations</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Setting up the Kite Scene&#39;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">SceneConfig</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span> <span class="o">=</span> <span class="n">bin_lat</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span> <span class="o">=</span> <span class="n">bin_lon</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">dE</span> <span class="o">=</span> <span class="n">bin_lon</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bin_lon</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">dN</span> <span class="o">=</span> <span class="n">bin_lat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bin_lat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="s1">&#39;degree&#39;</span>
 
-        <span class="k">if</span> <span class="n">stations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">station</span>
-
-    <span class="k">def</span> <span class="nf">add_station</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">station</span><span class="p">,</span> <span class="n">GNSSStation</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s1">&#39;Input object is not a valid station of&#39;</span>
-                <span class="s1">&#39; class: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">GNSSStation</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">station</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">station</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">scene_title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">scene_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">los_vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">theta_rad</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">los_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">theta_bin</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">bin_disp</span><span class="p">,</span> <span class="n">theta_rad</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">theta_bin</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">bin_disp</span><span class="p">)]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">if</span> <span class="n">theta_rad</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">phi_rad</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="n">phi_rad</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">los_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta_rad</span><span class="p">))</span>
+
+        <span class="n">phi_bin</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">bin_disp</span><span class="p">,</span> <span class="n">phi_rad</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">phi_bin</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">theta_bin</span><span class="p">)]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="n">scene</span> <span class="o">=</span> <span class="n">Scene</span><span class="p">(</span>
+            <span class="n">theta</span><span class="o">=</span><span class="n">theta_bin</span><span class="p">,</span>
+            <span class="n">phi</span><span class="o">=</span><span class="n">phi_bin</span><span class="p">,</span>
+            <span class="n">displacement</span><span class="o">=</span><span class="n">bin_disp</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scene</span>
+
+    <span class="k">def</span> <span class="nf">station_name_index_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_station2index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_station2index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">station</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_station2index</span>
+
+    <span class="k">def</span> <span class="nf">setup_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">correction_config</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">for_datatyp</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">typ</span> <span class="ow">and</span> \
+                <span class="n">correction_config</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Setting up </span><span class="si">%s</span><span class="s1"> correction for </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">correction_config</span><span class="o">.</span><span class="n">feature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">))</span>
+
+            <span class="n">s2idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">station_name_index_mapping</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_correction_idxs_blacklist</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">s2idx</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">blacklist</span><span class="p">])</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Stations with idxs </span><span class="si">%s</span><span class="s1"> got blacklisted!&#39;</span>
+                        <span class="s1">&#39;&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_correction_idxs_blacklist</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">correction_names</span> <span class="o">=</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_correction</span> <span class="o">=</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">enabled</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">euler_pole</span> <span class="o">=</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">get_theano_op</span><span class="p">()(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lats</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_correction_idxs_blacklist</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">slos_vector</span> <span class="o">=</span> <span class="n">shared</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;los_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">),</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Not correcting </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">feature</span><span class="p">))</span>
+
+<div class="viewcode-block" id="GNSSCompoundComponent.get_correction"><a class="viewcode-back" href="../api.html#heart.GNSSCompoundComponent.get_correction">[docs]</a>    <span class="k">def</span> <span class="nf">get_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hierarchicals</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get synthetic correction velocity due to Euler pole rotation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_correction</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Station </span><span class="si">%s</span><span class="s1"> already exists in dataset!&#39;</span> <span class="o">%</span> <span class="n">station</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="s1">&#39;Requested correction, but is not setup or configured! &#39;</span>
+                <span class="s1">&#39;For dataset </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_station</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">pole_lat_name</span><span class="p">,</span> <span class="n">pole_lon_name</span><span class="p">,</span> <span class="n">rotation_vel_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correction_names</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">point</span><span class="p">:</span>   <span class="c1"># theano instance for get_formula</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">corr_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">correction_names</span><span class="p">:</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="n">corr_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">corr_name</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">remove_stations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stations</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">st</span><span class="p">)</span>
+            <span class="n">vels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">euler_pole</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">vels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">slos_vector</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>       <span class="c1"># numpy instance else</span>
+            <span class="n">locx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lats</span>
+            <span class="n">locy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lons</span>
 
-    <span class="k">def</span> <span class="nf">get_station_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">pole_lat</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">pole_lat_name</span><span class="p">]</span>
+                <span class="n">pole_lon</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">pole_lon_name</span><span class="p">]</span>
+                <span class="n">omega</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">rotation_vel_name</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">pole_lat</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">pole_lat_name</span><span class="p">]</span>
+                <span class="n">pole_lon</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">pole_lon_name</span><span class="p">]</span>
+                <span class="n">omega</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">rotation_vel_name</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">get_component_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">get_component_names</span><span class="p">()</span>
+            <span class="n">vels</span> <span class="o">=</span> <span class="n">velocities_from_pole</span><span class="p">(</span><span class="n">locx</span><span class="p">,</span> <span class="n">locy</span><span class="p">,</span> <span class="n">pole_lat</span><span class="p">,</span> <span class="n">pole_lon</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_correction_idxs_blacklist</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">vels</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_correction_idxs_blacklist</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">vels</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_compound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="n">stations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_pyrocko_gnss_campaign</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">campaign</span><span class="p">):</span>
 
-        <span class="n">comps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_component_names</span><span class="p">()</span>
+        <span class="n">compounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;east&#39;</span><span class="p">,</span> <span class="s1">&#39;up&#39;</span><span class="p">):</span>
+            <span class="n">comp_stations</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">campaign</span><span class="o">.</span><span class="n">stations</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">comp</span><span class="p">])</span>
+                    <span class="n">comp_stations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">st</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warngin</span><span class="p">(</span>
+                        <span class="s1">&#39;No data for GNSS station: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">code</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">comps</span><span class="p">:</span>
-            <span class="n">stations_comps</span> <span class="o">=</span> <span class="p">[</span><span class="n">st</span><span class="o">.</span><span class="n">get_component</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">]</span>
-            <span class="n">lats</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">st</span><span class="o">.</span><span class="n">lat</span> <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">])</span>
-            <span class="n">lons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">st</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">stations</span><span class="p">])</span>
-
-            <span class="n">vs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">v</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">stations_comps</span><span class="p">])</span>
+            <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">loc</span><span class="o">.</span><span class="n">effective_latlon</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">comp_stations</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">vs</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">shift</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">])</span>
             <span class="n">variances</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">power</span><span class="p">(</span>
-                <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">sigma</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">stations_comps</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Requested component </span><span class="si">%s</span><span class="s1"> does not exist in the dataset&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+                <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">sigma</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">compounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">campaign</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">typ</span><span class="o">=</span><span class="s1">&#39;GNSS&#39;</span><span class="p">,</span>
+                <span class="n">stations</span><span class="o">=</span><span class="n">comp_stations</span><span class="p">,</span>
+                <span class="n">displacement</span><span class="o">=</span><span class="n">vs</span><span class="p">,</span>
+                <span class="n">covariance</span><span class="o">=</span><span class="n">Covariance</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">lats</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="n">variances</span><span class="p">),</span>
+                <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
+                <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
+                <span class="n">east_shifts</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span>
+                <span class="n">north_shifts</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span>
+                <span class="n">component</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                <span class="n">odw</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">lats</span><span class="o">.</span><span class="n">size</span><span class="p">)))</span>
 
-        <span class="k">return</span> <span class="n">GNSSCompoundComponent</span><span class="p">(</span>
-            <span class="n">typ</span><span class="o">=</span><span class="s1">&#39;GNSS&#39;</span><span class="p">,</span>
-            <span class="n">station_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_station_names</span><span class="p">(),</span>
-            <span class="n">displacement</span><span class="o">=</span><span class="n">vs</span><span class="p">,</span>
-            <span class="n">covariance</span><span class="o">=</span><span class="n">Covariance</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">lats</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="n">variances</span><span class="p">),</span>
-            <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
-            <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
-            <span class="n">east_shifts</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span>
-            <span class="n">north_shifts</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">odw</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">lats</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">iter_stations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stations</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">compounds</span></div>
 
 
 <div class="viewcode-block" id="ResultReport"><a class="viewcode-back" href="../api.html#heart.ResultReport">[docs]</a><span class="k">class</span> <span class="nc">ResultReport</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -966,7 +1088,7 @@
     <span class="k">def</span> <span class="nf">wavelength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">lambda_sensors</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">satellite</span><span class="p">]</span>
 
-<div class="viewcode-block" id="IFG.update_los_vector"><a class="viewcode-back" href="../api.html#heart.IFG.update_los_vector">[docs]</a>    <span class="k">def</span> <span class="nf">update_los_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IFG.update_los_vector"><a class="viewcode-back" href="../api.html#heart.IFG.update_los_vector">[docs]</a>    <span class="k">def</span> <span class="nf">update_los_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate LOS vector for given attributes incidence and heading angles.</span>
 
@@ -974,17 +1096,19 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`numpy.ndarray` (n_points, 3)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">force</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incidence</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Incidence and Heading need to be provided!&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Incidence and Heading need to be provided!&#39;</span><span class="p">)</span>
-
-        <span class="n">Su</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="p">))</span>
-        <span class="n">Sn</span> <span class="o">=</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="p">))</span> <span class="o">*</span> \
-            <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">-</span> <span class="mi">270</span><span class="p">))</span>
-        <span class="n">Se</span> <span class="o">=</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="p">))</span> <span class="o">*</span> \
-            <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">-</span> <span class="mi">270</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Sn</span><span class="p">,</span> <span class="n">Se</span><span class="p">,</span> <span class="n">Su</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span></div></div>
+            <span class="n">Su</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="p">))</span>
+            <span class="n">Sn</span> <span class="o">=</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="p">))</span> <span class="o">*</span> \
+                <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">-</span> <span class="mi">270</span><span class="p">))</span>
+            <span class="n">Se</span> <span class="o">=</span> <span class="o">-</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incidence</span><span class="p">))</span> <span class="o">*</span> \
+                <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heading</span> <span class="o">-</span> <span class="mi">270</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Sn</span><span class="p">,</span> <span class="n">Se</span><span class="p">,</span> <span class="n">Su</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">los_vector</span></div></div>
 
 
 <div class="viewcode-block" id="DiffIFG"><a class="viewcode-back" href="../api.html#heart.DiffIFG">[docs]</a><span class="k">class</span> <span class="nc">DiffIFG</span><span class="p">(</span><span class="n">IFG</span><span class="p">):</span>
@@ -1019,18 +1143,18 @@
         <span class="n">covariance</span> <span class="o">=</span> <span class="n">Covariance</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">covariance_matrix</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">isDegree</span><span class="p">():</span>
-                <span class="n">lats</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
-                <span class="n">lons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
-                <span class="n">lats</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">)</span>
-                <span class="n">lons</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">)</span>
-                <span class="n">lons</span> <span class="o">+=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_focal_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-                <span class="n">lats</span> <span class="o">+=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_focal_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">lats</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
+            <span class="n">lons</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">nleaves</span><span class="p">)</span>
+            <span class="n">lats</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">)</span>
+            <span class="n">lons</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">)</span>
+            <span class="n">lons</span> <span class="o">+=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_focal_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">lats</span> <span class="o">+=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_focal_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">isMeter</span><span class="p">():</span>
-                <span class="n">loce</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_eastings</span>
-                <span class="n">locn</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_northings</span>
-                <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">ne_to_latlon</span><span class="p">(</span>
-                    <span class="n">lat0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">,</span>
-                    <span class="n">north_m</span><span class="o">=</span><span class="n">locn</span><span class="p">,</span> <span class="n">east_m</span><span class="o">=</span><span class="n">loce</span><span class="p">)</span>
+            <span class="n">loce</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_eastings</span>
+            <span class="n">locn</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_northings</span>
+            <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">ne_to_latlon</span><span class="p">(</span>
+                <span class="n">lat0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLat</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">llLon</span><span class="p">,</span>
+                <span class="n">north_m</span><span class="o">=</span><span class="n">locn</span><span class="p">,</span> <span class="n">east_m</span><span class="o">=</span><span class="n">loce</span><span class="p">)</span>
 
         <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">scene</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
@@ -1043,14 +1167,60 @@
             <span class="n">odw</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">scene</span><span class="o">.</span><span class="n">quadtree</span><span class="o">.</span><span class="n">leaf_phis</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">plane_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ramp_name</span><span class="p">()]</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_name</span><span class="p">()]</span>
+<div class="viewcode-block" id="DiffIFG.setup_correction"><a class="viewcode-back" href="../api.html#heart.DiffIFG.setup_correction">[docs]</a>    <span class="k">def</span> <span class="nf">setup_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">correction_config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setup dataset correction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">for_datatyp</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">typ</span> <span class="ow">and</span> \
+                <span class="n">correction_config</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">blacklist</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting up </span><span class="si">%s</span><span class="s1"> correction for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">correction_config</span><span class="o">.</span><span class="n">feature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">locy</span><span class="p">,</span> <span class="n">locx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_local_coords</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span> <span class="o">=</span> <span class="n">shared</span><span class="p">(</span><span class="n">locx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">/</span> <span class="n">km</span><span class="p">,</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;localx_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span> <span class="o">=</span> <span class="n">shared</span><span class="p">(</span><span class="n">locy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">/</span> <span class="n">km</span><span class="p">,</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;localy_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Not correcting for </span><span class="si">%s</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">correction_config</span><span class="o">.</span><span class="n">feature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">ramp_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_ramp&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_correction</span> <span class="o">=</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correction_names</span> <span class="o">=</span> <span class="n">correction_config</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">offset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_offset&#39;</span></div>
+<div class="viewcode-block" id="DiffIFG.get_correction"><a class="viewcode-back" href="../api.html#heart.DiffIFG.get_correction">[docs]</a>    <span class="k">def</span> <span class="nf">get_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hierarchicals</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return synthetic correction displacements caused by orbital ramp.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_correction</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Requested correction, but is not setup or configured! &#39;</span>
+                <span class="s1">&#39;For dataset </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">azimuth_ramp_name</span><span class="p">,</span> <span class="n">range_ramp_name</span><span class="p">,</span> <span class="n">offset_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correction_names</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">point</span><span class="p">:</span>
+            <span class="n">locx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span>
+            <span class="n">locy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span>
+            <span class="n">azimuth_ramp</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">azimuth_ramp_name</span><span class="p">]</span>
+            <span class="n">range_ramp</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">range_ramp_name</span><span class="p">]</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">offset_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">locx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">east_shifts</span> <span class="o">/</span> <span class="n">km</span>
+            <span class="n">locy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">north_shifts</span> <span class="o">/</span> <span class="n">km</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">azimuth_ramp</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">azimuth_ramp_name</span><span class="p">]</span>
+                <span class="n">range_ramp</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">range_ramp_name</span><span class="p">]</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">offset_name</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">azimuth_ramp</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">azimuth_ramp_name</span><span class="p">]</span>
+                <span class="n">range_ramp</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">range_ramp_name</span><span class="p">]</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">offset_name</span><span class="p">]</span>
+
+        <span class="n">ramp</span> <span class="o">=</span> <span class="n">get_ramp_displacement</span><span class="p">(</span>
+            <span class="n">locx</span><span class="o">=</span><span class="n">locx</span><span class="p">,</span> <span class="n">locy</span><span class="o">=</span><span class="n">locy</span><span class="p">,</span>
+            <span class="n">azimuth_ramp</span><span class="o">=</span><span class="n">azimuth_ramp</span><span class="p">,</span> <span class="n">range_ramp</span><span class="o">=</span><span class="n">range_ramp</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ramp</span></div></div>
 
 
 <div class="viewcode-block" id="GeodeticResult"><a class="viewcode-back" href="../api.html#heart.GeodeticResult">[docs]</a><span class="k">class</span> <span class="nc">GeodeticResult</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -1133,12 +1303,17 @@
                         <span class="n">azimuth</span><span class="o">=</span><span class="n">cha</span><span class="o">.</span><span class="n">azimuth</span><span class="p">,</span>
                         <span class="n">dip</span><span class="o">=</span><span class="n">cha</span><span class="o">.</span><span class="n">dip</span><span class="p">,</span>
                         <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">,</span>
-                        <span class="n">store_id</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%.3f</span><span class="s1">Hz_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">store_id</span><span class="o">=</span><span class="n">get_store_id</span><span class="p">(</span>
                             <span class="n">store_prefixes</span><span class="p">[</span><span class="n">sta_num</span><span class="p">],</span>
                             <span class="n">em_name</span><span class="p">,</span>
                             <span class="n">sample_rate</span><span class="p">,</span>
                             <span class="n">crust_ind</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">targets</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_store_id</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">earth_model_name</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">crust_ind</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%.3f</span><span class="s1">Hz_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">prefix</span><span class="p">,</span> <span class="n">earth_model_name</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">crust_ind</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="init_geodetic_targets"><a class="viewcode-back" href="../api.html#heart.init_geodetic_targets">[docs]</a><span class="k">def</span> <span class="nf">init_geodetic_targets</span><span class="p">(</span>
@@ -1176,8 +1351,7 @@
         <span class="n">lats</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">lats</span><span class="p">,</span>
         <span class="n">interpolation</span><span class="o">=</span><span class="n">interpolation</span><span class="p">,</span>
         <span class="n">quantity</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
-        <span class="n">store_id</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%.3f</span><span class="s1">Hz_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="s1">&#39;statics&#39;</span><span class="p">,</span> <span class="n">em_name</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">crust_ind</span><span class="p">))</span>
+        <span class="n">store_id</span><span class="o">=</span><span class="n">get_store_id</span><span class="p">(</span><span class="s1">&#39;statics&#39;</span><span class="p">,</span> <span class="n">em_name</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="n">crust_ind</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">crust_ind</span> <span class="ow">in</span> <span class="n">crust_inds</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">targets</span></div>
@@ -1602,7 +1776,7 @@
 
     <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="s1">&#39;qseis&#39;</span><span class="p">:</span>
         <span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;2006a&#39;</span>
-        <span class="k">if</span> <span class="s1">&#39;slowest&#39;</span> <span class="ow">in</span> <span class="n">waveforms</span> <span class="ow">or</span> <span class="n">distances</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">km</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;slowest&#39;</span> <span class="ow">in</span> <span class="n">waveforms</span> <span class="ow">or</span> <span class="n">distances</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s1">&#39;Receiver and source&#39;</span>
                 <span class="s1">&#39; site structures have to be identical as distance&#39;</span>

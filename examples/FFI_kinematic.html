@@ -375,6 +375,17 @@ Here we are going to use <em>random</em> again, please set it now! We initially 
 <a class="reference internal image-reference" href="../_images/moment_rate_-1_0_max.png"><img alt="../_images/moment_rate_-1_0_max.png" src="../_images/moment_rate_-1_0_max.png" style="width: 494.8px; height: 350.0px;" /></a>
 <p>Here the MAP moment rate function is displayed by the black solid line.</p>
 </div>
+<div class="section" id="animation">
+<h2>Animation<a class="headerlink" href="#animation" title="Permalink to this headline">¶</a></h2>
+<p>In the development version of beat the following command Will also export a file: “rupture_evolution_max.yaml” to $project_directory/ffi/results.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="n">export</span> <span class="n">Laquila_kinematic</span> <span class="o">--</span><span class="n">mode</span><span class="o">=</span><span class="n">ffi</span>
+</pre></div>
+</div>
+<p>This file can be loaded into the GeometryElement of the Sparrow, which is also under development but a first introduction is given <a class="reference external" href="https://pyrocko.org/news/2020-01-16.html">here</a>.</p>
+<p>An animation of the MAP result of the rupture within the Sparrow then looks like this. Each second in the video after the rupture starts, is also a second in the rupture propagation.:</p>
+<video controls style="width: 100%;">Your browser does not support the &lt;video&gt; tag.
+<source src="http://data.pyrocko.org/media/Laquila_rupture_zoom.mp4" />
+</video></div>
 </div>
 
 
@@ -403,6 +414,7 @@ Here we are going to use <em>random</em> again, please set it now! We initially 
 <li class="toctree-l3"><a class="reference internal" href="#data-windowing">Data windowing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sample-the-solution-space">Sample the solution space</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#summarize-and-plotting">Summarize and plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#animation">Animation</a></li>
 </ul>
 </li>
 </ul>

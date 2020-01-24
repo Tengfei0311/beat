@@ -77,13 +77,16 @@
           <div class="body" role="main">
             
   <h1>Source code for pyrocko.guts</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># http://pyrocko.org - GPLv3</span>
+<span></span>
+<span class="c1"># https://pyrocko.org - GPLv3</span>
 <span class="c1">#</span>
 <span class="c1"># The Pyrocko Developers, 21st Century</span>
 <span class="c1"># ---|P------/S----------~Lg----------</span>
+
 <span class="sd">&#39;&#39;&#39;Lightweight declarative YAML and XML data binding for Python.&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span> <span class="k">as</span> <span class="n">newstr</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">range</span>
 <span class="kn">from</span> <span class="nn">future.utils</span> <span class="k">import</span> <span class="n">with_metaclass</span>
@@ -95,6 +98,7 @@
 <span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64decode</span><span class="p">,</span> <span class="n">b64encode</span>
 
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
 
@@ -703,6 +707,7 @@
 
 <span class="k">class</span> <span class="nc">ObjectMetaClass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">):</span>
+        <span class="n">classname</span> <span class="o">=</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_name&#39;</span><span class="p">,</span> <span class="n">classname</span><span class="p">)</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">classname</span> <span class="o">!=</span> <span class="s1">&#39;Object&#39;</span><span class="p">:</span>
             <span class="n">t_class_attr_name</span> <span class="o">=</span> <span class="s1">&#39;_</span><span class="si">%s</span><span class="s1">__T&#39;</span> <span class="o">%</span> <span class="n">classname</span>
@@ -1013,6 +1018,21 @@
 
         <span class="k">def</span> <span class="nf">to_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_cls</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Bytes</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+    <span class="n">dummy_for</span> <span class="o">=</span> <span class="nb">bytes</span>
+
+    <span class="k">class</span> <span class="nc">__T</span><span class="p">(</span><span class="n">TBase</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">regularize_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">newstr</span><span class="p">)):</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">val</span>
+
+        <span class="k">def</span> <span class="nf">to_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">literal</span><span class="p">(</span><span class="n">b64encode</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
 
 
 <span class="k">class</span> <span class="nc">Unicode</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -2009,7 +2029,12 @@
     <span class="n">ynames</span> <span class="o">=</span> <span class="n">ypath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">_parse_yname</span><span class="p">(</span><span class="n">ynames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">sobj</span> <span class="ow">in</span> <span class="n">iter_elements</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ynames</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">ynames</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="n">iter_elements</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ynames</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">it</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">sobj</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sobj</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">propnames</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
@@ -2055,7 +2080,11 @@
 
 <span class="k">def</span> <span class="nf">path_element</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">[</span><span class="si">%i</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">[</span><span class="si">%i</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">x</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">[</span><span class="si">%i</span><span class="s1">:</span><span class="si">%i</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">x</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span>
 

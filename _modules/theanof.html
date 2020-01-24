@@ -87,6 +87,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
 <span class="kn">from</span> <span class="nn">beat</span> <span class="k">import</span> <span class="n">heart</span><span class="p">,</span> <span class="n">utility</span><span class="p">,</span> <span class="n">interseismic</span>
 <span class="kn">from</span> <span class="nn">beat.fast_sweeping</span> <span class="k">import</span> <span class="n">fast_sweep</span>
 
@@ -609,6 +611,68 @@
 
     <span class="k">def</span> <span class="nf">infer_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_patch_dip</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_patch_strike</span><span class="p">,</span> <span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="EulerPole"><a class="viewcode-back" href="../api.html#theanof.EulerPole">[docs]</a><span class="k">class</span> <span class="nc">EulerPole</span><span class="p">(</span><span class="n">theano</span><span class="o">.</span><span class="n">Op</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Theano Op for rotation of geodetic observations around Euler Pole.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lats : float, vector</span>
+<span class="sd">        of Latitudes [deg] of points to be rotated</span>
+<span class="sd">    lons : float, vector</span>
+<span class="sd">        of Longitudes [deg] of points to be rotated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__props__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;lats&#39;</span><span class="p">,</span> <span class="s1">&#39;lons&#39;</span><span class="p">,</span> <span class="s1">&#39;blacklist&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">,</span> <span class="n">blacklist</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lats</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lats</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lons</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">lons</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blacklist</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">blacklist</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">inlist</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixed_values</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">varname</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">FreeRV</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">varname</span><span class="p">)</span>
+                <span class="n">inlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fixed_values</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">outv</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="n">as_tensor_variable</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="n">outlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">outv</span><span class="o">.</span><span class="n">type</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">theano</span><span class="o">.</span><span class="n">Apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inlist</span><span class="p">,</span> <span class="n">outlist</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="p">{</span><span class="n">vname</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">vname</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)}</span>
+        <span class="n">point</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fixed_values</span><span class="p">)</span>
+
+        <span class="n">pole_lat</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;pole_lat&#39;</span><span class="p">]</span>
+        <span class="n">pole_lon</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;pole_lon&#39;</span><span class="p">]</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span>
+
+        <span class="n">velocities</span> <span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">velocities_from_pole</span><span class="p">(</span>
+            <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lats</span><span class="p">),</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lons</span><span class="p">),</span>
+            <span class="n">pole_lat</span><span class="p">,</span> <span class="n">pole_lon</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blacklist</span><span class="p">:</span>
+            <span class="n">velocities</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blacklist</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">velocities</span>
+
+    <span class="k">def</span> <span class="nf">infer_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lats</span><span class="p">),</span> <span class="mi">3</span><span class="p">)]</span></div>
 </pre></div>
 
           </div>

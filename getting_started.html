@@ -139,12 +139,10 @@ Options:
 </div>
 <p>This will create project directory called LandersEQ in the current directory.
 Within the directoy you will see that there have been two files created:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>BEAT_log.txt</li>
 <li>geometry_config.yaml</li>
 </ul>
-</div></blockquote>
 <p>The first file is a logging file where all the executed comments and outputs are written to. In case something goes wrong this log file helps to find the error.
 For now it contains:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>2018-01-04 16:15:06,696 - utility - INFO - Getting relevant events from the gCMT catalog for the dates:1992-06-27 00:00:00.000 - 1992-06-29 00:00:00.000
@@ -509,9 +507,7 @@ before the actual update what is going to change. These changes can be displayed
 </pre></div>
 </div>
 <p>An update screen that appears may look like this.</p>
-<blockquote>
-<div><img alt="_images/beat_update_cut.png" src="_images/beat_update_cut.png" />
-</div></blockquote>
+<img alt="_images/beat_update_cut.png" src="_images/beat_update_cut.png" />
 <p>Where omitting the “–diff” option will update the configuration file right away.</p>
 <p>An update of the configuration file is also necessary, if some of the hierarchical parameters are affected by some changes in the configuration file. For example by enabling temporal “station_corrections” in seismic setups or enabling “fit_ramp”
 for residual ramp estimation in the InSAR data.:</p>
@@ -555,7 +551,9 @@ In lines 4-6 we find the reference event:</p>
 </pre></div>
 </div>
 <p>The distance between these two locations determines the center point of the grid of Greens Functions that we want to calculate.
-For our example we set the reference location close to Vancouver, Canada as we want to study the Cascadia subduction zone.
+The following image (contributed by So-Young Baag) sketches the geometry of an example setup.</p>
+<img alt="_images/custom_gf_store_setup.png" src="_images/custom_gf_store_setup.png" />
+<p>For our example we set the reference location close to Vancouver, Canada as we want to study the Cascadia subduction zone.
 We ignore the ‘elevation’ and ‘depth’ attributes but we set the ‘station’ attribute, which determines the prefix of the name of the
 Greens Function store.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>reference_location: !beat.heart.ReferenceLocation

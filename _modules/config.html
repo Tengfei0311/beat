@@ -118,8 +118,7 @@
 <span class="n">geometry_mode_str</span> <span class="o">=</span> <span class="s1">&#39;geometry&#39;</span>
 
 
-<span class="n">block_vars</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;bl_azimuth&#39;</span><span class="p">,</span> <span class="s1">&#39;bl_amplitude&#39;</span><span class="p">]</span>
+<span class="n">block_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bl_azimuth&#39;</span><span class="p">,</span> <span class="s1">&#39;bl_amplitude&#39;</span><span class="p">]</span>
 <span class="n">seis_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">]</span>
 
 <span class="n">source_names</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
@@ -146,16 +145,16 @@
     <span class="n">gf</span><span class="o">.</span><span class="n">RingfaultSource</span><span class="p">]</span>
 
 <span class="n">stf_names</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">Boxcar</span>
-<span class="s1">Triangular</span>
-<span class="s1">HalfSinusoid</span>
-<span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="s1">    Boxcar</span>
+<span class="s1">    Triangular</span>
+<span class="s1">    HalfSinusoid</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
 <span class="n">source_catalog</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">source_class</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">source_class</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="n">source_names</span><span class="p">,</span> <span class="n">source_classes</span><span class="p">)}</span>
+<span class="n">source_names</span><span class="p">,</span> <span class="n">source_classes</span><span class="p">)}</span>
 
 <span class="n">stf_catalog</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">stf_class</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">stf_class</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="n">stf_names</span><span class="p">,</span> <span class="n">stf_classes</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">])}</span>
+<span class="n">stf_names</span><span class="p">,</span> <span class="n">stf_classes</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">])}</span>
 
 <span class="n">interseismic_vars</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;east_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;north_shift&#39;</span><span class="p">,</span> <span class="s1">&#39;strike&#39;</span><span class="p">,</span> <span class="s1">&#39;dip&#39;</span><span class="p">,</span> <span class="s1">&#39;length&#39;</span><span class="p">,</span>
@@ -169,7 +168,7 @@
 
 <span class="n">kinematic_dist_vars</span> <span class="o">=</span> <span class="n">static_dist_vars</span> <span class="o">+</span> <span class="n">partial_kinematic_vars</span> <span class="o">+</span> <span class="n">hypo_vars</span>
 <span class="n">transd_vars_dist</span> <span class="o">=</span> <span class="n">partial_kinematic_vars</span> <span class="o">+</span> <span class="n">static_dist_vars</span> <span class="o">+</span> \
-    <span class="n">voronoi_locations</span>
+<span class="n">voronoi_locations</span>
 <span class="n">dist_vars</span> <span class="o">=</span> <span class="n">static_dist_vars</span> <span class="o">+</span> <span class="n">partial_kinematic_vars</span>
 
 <span class="n">interseismic_catalog</span> <span class="o">=</span> <span class="p">{</span>
@@ -256,7 +255,10 @@
 
     <span class="n">hypers</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">),</span>
     <span class="n">ramp</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">),</span>
-    <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">offset</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span>
+    <span class="n">lat</span><span class="o">=</span><span class="p">(</span><span class="mf">30.</span><span class="p">,</span> <span class="mf">30.5</span><span class="p">),</span>
+    <span class="n">lon</span><span class="o">=</span><span class="p">(</span><span class="mf">30.</span><span class="p">,</span> <span class="mf">30.5</span><span class="p">),</span>
+    <span class="n">omega</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
 
 <span class="n">default_seis_std</span> <span class="o">=</span> <span class="mf">1.e-6</span>
 <span class="n">default_geo_std</span> <span class="o">=</span> <span class="mf">1.e-3</span>
@@ -285,9 +287,12 @@
 <span class="n">_structure_choices</span> <span class="o">=</span> <span class="n">available_noise_structures</span><span class="p">()</span>
 <span class="n">_mode_choices</span> <span class="o">=</span> <span class="p">[</span><span class="n">geometry_mode_str</span><span class="p">,</span> <span class="n">ffi_mode_str</span><span class="p">]</span>
 <span class="n">_regularization_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;laplacian&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]</span>
+<span class="n">_correlation_function_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nearest_neighbor&#39;</span><span class="p">,</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;exponential&#39;</span><span class="p">]</span>
+<span class="n">_discretization_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;resolution&#39;</span><span class="p">]</span>
 <span class="n">_initialization_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="s1">&#39;lsq&#39;</span><span class="p">]</span>
 <span class="n">_backend_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">]</span>
 <span class="n">_datatype_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;geodetic&#39;</span><span class="p">,</span> <span class="s1">&#39;seismic&#39;</span><span class="p">]</span>
+<span class="n">_sampler_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;PT&#39;</span><span class="p">,</span> <span class="s1">&#39;SMC&#39;</span><span class="p">,</span> <span class="s1">&#39;Metropolis&#39;</span><span class="p">]</span>
 
 
 <span class="k">class</span> <span class="nc">InconsistentParameterNaming</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -439,25 +444,10 @@
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Distance spacing [km] for GF medium grid.&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LinearGFConfig"><a class="viewcode-back" href="../api.html#config.LinearGFConfig">[docs]</a><span class="k">class</span> <span class="nc">LinearGFConfig</span><span class="p">(</span><span class="n">GFConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscretizationConfig"><a class="viewcode-back" href="../api.html#config.DiscretizationConfig">[docs]</a><span class="k">class</span> <span class="nc">DiscretizationConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Config for linear GreensFunction calculation parameters.</span>
+<span class="sd">    Config to determine the discretization of the finite fault(s)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">RectangularSource</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Geometry of the reference source(s) to fix&#39;</span><span class="p">)</span>
-    <span class="n">patch_widths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of Patch width [km] to divide reference sources. Each value&#39;</span>
-             <span class="s1">&#39; is applied following the list-order to the respective reference&#39;</span>
-             <span class="s1">&#39; source&#39;</span><span class="p">)</span>
-    <span class="n">patch_lengths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch length [km] to divide reference sources Each value&#39;</span>
-             <span class="s1">&#39; is applied following the list-order to the respective reference&#39;</span>
-             <span class="s1">&#39; source&#39;</span><span class="p">)</span>
     <span class="n">extension_widths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">],</span>
@@ -473,10 +463,114 @@
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Extend reference sources by this factor in each&#39;</span>
              <span class="s1">&#39; strike-direction. 0.1 means extension of the fault by 10</span><span class="si">% i</span><span class="s1">n&#39;</span>
              <span class="s1">&#39; each direction, i.e. 20</span><span class="si">% i</span><span class="s1">n total. Each value is applied &#39;</span>
-             <span class="s1">&#39; following the list-order to the respective reference source.&#39;</span><span class="p">)</span>
+             <span class="s1">&#39; following the list-order to the respective reference source.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UniformDiscretizationConfig"><a class="viewcode-back" href="../api.html#config.UniformDiscretizationConfig">[docs]</a><span class="k">class</span> <span class="nc">UniformDiscretizationConfig</span><span class="p">(</span><span class="n">DiscretizationConfig</span><span class="p">):</span>
+
+    <span class="n">patch_widths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of Patch width [km] to divide reference sources. Each value&#39;</span>
+             <span class="s1">&#39; is applied following the list-order to the respective reference&#39;</span>
+             <span class="s1">&#39; source&#39;</span><span class="p">)</span>
+    <span class="n">patch_lengths</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch length [km] to divide reference sources Each value&#39;</span>
+             <span class="s1">&#39; is applied following the list-order to the respective reference&#39;</span>
+             <span class="s1">&#39; source&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_patch_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_widths</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_lengths</span></div>
+
+
+<div class="viewcode-block" id="ResolutionDiscretizationConfig"><a class="viewcode-back" href="../api.html#config.ResolutionDiscretizationConfig">[docs]</a><span class="k">class</span> <span class="nc">ResolutionDiscretizationConfig</span><span class="p">(</span><span class="n">DiscretizationConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters that control the source discretization optimization following</span>
+<span class="sd">    Atzori &amp; Antonioli 2011:</span>
+<span class="sd">        Optimal fault resolution in geodetic inversion of coseismic data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">5.e-3</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Damping constant for SVD of Greens Functions. &#39;</span>
+             <span class="s1">&#39;Reasonable between: [10e-2 to 10e-5]&#39;</span><span class="p">)</span>
+    <span class="n">resolution_thresh</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resolution threshold discretization continues until all patches &#39;</span>
+             <span class="s1">&#39;are below this threshold. The lower the finer the discretization. &#39;</span>
+             <span class="s1">&#39;Reasonable between: [0.95, 0.99]&#39;</span><span class="p">)</span>
+    <span class="n">depth_penalty</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">3.5</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The higher the number the more penalty on the deeper &#39;</span>
+             <span class="s1">&#39;patches-ergo larger patches.&#39;</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Decimal percentage of largest patches that are subdivided &#39;</span>
+             <span class="s1">&#39;further. Reasonable: [0.1, 0.3]&#39;</span><span class="p">)</span>
+    <span class="n">patch_widths_min</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch width [km] for min final discretization of patches.&#39;</span><span class="p">)</span>
+    <span class="n">patch_widths_max</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch width [km] for max initial discretization of patches.&#39;</span><span class="p">)</span>
+    <span class="n">patch_lengths_min</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch length [km] for min final discretization of&#39;</span>
+             <span class="s1">&#39; patches.&#39;</span><span class="p">)</span>
+    <span class="n">patch_lengths_max</span><span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">5.</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Patch length [km] for max initial discretization of&#39;</span>
+             <span class="s1">&#39; patches.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ResolutionDiscretizationConfig.get_patch_dimensions"><a class="viewcode-back" href="../api.html#config.ResolutionDiscretizationConfig.get_patch_dimensions">[docs]</a>    <span class="k">def</span> <span class="nf">get_patch_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List of patch_widths, List of patch_lengths</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_widths_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_lengths_max</span></div></div>
+
+
+<span class="n">discretization_catalog</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;uniform&#39;</span><span class="p">:</span> <span class="n">UniformDiscretizationConfig</span><span class="p">,</span>
+    <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="n">ResolutionDiscretizationConfig</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="LinearGFConfig"><a class="viewcode-back" href="../api.html#config.LinearGFConfig">[docs]</a><span class="k">class</span> <span class="nc">LinearGFConfig</span><span class="p">(</span><span class="n">GFConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Config for linear GreensFunction calculation parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">RectangularSource</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Geometry of the reference source(s) to fix&#39;</span><span class="p">)</span>
     <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">Float</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sample rate for the Greens Functions.&#39;</span><span class="p">)</span></div>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sample rate for the Greens Functions.&#39;</span><span class="p">)</span>
+    <span class="n">discretization</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">_discretization_choices</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag for discretization of finite sources into patches.&#39;</span>
+             <span class="s1">&#39; Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_discretization_choices</span><span class="p">))</span>
+    <span class="n">discretization_config</span> <span class="o">=</span> <span class="n">DiscretizationConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">UniformDiscretizationConfig</span><span class="o">.</span><span class="n">D</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Discretization configuration that allows customization.&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">_init_kwargs</span><span class="p">(</span>
+            <span class="n">method_config_name</span><span class="o">=</span><span class="s1">&#39;discretization_config&#39;</span><span class="p">,</span>
+            <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;discretization&#39;</span><span class="p">,</span>
+            <span class="n">method_catalog</span><span class="o">=</span><span class="n">discretization_catalog</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SeismicLinearGFConfig"><a class="viewcode-back" href="../api.html#config.SeismicLinearGFConfig">[docs]</a><span class="k">class</span> <span class="nc">SeismicLinearGFConfig</span><span class="p">(</span><span class="n">LinearGFConfig</span><span class="p">):</span>
@@ -497,7 +591,15 @@
         <span class="n">default</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Calculate Green&#39;s Functions for varying rupture onset times.&quot;</span>
              <span class="s2">&quot;These are determined by the (rupture) velocity prior bounds &quot;</span>
-             <span class="s2">&quot;and the hypocenter location.&quot;</span><span class="p">)</span></div>
+             <span class="s2">&quot;and the hypocenter location.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">discretization</span> <span class="o">==</span> <span class="s1">&#39;resolution&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Resolution based discretization only available &#39;</span>
+                             <span class="s1">&#39;for geodetic data!&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GeodeticLinearGFConfig"><a class="viewcode-back" href="../api.html#config.GeodeticLinearGFConfig">[docs]</a><span class="k">class</span> <span class="nc">GeodeticLinearGFConfig</span><span class="p">(</span><span class="n">LinearGFConfig</span><span class="p">):</span>
@@ -527,7 +629,7 @@
         <span class="n">choices</span><span class="o">=</span><span class="n">_interpolation_choices</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;multilinear&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;GF interpolation sceme. Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
-        <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_interpolation_choices</span><span class="p">))</span>
+             <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_interpolation_choices</span><span class="p">))</span>
     <span class="n">arrival_taper</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">Taper</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">ArrivalTaper</span><span class="o">.</span><span class="n">D</span><span class="p">(),</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Taper a,b/c,d time [s] before/after wave arrival&#39;</span><span class="p">)</span></div>
@@ -618,6 +720,13 @@
 
         <span class="k">return</span> <span class="n">hids</span>
 
+    <span class="k">def</span> <span class="nf">get_station_blacklist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">blacklist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">wc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">:</span>
+            <span class="n">blacklist</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">wc</span><span class="o">.</span><span class="n">blacklist</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">blacklist</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">get_hierarchical_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">station_corrections</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;time_shift&#39;</span><span class="p">]</span>
@@ -630,6 +739,77 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">wavename</span> <span class="ow">in</span> <span class="n">wavenames</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WaveformFitConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">wavename</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="CorrectionConfig"><a class="viewcode-back" href="../api.html#config.CorrectionConfig">[docs]</a><span class="k">class</span> <span class="nc">CorrectionConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag to enable Correction.&#39;</span><span class="p">)</span>
+    <span class="n">blacklist</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Dataset name or GNSS station name to apply no correction.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_suffixes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suffixes</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_suffixes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_hierarchical_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_suffixes</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blacklist</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="EulerPoleConfig"><a class="viewcode-back" href="../api.html#config.EulerPoleConfig">[docs]</a><span class="k">class</span> <span class="nc">EulerPoleConfig</span><span class="p">(</span><span class="n">CorrectionConfig</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_suffixes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;pole_lat&#39;</span><span class="p">,</span> <span class="s1">&#39;pole_lon&#39;</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Euler Pole&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">for_datatyp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;GNSS&#39;</span>
+
+    <span class="k">def</span> <span class="nf">get_theano_op</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">beat.theanof</span> <span class="k">import</span> <span class="n">EulerPole</span>
+        <span class="k">return</span> <span class="n">EulerPole</span></div>
+
+
+<div class="viewcode-block" id="RampConfig"><a class="viewcode-back" href="../api.html#config.RampConfig">[docs]</a><span class="k">class</span> <span class="nc">RampConfig</span><span class="p">(</span><span class="n">CorrectionConfig</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_suffixes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;azimuth_ramp&#39;</span><span class="p">,</span> <span class="s1">&#39;range_ramp&#39;</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">feature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Ramps&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">for_datatyp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;SAR&#39;</span></div>
+
+
+<div class="viewcode-block" id="GeodeticCorrectionsConfig"><a class="viewcode-back" href="../api.html#config.GeodeticCorrectionsConfig">[docs]</a><span class="k">class</span> <span class="nc">GeodeticCorrectionsConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Config for corrections to geodetic datasets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">euler_pole</span> <span class="o">=</span> <span class="n">EulerPoleConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">EulerPoleConfig</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
+    <span class="n">ramp</span> <span class="o">=</span> <span class="n">RampConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">RampConfig</span><span class="o">.</span><span class="n">D</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">iter_corrections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">euler_pole</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ramp</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">has_enabled_corrections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">corr</span><span class="o">.</span><span class="n">enabled</span> <span class="k">for</span> <span class="n">corr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_corrections</span><span class="p">()])</span></div>
 
 
 <div class="viewcode-block" id="GeodeticConfig"><a class="viewcode-back" href="../api.html#config.GeodeticConfig">[docs]</a><span class="k">class</span> <span class="nc">GeodeticConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -656,10 +836,9 @@
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;multilinear&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;GF interpolation scheme during synthetics generation.&#39;</span>
              <span class="s1">&#39; Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_interpolation_choices</span><span class="p">))</span>
-    <span class="n">fit_plane</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag for inverting for additional plane parameters on each&#39;</span>
-             <span class="s1">&#39; SAR datatype&#39;</span><span class="p">)</span>
+    <span class="n">corrections_config</span> <span class="o">=</span> <span class="n">GeodeticCorrectionsConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">GeodeticCorrectionsConfig</span><span class="o">.</span><span class="n">D</span><span class="p">(),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Config for additional corrections to apply to geodetic datasets.&#39;</span><span class="p">)</span>
     <span class="n">dataset_specific_residual_noise_estimation</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, for EACH DATASET specific hyperparameter estimation.&#39;</span>
@@ -686,12 +865,17 @@
     <span class="k">def</span> <span class="nf">get_hypernames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">typ</span><span class="p">))</span> <span class="k">for</span> <span class="n">typ</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">get_hierarchical_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_plane</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_ramp&#39;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">]</span> <span class="o">+</span> \
-                <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_offset&#39;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span></div>
+    <span class="k">def</span> <span class="nf">get_hierarchical_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">out_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">corr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">iter_corrections</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">corr</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">corr</span><span class="o">.</span><span class="n">for_datatyp</span> <span class="o">==</span> <span class="n">dataset</span><span class="o">.</span><span class="n">typ</span><span class="p">:</span>
+                        <span class="n">out_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                            <span class="n">corr</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">out_names</span></div>
 
 
 <div class="viewcode-block" id="ModeConfig"><a class="viewcode-back" href="../api.html#config.ModeConfig">[docs]</a><span class="k">class</span> <span class="nc">ModeConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -701,6 +885,65 @@
     <span class="k">pass</span></div>
 
 
+<div class="viewcode-block" id="RegularizationConfig"><a class="viewcode-back" href="../api.html#config.RegularizationConfig">[docs]</a><span class="k">class</span> <span class="nc">RegularizationConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="NoneRegularizationConfig"><a class="viewcode-back" href="../api.html#config.NoneRegularizationConfig">[docs]</a><span class="k">class</span> <span class="nc">NoneRegularizationConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dummy class to return None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="LaplacianRegularizationConfig"><a class="viewcode-back" href="../api.html#config.LaplacianRegularizationConfig">[docs]</a><span class="k">class</span> <span class="nc">LaplacianRegularizationConfig</span><span class="p">(</span><span class="n">RegularizationConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines the structure of the Laplacian.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">correlation_function</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;nearest_neighbor&#39;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">_correlation_function_choices</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Determines the correlation function for smoothing across &#39;</span>
+             <span class="s1">&#39;patches. Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span>
+            <span class="n">_correlation_function_choices</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">get_hypernames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">hyper_name_laplacian</span><span class="p">]</span></div>
+
+
+<span class="n">regularization_catalog</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;laplacian&#39;</span><span class="p">:</span> <span class="n">LaplacianRegularizationConfig</span><span class="p">,</span>
+    <span class="s1">&#39;none&#39;</span><span class="p">:</span> <span class="n">NoneRegularizationConfig</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_init_kwargs</span><span class="p">(</span><span class="n">method_config_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">method_catalog</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fiddle with input arguments for method_config and initialise sub method</span>
+<span class="sd">    config according to requested method name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">method_config</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">method_config_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">method_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">method_config</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="n">method_config_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">method_catalog</span><span class="p">[</span><span class="n">method</span><span class="p">]()</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="ow">and</span> <span class="n">method_config</span><span class="p">:</span>
+        <span class="n">wanted_config</span> <span class="o">=</span> <span class="n">method_catalog</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">method_config</span><span class="p">,</span> <span class="n">wanted_config</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> method changed!&#39;</span>
+                        <span class="s1">&#39; Initializing new config...&#39;</span> <span class="o">%</span> <span class="n">method_name</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">method_config_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">wanted_config</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">method_config_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">method_config</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="n">method_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">method</span>
+
+    <span class="k">return</span> <span class="n">kwargs</span>
+
+
 <div class="viewcode-block" id="FFIConfig"><a class="viewcode-back" href="../api.html#config.FFIConfig">[docs]</a><span class="k">class</span> <span class="nc">FFIConfig</span><span class="p">(</span><span class="n">ModeConfig</span><span class="p">):</span>
 
     <span class="n">regularization</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
@@ -708,17 +951,31 @@
         <span class="n">choices</span><span class="o">=</span><span class="n">_regularization_choices</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Flag for regularization in distributed slip-optimization.&#39;</span>
              <span class="s1">&#39; Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_regularization_choices</span><span class="p">))</span>
-    <span class="n">npatches</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">regularization_config</span> <span class="o">=</span> <span class="n">RegularizationConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of patches on full fault. Should not be edited manually!&#39;</span>
-             <span class="s1">&#39; Please edit indirectly through patch_widths and patch_lengths&#39;</span>
-             <span class="s1">&#39; parameters!&#39;</span><span class="p">)</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Additional configuration parameters for regularization&#39;</span><span class="p">)</span>
     <span class="n">initialization</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span>
         <span class="n">choices</span><span class="o">=</span><span class="n">_initialization_choices</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Initialization of chain starting points, default: random.&#39;</span>
-             <span class="s1">&#39; Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_initialization_choices</span><span class="p">))</span></div>
+             <span class="s1">&#39; Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_initialization_choices</span><span class="p">))</span>
+    <span class="n">npatches</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span> <span class="o">=</span> <span class="s1">&#39;Number of patches on full fault. Should not be edited manually!&#39;</span>
+               <span class="s1">&#39; Please edit indirectly through patch_widths and patch_lengths&#39;</span>
+               <span class="s1">&#39; parameters!&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">_init_kwargs</span><span class="p">(</span>
+            <span class="n">method_config_name</span><span class="o">=</span><span class="s1">&#39;regularization_config&#39;</span><span class="p">,</span>
+            <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;regularization&#39;</span><span class="p">,</span>
+            <span class="n">method_catalog</span><span class="o">=</span><span class="n">regularization_catalog</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProblemConfig"><a class="viewcode-back" href="../api.html#config.ProblemConfig">[docs]</a><span class="k">class</span> <span class="nc">ProblemConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -729,7 +986,7 @@
         <span class="n">choices</span><span class="o">=</span><span class="n">_mode_choices</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="n">geometry_mode_str</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Problem to solve. Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
-        <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_mode_choices</span><span class="p">))</span>
+             <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_mode_choices</span><span class="p">))</span>
     <span class="n">mode_config</span> <span class="o">=</span> <span class="n">ModeConfig</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Global optimization mode specific parameters.&#39;</span><span class="p">)</span>
@@ -830,7 +1087,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s1">&#39;Prior for variable </span><span class="si">%s</span><span class="s1"> does not exist!&#39;</span>
-                    <span class="s1">&#39; Bounds not updated!&#39;</span> <span class="o">%</span> <span class="n">variable</span><span class="p">)</span></div>
+                    <span class="s1">&#39; Bounds not updated!&#39;</span> <span class="o">%</span> <span class="n">variable</span><span class="p">)</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">upd_dict</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProblemConfig.select_variables"><a class="viewcode-back" href="../api.html#config.ProblemConfig.select_variables">[docs]</a>    <span class="k">def</span> <span class="nf">select_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -882,6 +1141,51 @@
                 <span class="s1">&#39; or not resolvable with given datatypes.&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">unique_variables</span></div>
+
+<div class="viewcode-block" id="ProblemConfig.get_random_variables"><a class="viewcode-back" href="../api.html#config.ProblemConfig.get_random_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_random_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate problem setup and return random variables dictionary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rvs : dict</span>
+<span class="sd">            variable random variables</span>
+<span class="sd">        fixed_params : dict</span>
+<span class="sd">            fixed random parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">pymc3</span> <span class="k">import</span> <span class="n">Uniform</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Optimization for </span><span class="si">%i</span><span class="s1"> sources&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sources</span><span class="p">)</span>
+
+        <span class="n">rvs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">fixed_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">num</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
+
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">get_parameter_shape</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+                <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+                    <span class="n">lower</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+                    <span class="n">upper</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span>
+                    <span class="n">testval</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">testvalue</span><span class="p">,</span>
+                    <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">rvs</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                    <span class="n">rvs</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;not solving for </span><span class="si">%s</span><span class="s1">, got fixed at </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
+                <span class="n">fixed_params</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">lower</span>
+
+        <span class="k">return</span> <span class="n">rvs</span><span class="p">,</span> <span class="n">fixed_params</span></div>
 
 <div class="viewcode-block" id="ProblemConfig.get_slip_variables"><a class="viewcode-back" href="../api.html#config.ProblemConfig.get_slip_variables">[docs]</a>    <span class="k">def</span> <span class="nf">get_slip_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -988,7 +1292,9 @@
 
 <span class="k">def</span> <span class="nf">get_parameter_shape</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">pc</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">ffi_mode_str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hypo_vars</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">hypo_vars</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">n_sources</span>
+        <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hypo_vars</span> <span class="ow">and</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode_config</span><span class="o">.</span><span class="n">npatches</span><span class="p">:</span>
             <span class="n">shape</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">mode_config</span><span class="o">.</span><span class="n">npatches</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">shape</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">dimension</span>
@@ -1119,15 +1425,24 @@
              <span class="s1">&#39;stages.&#39;</span><span class="p">)</span></div>
 
 
+<span class="n">sampler_catalog</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;PT&#39;</span><span class="p">:</span> <span class="n">ParallelTemperingConfig</span><span class="p">,</span>
+    <span class="s1">&#39;SMC&#39;</span><span class="p">:</span> <span class="n">SMCConfig</span><span class="p">,</span>
+    <span class="s1">&#39;Metropolis&#39;</span><span class="p">:</span> <span class="n">MetropolisConfig</span><span class="p">,</span>
+<span class="p">}</span>
+
+
 <div class="viewcode-block" id="SamplerConfig"><a class="viewcode-back" href="../api.html#config.SamplerConfig">[docs]</a><span class="k">class</span> <span class="nc">SamplerConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Config for the sampler specific parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;SMC&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sampler to use for sampling the solution space.&#39;</span>
-             <span class="s1">&#39; Metropolis/ SMC&#39;</span><span class="p">)</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">_sampler_choices</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sampler to use for sampling the solution space. &#39;</span>
+             <span class="s1">&#39;Choices: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span><span class="n">_sampler_choices</span><span class="p">)</span>
+             <span class="p">)</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">StringChoice</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span>
         <span class="n">choices</span><span class="o">=</span><span class="n">_backend_choices</span><span class="p">,</span>
@@ -1147,29 +1462,17 @@
              <span class="s1">&#39;writing to disc.&#39;</span><span class="p">)</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">SamplerParameters</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">SMCConfig</span><span class="o">.</span><span class="n">D</span><span class="p">(),</span>
-        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sampler dependend Parameters&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Sampler not defined, using default sampler: SMC&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;SMC&#39;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">_init_kwargs</span><span class="p">(</span>
+            <span class="n">method_config_name</span><span class="o">=</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span>
+            <span class="n">method_name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
+            <span class="n">method_catalog</span><span class="o">=</span><span class="n">sampler_catalog</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;SMC&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">SMCConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;SMC&#39;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;update_covariances&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Metropolis&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">MetropolisConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;PT&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">ParallelTemperingConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Sampler &quot;</span><span class="si">%s</span><span class="s1">&quot; is not implemented.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="n">Object</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GFLibaryConfig"><a class="viewcode-back" href="../api.html#config.GFLibaryConfig">[docs]</a><span class="k">class</span> <span class="nc">GFLibaryConfig</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -1258,11 +1561,11 @@
             <span class="n">hypers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">lower</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span>
-                <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
                 <span class="n">upper</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span>
-                <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                      <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
                 <span class="n">testvalue</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span>
-                <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">]))</span>
+                          <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">]))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">hypers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">validate_hypers</span><span class="p">()</span>
@@ -1280,37 +1583,41 @@
 
         <span class="n">hierarnames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geodetic_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">hierarnames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">has_enabled_corrections</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Loading geodetic data to resolve &#39;</span>
+                    <span class="s1">&#39;correction dependencies...&#39;</span><span class="p">)</span>
+                <span class="n">geodetic_data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">geodetic_data_name</span><span class="p">)</span>
+
+                <span class="n">datasets</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">load_objects</span><span class="p">(</span><span class="n">geodetic_data_path</span><span class="p">)</span>
+                <span class="n">hierarnames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">(</span><span class="n">datasets</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seismic_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">hierarnames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seismic_config</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">())</span>
 
         <span class="n">hierarchicals</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">shp</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">hierarnames</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s1">&#39;Added hierarchical parameter </span><span class="si">%s</span><span class="s1"> to config and &#39;</span>
                 <span class="s1">&#39;model setup!&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;time_shift&#39;</span><span class="p">:</span>
-                <span class="n">shp</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="n">defaultb_name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">rampparname</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">rampparname</span> <span class="o">==</span> <span class="s1">&#39;ramp&#39;</span><span class="p">:</span>
-                    <span class="n">shp</span> <span class="o">=</span> <span class="mi">2</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">shp</span> <span class="o">=</span> <span class="mi">1</span>
-
-                <span class="n">defaultb_name</span> <span class="o">=</span> <span class="n">rampparname</span>
+                <span class="n">correction_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">defaultb_name</span> <span class="o">=</span> <span class="n">correction_name</span>
 
             <span class="n">hierarchicals</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">lower</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span>
-                <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
                 <span class="n">upper</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span>
-                <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                      <span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
                 <span class="n">testvalue</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">*</span>
-                <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">]))</span>
+                          <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">default_bounds</span><span class="p">[</span><span class="n">defaultb_name</span><span class="p">]))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">hierarchicals</span> <span class="o">=</span> <span class="n">hierarchicals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">validate_hierarchicals</span><span class="p">()</span>
@@ -1319,21 +1626,44 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Number of hierarchicals! </span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n_hierarchicals</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">init_reference_sources</span><span class="p">(</span>
-        <span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span> <span class="n">source_type</span><span class="p">,</span> <span class="n">stf_type</span><span class="p">,</span> <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="init_reference_sources"><a class="viewcode-back" href="../api.html#config.init_reference_sources">[docs]</a><span class="k">def</span> <span class="nf">init_reference_sources</span><span class="p">(</span>
+        <span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span> <span class="n">source_type</span><span class="p">,</span> <span class="n">stf_type</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialise sources of specified geometry</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_points : list</span>
+<span class="sd">        of dicts or kite sources</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">isdict</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source_points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+
     <span class="n">reference_sources</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sources</span><span class="p">):</span>
         <span class="c1"># rf = source_catalog[source_type](stf=stf_catalog[stf_type]())</span>
         <span class="c1"># maybe future if several meshtypes</span>
-        <span class="n">rf</span> <span class="o">=</span> <span class="n">RectangularSource</span><span class="p">(</span><span class="n">stf</span><span class="o">=</span><span class="n">stf_catalog</span><span class="p">[</span><span class="n">stf_type</span><span class="p">](</span><span class="n">anchor</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">utility</span><span class="o">.</span><span class="n">update_source</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">input_depth</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">source_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">stf</span> <span class="o">=</span> <span class="n">stf_catalog</span><span class="p">[</span><span class="n">stf_type</span><span class="p">](</span><span class="n">anchor</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">isdict</span><span class="p">:</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="n">RectangularSource</span><span class="p">(</span><span class="n">stf</span><span class="o">=</span><span class="n">stf</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+            <span class="n">utility</span><span class="o">.</span><span class="n">update_source</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="o">**</span><span class="n">source_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;stf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stf</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="n">RectangularSource</span><span class="o">.</span><span class="n">from_kite_source</span><span class="p">(</span>
+                <span class="n">source_points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
         <span class="n">rf</span><span class="o">.</span><span class="n">nucleation_x</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">rf</span><span class="o">.</span><span class="n">nucleation_y</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">ref_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">rf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ref_time</span><span class="p">)</span>
-        <span class="n">reference_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rf</span><span class="o">.</span><span class="n">lat</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">rf</span><span class="o">.</span><span class="n">lon</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Reference source is configured without Latitude &#39;</span>
+                    <span class="s1">&#39;and Longitude! Updating with event information! ...&#39;</span><span class="p">)</span>
+                <span class="n">rf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+            <span class="n">reference_sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">reference_sources</span>
+    <span class="k">return</span> <span class="n">reference_sources</span></div>
 
 
 <div class="viewcode-block" id="init_config"><a class="viewcode-back" href="../api.html#config.init_config">[docs]</a><span class="k">def</span> <span class="nf">init_config</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_magnitude</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">main_path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
@@ -1463,7 +1793,7 @@
 
         <span class="n">reference_sources</span> <span class="o">=</span> <span class="n">init_reference_sources</span><span class="p">(</span>
             <span class="n">source_points</span><span class="p">,</span> <span class="n">n_sources</span><span class="p">,</span> <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">source_type</span><span class="p">,</span>
-            <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">stf_type</span><span class="p">,</span> <span class="n">ref_time</span><span class="o">=</span><span class="n">gmc</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">gmc</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">stf_type</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">gmc</span><span class="o">.</span><span class="n">event</span><span class="p">)</span>
 
         <span class="n">c</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">date</span>
         <span class="n">c</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">gmc</span><span class="o">.</span><span class="n">event</span>
@@ -1517,10 +1847,7 @@
     <span class="n">c</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">set_decimation_factor</span><span class="p">()</span>
 
     <span class="n">c</span><span class="o">.</span><span class="n">sampler_config</span> <span class="o">=</span> <span class="n">SamplerConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sampler</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">sampler_config</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">update_covariances</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
     <span class="n">c</span><span class="o">.</span><span class="n">hyper_sampler_config</span> <span class="o">=</span> <span class="n">SamplerConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">hyper_sampler</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">hyper_sampler_config</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">update_covariances</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="n">c</span><span class="o">.</span><span class="n">update_hypers</span><span class="p">()</span>
     <span class="n">c</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">validate_priors</span><span class="p">()</span>

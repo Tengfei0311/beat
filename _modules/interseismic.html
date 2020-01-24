@@ -101,7 +101,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
-<span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">orthodrome</span>
+<span class="kn">from</span> <span class="nn">pyrocko.orthodrome</span> <span class="k">import</span> <span class="n">latlon_to_ne_numpy</span><span class="p">,</span> <span class="n">latlon_to_xyz</span><span class="p">,</span> <span class="n">earthradius</span>
 <span class="kn">from</span> <span class="nn">pyrocko.gf</span> <span class="k">import</span> <span class="n">RectangularSource</span> <span class="k">as</span> <span class="n">RS</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="k">import</span> <span class="n">Path</span>
@@ -211,7 +211,7 @@
 <span class="sd">        mask with zeros/ones for stable/moving observation points, respectively</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">norths</span><span class="p">,</span> <span class="n">easts</span> <span class="o">=</span> <span class="n">orthodrome</span><span class="o">.</span><span class="n">latlon_to_ne_numpy</span><span class="p">(</span>
+    <span class="n">norths</span><span class="p">,</span> <span class="n">easts</span> <span class="o">=</span> <span class="n">latlon_to_ne_numpy</span><span class="p">(</span>
         <span class="n">reference</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">block_mask</span><span class="p">(</span><span class="n">easts</span><span class="p">,</span> <span class="n">norths</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">east_ref</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">north_ref</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
