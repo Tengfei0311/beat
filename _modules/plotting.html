@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>plotting &#8212; beat 1.0beta documentation</title>
+    <title>plotting &#8212; beat 1.0 documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0beta',
+        VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -62,7 +62,7 @@
           </li>
            &#187;
           <li>
-              <a href="../index.html">beat 1.0beta documentation</a> &#187;
+              <a href="../index.html">beat 1.0 documentation</a> &#187;
           </li>
             <li><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
         </ul>
@@ -199,7 +199,7 @@
     <span class="s1">&#39;like&#39;</span><span class="p">:</span> <span class="n">u_hyp</span><span class="p">}</span>
 
 
-<span class="n">plot_projections</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">]</span>
+<span class="n">plot_projections</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;individual&#39;</span><span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">hypername</span><span class="p">(</span><span class="n">varname</span><span class="p">):</span>
@@ -1462,7 +1462,8 @@
             <span class="n">ens_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">best_point</span><span class="p">:</span>
-        <span class="n">bresults</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span><span class="n">best_point</span><span class="p">)</span>
+        <span class="n">bresults</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span>
+            <span class="n">best_point</span><span class="p">,</span> <span class="n">outmode</span> <span class="o">=</span> <span class="s1">&#39;tapered_data&#39;</span><span class="p">)</span>   <span class="c1"># for source individual contributions</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># get dummy results for data</span>
         <span class="n">bresults</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
@@ -1485,7 +1486,7 @@
         <span class="n">target_synths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">target_index</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
         <span class="n">target_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">target_synths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">)</span>
+        <span class="n">target_synths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">)</span>  <span class="c1"># TODO</span>
 
         <span class="n">dtraces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">processed_res</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">plot_options</span><span class="o">.</span><span class="n">nensemble</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1667,9 +1668,16 @@
                         <span class="n">fc</span><span class="o">=</span><span class="n">light</span><span class="p">(</span><span class="n">misfit_color</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
                         <span class="n">ec</span><span class="o">=</span><span class="n">misfit_color</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-                    <span class="n">plot_trace</span><span class="p">(</span>
-                        <span class="n">axes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">,</span>
-                        <span class="n">color</span><span class="o">=</span><span class="n">syn_color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span> <span class="o">==</span> <span class="s1">&#39;individual&#39;</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">source_contributions</span><span class="p">):</span>
+                            <span class="n">plot_trace</span><span class="p">(</span>
+                                <span class="n">axes</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">mpl_graph_color</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">plot_trace</span><span class="p">(</span>
+                            <span class="n">axes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">,</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">syn_color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
 
                 <span class="n">plot_trace</span><span class="p">(</span>
                     <span class="n">axes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_obs</span><span class="p">,</span>
@@ -3911,7 +3919,6 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Depth [km]&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;North_shift [km]&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;East_shift [km]&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
     <span class="n">set_axes_equal</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
@@ -3920,7 +3927,169 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">draw_station_map</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">draw_station_map_gmt</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
+
+    <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">gmtpy</span>
+
+    <span class="n">installations</span> <span class="o">=</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">detect_gmt_installations</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span> <span class="o">==</span> <span class="s1">&#39;svg&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;SVG format is not supported for this plot!&#39;</span><span class="p">)</span>
+
+    <span class="n">ts</span> <span class="o">=</span> <span class="s1">&#39;time_shift&#39;</span>
+    <span class="k">if</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">po</span><span class="o">.</span><span class="n">varnames</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Plotting time-shifts on station locations&#39;</span><span class="p">)</span>
+        <span class="n">stage</span> <span class="o">=</span> <span class="n">load_stage</span><span class="p">(</span>
+            <span class="n">problem</span><span class="p">,</span> <span class="n">stage_number</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">load_stage</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">point</span> <span class="o">=</span> <span class="n">get_result_point</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">post_llk</span><span class="p">)</span>
+        <span class="n">value_string</span> <span class="o">=</span> <span class="s1">&#39;timeshifts&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">value_string</span> <span class="o">=</span> <span class="s1">&#39;location&#39;</span>
+
+    <span class="n">font_size</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">font</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+    <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># major grid and tick increment in [deg]</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># outsize in cm</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">h</span> <span class="o">-</span> <span class="mi">5</span>
+
+    <span class="k">if</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">is_gmt5</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;newest&#39;</span><span class="p">):</span>
+        <span class="n">gmtconfig</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;MAP_GRID_PEN_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.1p&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;MAP_GRID_PEN_SECONDARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.1p&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;MAP_FRAME_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;fancy&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;FONT_ANNOT_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;FONT_ANNOT_SECONDARY&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;FONT_LABEL&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;FORMAT_GEO_MAP&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;PS_MEDIA&#39;</span><span class="p">:</span> <span class="s1">&#39;Custom_</span><span class="si">%i</span><span class="s1">x</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gmtconfig</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;MAP_FRAME_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;fancy&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;GRID_PEN_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01p&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ANNOT_FONT_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ANNOT_FONT_SIZE_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;12p&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;PLOT_DEGREE_FORMAT&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;GRID_PEN_SECONDARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01p&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;FONT_LABEL&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;PS_MEDIA&#39;</span><span class="p">:</span> <span class="s1">&#39;Custom_</span><span class="si">%i</span><span class="s1">x</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing Station Map ...&#39;</span><span class="p">)</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="p">[</span><span class="s1">&#39;seismic&#39;</span><span class="p">]</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">event</span>
+
+    <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="n">sc</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
+        <span class="n">outpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">outfolder</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">figure_dir</span><span class="p">,</span> <span class="s1">&#39;station_map_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%i</span><span class="s1">_</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">wmap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wmap</span><span class="o">.</span><span class="n">mapnumber</span><span class="p">,</span> <span class="n">value_string</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">))</span>
+
+        <span class="n">dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">distances</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span> <span class="c1"># add interval to have bound</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
+
+            <span class="n">st_lons</span> <span class="o">=</span> <span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">]</span>
+            <span class="n">st_lats</span> <span class="o">=</span> <span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">lat</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">]</span>
+
+            <span class="n">J_basemap</span> <span class="o">=</span> <span class="s1">&#39;E0/-90/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">J_location</span> <span class="o">=</span> <span class="s1">&#39;E</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">R_location</span> <span class="o">=</span> <span class="s1">&#39;0/360/-90/0&#39;</span>
+
+            <span class="n">gmt</span> <span class="o">=</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">GMT</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">gmtconfig</span><span class="p">)</span>
+            <span class="n">gmt</span><span class="o">.</span><span class="n">psbasemap</span><span class="p">(</span>
+                <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
+                <span class="n">J</span><span class="o">=</span><span class="s1">&#39;S0/-90/90/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">w</span><span class="p">,</span>
+                <span class="n">B</span><span class="o">=</span><span class="s1">&#39;xa</span><span class="si">%s</span><span class="s1">f</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bin_width</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">))</span>
+            <span class="n">gmt</span><span class="o">.</span><span class="n">pscoast</span><span class="p">(</span>
+                <span class="n">R</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span>
+                <span class="n">J</span><span class="o">=</span><span class="s1">&#39;E</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span>
+                <span class="n">D</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span>
+                <span class="n">G</span><span class="o">=</span><span class="s1">&#39;darkgrey&#39;</span><span class="p">)</span>
+            <span class="n">gmt</span><span class="o">.</span><span class="n">psbasemap</span><span class="p">(</span>
+                <span class="n">R</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span>
+                <span class="n">J</span><span class="o">=</span><span class="n">J_basemap</span><span class="p">,</span>
+                <span class="n">B</span><span class="o">=</span><span class="s1">&#39;xg</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">bin_width</span><span class="p">)</span>
+            <span class="n">gmt</span><span class="o">.</span><span class="n">psbasemap</span><span class="p">(</span>
+                <span class="n">R</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span>
+                <span class="n">J</span><span class="o">=</span><span class="n">J_basemap</span><span class="p">,</span>
+                <span class="n">B</span><span class="o">=</span><span class="s1">&#39;yg</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bin_width</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">point</span><span class="p">:</span>
+                <span class="c1"># Draw MAP time-shifts at station locations as colored triangles</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">time_shifts</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">wmap</span><span class="o">.</span><span class="n">time_shifts_id</span><span class="p">][</span>
+                        <span class="n">wmap</span><span class="o">.</span><span class="n">station_correction_idxs</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s1">&#39;Sampling results do not contain time-shifts for wmap&#39;</span>
+                        <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="n">wmap</span><span class="o">.</span><span class="n">time_shifts_id</span><span class="p">)</span>
+
+                <span class="n">cptfilepath</span> <span class="o">=</span> <span class="s1">&#39;/tmp/tempfile.cpt&#39;</span>
+                <span class="n">miny</span> <span class="o">=</span> <span class="n">time_shifts</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+                <span class="n">maxy</span> <span class="o">=</span> <span class="n">time_shifts</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">bound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">miny</span><span class="p">),</span> <span class="n">maxy</span><span class="p">)</span>
+
+                <span class="n">gmt</span><span class="o">.</span><span class="n">makecpt</span><span class="p">(</span>
+                    <span class="n">C</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span><span class="p">,</span>
+                    <span class="n">T</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">/</span><span class="si">%g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">),</span>
+                    <span class="n">Q</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">out_filename</span><span class="o">=</span><span class="n">cptfilepath</span><span class="p">,</span> <span class="n">suppress_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">gmt</span><span class="o">.</span><span class="n">psxy</span><span class="p">(</span>
+                    <span class="n">in_columns</span><span class="o">=</span><span class="p">(</span><span class="n">st_lons</span><span class="p">,</span> <span class="n">st_lats</span><span class="p">,</span> <span class="n">time_shifts</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+                    <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
+                    <span class="n">C</span><span class="o">=</span><span class="n">cptfilepath</span><span class="p">,</span>
+                    <span class="n">S</span><span class="o">=</span><span class="s1">&#39;t14p&#39;</span><span class="p">,</span>
+                    <span class="n">J</span><span class="o">=</span><span class="n">J_location</span><span class="p">)</span>
+
+                <span class="c1"># add a colorbar</span>
+                <span class="n">gmt</span><span class="o">.</span><span class="n">psscale</span><span class="p">(</span>
+                    <span class="n">B</span><span class="o">=</span><span class="s1">&#39;xa</span><span class="si">%s</span><span class="s1"> +l time shifts [s]&#39;</span> <span class="o">%</span> <span class="n">num</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">bound</span><span class="p">),</span>
+                    <span class="n">D</span><span class="o">=</span><span class="s1">&#39;x1.5c/0c+w6c/0.5c+jMC+h&#39;</span><span class="p">,</span>
+                    <span class="n">C</span><span class="o">=</span><span class="n">cptfilepath</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">gmt</span><span class="o">.</span><span class="n">psxy</span><span class="p">(</span>
+                    <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
+                    <span class="n">J</span><span class="o">=</span><span class="n">J_location</span><span class="p">,</span>
+                    <span class="n">in_columns</span><span class="o">=</span><span class="p">(</span><span class="n">st_lons</span><span class="p">,</span> <span class="n">st_lats</span><span class="p">),</span>
+                    <span class="n">G</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+                    <span class="n">S</span><span class="o">=</span><span class="s1">&#39;t14p&#39;</span><span class="p">)</span>
+
+            <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">alignment</span> <span class="o">=</span> <span class="s1">&#39;TC&#39;</span>
+            <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">gmt</span><span class="o">.</span><span class="n">is_gmt5</span><span class="p">():</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                        <span class="s1">&#39;</span><span class="si">%i</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">font_size</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">),</span>
+                        <span class="n">alignment</span><span class="p">,</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
+                    <span class="n">farg</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-F+f+j&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                        <span class="n">font_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">alignment</span><span class="p">,</span>
+                        <span class="n">st</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
+                    <span class="n">farg</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+            <span class="n">gmt</span><span class="o">.</span><span class="n">pstext</span><span class="p">(</span>
+                <span class="n">in_rows</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span>
+                <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
+                <span class="n">J</span><span class="o">=</span><span class="n">J_location</span><span class="p">,</span>
+                <span class="n">N</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">farg</span><span class="p">)</span>
+
+            <span class="n">gmt</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;saving figure to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">outpath</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Plot exists! Use --force to overwrite!&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">draw_station_map_cartopy</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing Station Map ...&#39;</span><span class="p">)</span>
@@ -4047,7 +4216,7 @@
     <span class="s1">&#39;fuzzy_beachball&#39;</span><span class="p">:</span> <span class="n">draw_fuzzy_beachball</span><span class="p">,</span>
     <span class="s1">&#39;fuzzy_mt_decomp&#39;</span><span class="p">:</span> <span class="n">draw_fuzzy_mt_decomposition</span><span class="p">,</span>
     <span class="s1">&#39;moment_rate&#39;</span><span class="p">:</span> <span class="n">draw_moment_rate</span><span class="p">,</span>
-    <span class="s1">&#39;station_map&#39;</span><span class="p">:</span> <span class="n">draw_station_map</span><span class="p">}</span>
+    <span class="s1">&#39;station_map&#39;</span><span class="p">:</span> <span class="n">draw_station_map_gmt</span><span class="p">}</span>
 
 
 <span class="n">common_plots</span> <span class="o">=</span> <span class="p">[</span>
@@ -4108,6 +4277,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../short_installation.html">Short Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../anaconda_installation.html">Anaconda Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>
