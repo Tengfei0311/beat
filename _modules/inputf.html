@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>inputf &#8212; beat 1.0 documentation</title>
+    <title>inputf &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0',
+        VERSION:     '1.0beta',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -62,7 +62,7 @@
           </li>
            &#187;
           <li>
-              <a href="../index.html">beat 1.0 documentation</a> &#187;
+              <a href="../index.html">beat 1.0beta documentation</a> &#187;
           </li>
             <li><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
         </ul>
@@ -192,7 +192,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">kite</span> <span class="k">import</span> <span class="n">Scene</span>
-        <span class="kn">from</span> <span class="nn">kite.scene</span> <span class="k">import</span> <span class="n">UserIOWarning</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
             <span class="s1">&#39;kite not installed! please checkout www.pyrocko.org!&#39;</span><span class="p">)</span>
@@ -204,12 +203,46 @@
             <span class="n">sc</span> <span class="o">=</span> <span class="n">Scene</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
             <span class="n">diffgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heart</span><span class="o">.</span><span class="n">DiffIFG</span><span class="o">.</span><span class="n">from_kite_scene</span><span class="p">(</span><span class="n">sc</span><span class="p">))</span>
             <span class="n">tobeloaded_names</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully imported kite scene </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
-        <span class="k">except</span><span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="n">UserIOWarning</span><span class="p">):</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;File </span><span class="si">%s</span><span class="s1"> not conform with kite format!&#39;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
 
     <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tobeloaded_names</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">diffgs</span></div>
+
+
+<div class="viewcode-block" id="load_ascii_gnss"><a class="viewcode-back" href="../api.html#inputf.load_ascii_gnss">[docs]</a><span class="k">def</span> <span class="nf">load_ascii_gnss</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load ascii file columns containing:</span>
+<span class="sd">    station name, Lon, Lat, ve, vn, vu, sigma_ve, sigma_vn, sigma_vu</span>
+<span class="sd">    location [decimal deg]</span>
+<span class="sd">    measurement unit [mm/yr]</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`heart.GNSSDataset`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;string&#39;</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">names</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Number of stations and available data differs!&#39;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">GNSSDataset</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+
+        <span class="n">gnss_station</span> <span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">GNSSStation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">lon</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">lat</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="s1">&#39;ENU&#39;</span><span class="p">):</span>
+
+            <span class="n">gnss_station</span><span class="o">.</span><span class="n">add_component</span><span class="p">(</span>
+                <span class="n">heart</span><span class="o">.</span><span class="n">GNSSComponent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                    <span class="n">v</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">km</span><span class="p">),</span>
+                    <span class="n">sigma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">/</span> <span class="n">km</span><span class="p">)))</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">add_station</span><span class="p">(</span><span class="n">gnss_station</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
 <div class="viewcode-block" id="load_ascii_gnss_globk"><a class="viewcode-back" href="../api.html#inputf.load_ascii_gnss_globk">[docs]</a><span class="k">def</span> <span class="nf">load_ascii_gnss_globk</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -221,10 +254,8 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    :class:`pyrocko.model.gnss.GNSSCampaign`</span>
+<span class="sd">    :class:`heart.GNSSDataset`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pyrocko.model</span> <span class="k">import</span> <span class="n">gnss</span>
-
     <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     <span class="n">names</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
@@ -234,19 +265,18 @@
     <span class="k">if</span> <span class="n">names</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Number of stations and available data differs!&#39;</span><span class="p">)</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="n">gnss</span><span class="o">.</span><span class="n">GNSSCampaign</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">GNSSDataset</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
 
-        <span class="n">gnss_station</span> <span class="o">=</span> <span class="n">gnss</span><span class="o">.</span><span class="n">GNSSStation</span><span class="p">(</span>
-            <span class="n">code</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span>
-            <span class="n">lon</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
-            <span class="n">lat</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+        <span class="n">gnss_station</span> <span class="o">=</span> <span class="n">heart</span><span class="o">.</span><span class="n">GNSSStation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">lon</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">lat</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">comp</span><span class="p">,</span> <span class="n">vel_idx</span><span class="p">,</span> <span class="n">std_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
-                <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;east&#39;</span><span class="p">,</span> <span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;up&#39;</span><span class="p">],</span> <span class="n">velocity_idxs</span><span class="p">,</span> <span class="n">std_idxs</span><span class="p">)):</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="s1">&#39;ENU&#39;</span><span class="p">,</span> <span class="n">velocity_idxs</span><span class="p">,</span> <span class="n">std_idxs</span><span class="p">)):</span>
 
-            <span class="nb">setattr</span><span class="p">(</span><span class="n">gnss_station</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                <span class="n">gnss</span><span class="o">.</span><span class="n">GNSSComponent</span><span class="p">(</span>
-                    <span class="n">shift</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">vel_idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">km</span><span class="p">),</span>
+            <span class="n">gnss_station</span><span class="o">.</span><span class="n">add_component</span><span class="p">(</span>
+                <span class="n">heart</span><span class="o">.</span><span class="n">GNSSComponent</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                    <span class="n">v</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">vel_idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">km</span><span class="p">),</span>
                     <span class="n">sigma</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">std_idx</span><span class="p">]</span> <span class="o">/</span> <span class="n">km</span><span class="p">)))</span>
         <span class="n">data</span><span class="o">.</span><span class="n">add_station</span><span class="p">(</span><span class="n">gnss_station</span><span class="p">)</span>
 
@@ -281,25 +311,20 @@
     <span class="k">return</span> <span class="n">responses</span>
 
 
-<div class="viewcode-block" id="load_and_blacklist_gnss"><a class="viewcode-back" href="../api.html#inputf.load_and_blacklist_gnss">[docs]</a><span class="k">def</span> <span class="nf">load_and_blacklist_gnss</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">blacklist</span><span class="p">,</span> <span class="n">campaign</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="load_and_blacklist_gnss"><a class="viewcode-back" href="../api.html#inputf.load_and_blacklist_gnss">[docs]</a><span class="k">def</span> <span class="nf">load_and_blacklist_gnss</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">blacklist</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load ascii GNSS data from GLOBK, apply blacklist and initialise targets.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    campaign : boolean</span>
-<span class="sd">        if True return gnss.GNSSCampaign otherwise</span>
-<span class="sd">        list of heart.GNSSCompoundComponent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">gnss_campaign</span> <span class="o">=</span> <span class="n">load_ascii_gnss_globk</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">station_code</span> <span class="ow">in</span> <span class="n">blacklist</span><span class="p">:</span>
-        <span class="n">gnss_campaign</span><span class="o">.</span><span class="n">remove_station</span><span class="p">(</span><span class="n">station_code</span><span class="p">)</span>
+    <span class="c1"># gnss_ds = load_ascii_gnss()</span>
+    <span class="n">gnss_ds</span> <span class="o">=</span> <span class="n">load_ascii_gnss_globk</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">gnss_ds</span><span class="o">.</span><span class="n">remove_stations</span><span class="p">(</span><span class="n">blacklist</span><span class="p">)</span>
+    <span class="n">comps</span> <span class="o">=</span> <span class="n">gnss_ds</span><span class="o">.</span><span class="n">get_component_names</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">campaign</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">heart</span><span class="o">.</span><span class="n">GNSSCompoundComponent</span><span class="o">.</span><span class="n">from_pyrocko_gnss_campaign</span><span class="p">(</span>
-            <span class="n">gnss_campaign</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">gnss_campaign</span></div>
+    <span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comps</span><span class="p">:</span>
+        <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gnss_ds</span><span class="o">.</span><span class="n">get_compound</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">targets</span></div>
 
 
 <div class="viewcode-block" id="load_and_blacklist_stations"><a class="viewcode-back" href="../api.html#inputf.load_and_blacklist_stations">[docs]</a><span class="k">def</span> <span class="nf">load_and_blacklist_stations</span><span class="p">(</span><span class="n">datadir</span><span class="p">,</span> <span class="n">blacklist</span><span class="p">):</span>
@@ -504,7 +529,6 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../short_installation.html">Short Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../anaconda_installation.html">Anaconda Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>

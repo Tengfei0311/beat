@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyrocko.gf.meta &#8212; beat 1.0 documentation</title>
+    <title>pyrocko.gf.meta &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../../../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '1.0',
+        VERSION:     '1.0beta',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -62,7 +62,7 @@
           </li>
            &#187;
           <li>
-              <a href="../../../index.html">beat 1.0 documentation</a> &#187;
+              <a href="../../../index.html">beat 1.0beta documentation</a> &#187;
           </li>
             <li><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
         </ul>
@@ -81,11 +81,7 @@
 <span class="c1">#</span>
 <span class="c1"># The Pyrocko Developers, 21st Century</span>
 <span class="c1"># ---|P------/S----------~Lg----------</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
-
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">str</span> <span class="k">as</span> <span class="n">new_str</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">range</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="nb">zip</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -104,6 +100,12 @@
 
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">cake</span><span class="p">,</span> <span class="n">orthodrome</span><span class="p">,</span> <span class="n">spit</span><span class="p">,</span> <span class="n">moment_tensor</span><span class="p">,</span> <span class="n">trace</span>
 
+<span class="kn">from</span> <span class="nn">.error</span> <span class="k">import</span> <span class="n">StoreError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">new_str</span> <span class="o">=</span> <span class="n">unicode</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="n">new_str</span> <span class="o">=</span> <span class="nb">str</span>
 
 <span class="n">guts_prefix</span> <span class="o">=</span> <span class="s1">&#39;pf&#39;</span>
 
@@ -152,6 +154,16 @@
                            <span class="n">ydata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
                            <span class="n">deltat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">deltat</span><span class="p">,</span>
                            <span class="n">tmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmin</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_pyrocko_trace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">codes</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">nslc_id</span><span class="p">,</span>
+            <span class="n">tmin</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">tmin</span><span class="p">,</span>
+            <span class="n">deltat</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">deltat</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">SeismosizerResult</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -217,6 +229,7 @@
     <span class="n">name</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
     <span class="n">source_terms</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
     <span class="n">ncomponents</span> <span class="o">=</span> <span class="n">Int</span><span class="o">.</span><span class="n">T</span><span class="p">()</span>
+    <span class="n">default_stored_quantity</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">provided_components</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">String</span><span class="o">.</span><span class="n">T</span><span class="p">())</span>
 
 
@@ -225,36 +238,42 @@
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elastic2&#39;</span><span class="p">,</span>
         <span class="n">source_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;m0&#39;</span><span class="p">],</span>
         <span class="n">ncomponents</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">default_stored_quantity</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
         <span class="n">provided_components</span><span class="o">=</span><span class="p">[</span>
-            <span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.e&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.d&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]),</span>
     <span class="n">ComponentSchemeDescription</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elastic8&#39;</span><span class="p">,</span>
         <span class="n">source_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mnn&#39;</span><span class="p">,</span> <span class="s1">&#39;mee&#39;</span><span class="p">,</span> <span class="s1">&#39;mdd&#39;</span><span class="p">,</span> <span class="s1">&#39;mne&#39;</span><span class="p">,</span> <span class="s1">&#39;mnd&#39;</span><span class="p">,</span> <span class="s1">&#39;med&#39;</span><span class="p">],</span>
         <span class="n">ncomponents</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">default_stored_quantity</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
         <span class="n">provided_components</span><span class="o">=</span><span class="p">[</span>
-            <span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.e&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.d&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]),</span>
     <span class="n">ComponentSchemeDescription</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elastic10&#39;</span><span class="p">,</span>
         <span class="n">source_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mnn&#39;</span><span class="p">,</span> <span class="s1">&#39;mee&#39;</span><span class="p">,</span> <span class="s1">&#39;mdd&#39;</span><span class="p">,</span> <span class="s1">&#39;mne&#39;</span><span class="p">,</span> <span class="s1">&#39;mnd&#39;</span><span class="p">,</span> <span class="s1">&#39;med&#39;</span><span class="p">],</span>
         <span class="n">ncomponents</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">default_stored_quantity</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
         <span class="n">provided_components</span><span class="o">=</span><span class="p">[</span>
-            <span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.e&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.d&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]),</span>
     <span class="n">ComponentSchemeDescription</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elastic18&#39;</span><span class="p">,</span>
         <span class="n">source_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mnn&#39;</span><span class="p">,</span> <span class="s1">&#39;mee&#39;</span><span class="p">,</span> <span class="s1">&#39;mdd&#39;</span><span class="p">,</span> <span class="s1">&#39;mne&#39;</span><span class="p">,</span> <span class="s1">&#39;mnd&#39;</span><span class="p">,</span> <span class="s1">&#39;med&#39;</span><span class="p">],</span>
         <span class="n">ncomponents</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
+        <span class="n">default_stored_quantity</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
         <span class="n">provided_components</span><span class="o">=</span><span class="p">[</span>
-            <span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.e&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.d&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]),</span>
     <span class="n">ComponentSchemeDescription</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elastic5&#39;</span><span class="p">,</span>
         <span class="n">source_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">,</span> <span class="s1">&#39;fe&#39;</span><span class="p">,</span> <span class="s1">&#39;fd&#39;</span><span class="p">],</span>
         <span class="n">ncomponents</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">default_stored_quantity</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
         <span class="n">provided_components</span><span class="o">=</span><span class="p">[</span>
-            <span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.e&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.d&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]),</span>
     <span class="n">ComponentSchemeDescription</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;poroelastic10&#39;</span><span class="p">,</span>
         <span class="n">source_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pore_pressure&#39;</span><span class="p">],</span>
         <span class="n">ncomponents</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">default_stored_quantity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">provided_components</span><span class="o">=</span><span class="p">[</span>
             <span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.e&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement.d&#39;</span><span class="p">,</span>
             <span class="s1">&#39;vertical_tilt.n&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical_tilt.e&#39;</span><span class="p">,</span>
@@ -1075,6 +1094,8 @@
             <span class="n">m6s</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m0s</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
             <span class="n">m6s</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m0s</span><span class="p">[:,</span> <span class="n">num</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">m6s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">make_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">scheme</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_scheme</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
@@ -1327,6 +1348,9 @@
                 <span class="n">g_e</span> <span class="o">=</span> <span class="n">rep</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
                 <span class="n">w_d</span> <span class="o">=</span> <span class="n">cat</span><span class="p">((</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f5</span><span class="p">))</span>
                 <span class="n">g_d</span> <span class="o">=</span> <span class="n">rep</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="p">(</span>
             <span class="p">(</span><span class="s1">&#39;displacement.n&#39;</span><span class="p">,</span> <span class="n">w_n</span><span class="p">,</span> <span class="n">g_n</span><span class="p">),</span>
@@ -1631,6 +1655,13 @@
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;elastic10&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;GF component scheme (</span><span class="si">%s</span><span class="s1">).&#39;</span> <span class="o">%</span> <span class="n">fmt_choices</span><span class="p">(</span><span class="n">ComponentScheme</span><span class="p">))</span>
 
+    <span class="n">stored_quantity</span> <span class="o">=</span> <span class="n">QuantityType</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
+        <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Physical quantity of stored values (</span><span class="si">%s</span><span class="s1">). If not given, a &#39;</span>
+             <span class="s1">&#39;default is used based on the GF component scheme. The default &#39;</span>
+             <span class="s1">&#39;for the ``&quot;elastic*&quot;`` family of component schemes is &#39;</span>
+             <span class="s1">&#39;``&quot;displacement&quot;``.&#39;</span> <span class="o">%</span> <span class="n">fmt_choices</span><span class="p">(</span><span class="n">QuantityType</span><span class="p">))</span>
+
     <span class="n">tabulated_phases</span> <span class="o">=</span> <span class="n">List</span><span class="o">.</span><span class="n">T</span><span class="p">(</span>
         <span class="n">TPDef</span><span class="o">.</span><span class="n">T</span><span class="p">(),</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Mapping of phase names to phase definitions, for which travel &#39;</span>
@@ -1697,6 +1728,12 @@
 
     <span class="k">def</span> <span class="nf">vicinities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vicinities_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">grid_interpolation_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grid_interpolation_coefficients</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minlevel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">minlevel</span><span class="p">:</span><span class="n">level</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">iter_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minlevel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">nditer_outer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">minlevel</span><span class="p">:</span><span class="n">level</span><span class="p">])</span>
@@ -1830,7 +1867,7 @@
                             <span class="s2">&quot;multilinear&quot;</span><span class="p">,</span> <span class="s2">&quot;nearest_neighbor&quot;</span><span class="p">)</span>
 
         <span class="n">earthmod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">earthmodel_1d</span>
-        <span class="n">store_depth_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">store_depth_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_depths</span><span class="p">()</span>
         <span class="n">z_profile</span> <span class="o">=</span> <span class="n">earthmod</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">parameter</span> <span class="o">==</span> <span class="s1">&#39;vs&#39;</span><span class="p">:</span>
@@ -1886,6 +1923,25 @@
     <span class="k">def</span> <span class="nf">is_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_static</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">get_source_depths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;must be implemented in subclass&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_tabulated_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_id</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get tabulated phase definition.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">pdef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabulated_phases</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pdef</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">phase_id</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pdef</span>
+
+        <span class="k">raise</span> <span class="n">StoreError</span><span class="p">(</span><span class="s1">&#39;No such phase: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">phase_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fix_ttt_holes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sptree</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">StoreError</span><span class="p">(</span>
+            <span class="s1">&#39;Cannot fix travel time table holes in GF stores of type </span><span class="si">%s</span><span class="s1">.&#39;</span>
+            <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_type</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">ConfigTypeA</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -1938,6 +1994,9 @@
     <span class="k">def</span> <span class="nf">get_source_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+    <span class="k">def</span> <span class="nf">get_source_depths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="nf">get_receiver_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">receiver_depth</span>
 
@@ -1989,9 +2048,13 @@
                     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="n">OutOfBounds</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">vicinity_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ig</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">grid_interpolation_coefficients</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
             <span class="n">ias</span> <span class="o">=</span> <span class="n">indi12</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">amin</span><span class="p">)</span> <span class="o">/</span> <span class="n">da</span><span class="p">,</span> <span class="n">na</span><span class="p">)</span>
             <span class="n">ibs</span> <span class="o">=</span> <span class="n">indi12</span><span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="n">bmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">db</span><span class="p">,</span> <span class="n">nb</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ias</span><span class="p">,</span> <span class="n">ibs</span>
+
+        <span class="k">def</span> <span class="nf">vicinity_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ig</span><span class="p">):</span>
+            <span class="n">ias</span><span class="p">,</span> <span class="n">ibs</span> <span class="o">=</span> <span class="n">grid_interpolation_coefficients</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">ig</span> <span class="o">&lt;</span> <span class="n">ng</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">OutOfBounds</span><span class="p">()</span>
@@ -2053,6 +2116,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_index_function</span> <span class="o">=</span> <span class="n">index_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_indices_function</span> <span class="o">=</span> <span class="n">indices_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grid_interpolation_coefficients</span> <span class="o">=</span> <span class="n">grid_interpolation_coefficients</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vicinity_function</span> <span class="o">=</span> <span class="n">vicinity_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vicinities_function</span> <span class="o">=</span> <span class="n">vicinities_function</span>
 
@@ -2076,6 +2140,60 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">distance_min</span><span class="o">/</span><span class="n">km</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">distance_max</span><span class="o">/</span><span class="n">km</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">distance_delta</span><span class="o">/</span><span class="n">km</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fix_ttt_holes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sptree</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">eikonal_ext</span><span class="p">,</span> <span class="n">spit</span>
+
+        <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">num</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">delta</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltas</span><span class="p">)</span>
+
+        <span class="n">nsources</span><span class="p">,</span> <span class="n">ndistances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ns</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nodes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">speeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_material_property</span><span class="p">(</span>
+            <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span>
+            <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;vp&#39;</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">cake</span><span class="o">.</span><span class="n">P</span> <span class="k">else</span> <span class="s1">&#39;vs&#39;</span><span class="p">,</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;multilinear&#39;</span><span class="p">)</span>
+
+        <span class="n">speeds</span> <span class="o">=</span> <span class="n">speeds</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nsources</span><span class="p">,</span> <span class="n">ndistances</span><span class="p">))</span>
+
+        <span class="n">times</span> <span class="o">=</span> <span class="n">sptree</span><span class="o">.</span><span class="n">interpolate_many</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+
+        <span class="n">times</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">times</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">speeds</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">eikonal_ext</span><span class="o">.</span><span class="n">eikonal_solver_fmm_cartesian</span><span class="p">(</span>
+                <span class="n">speeds</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">eikonal_ext</span><span class="o">.</span><span class="n">EikonalExtError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;please check results&#39;</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s1">&#39;Got a warning from eikonal solver &#39;</span>
+                    <span class="s1">&#39;- may be ok...&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">ibs</span><span class="p">,</span> <span class="n">ics</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid_interpolation_coefficients</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ib</span><span class="p">,</span> <span class="n">vb</span> <span class="ow">in</span> <span class="n">ibs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">vc</span> <span class="ow">in</span> <span class="n">ics</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">+=</span> <span class="n">times</span><span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ic</span><span class="p">]</span> <span class="o">*</span> <span class="n">vb</span> <span class="o">*</span> <span class="n">vc</span>
+
+            <span class="k">return</span> <span class="n">t</span>
+
+        <span class="k">return</span> <span class="n">spit</span><span class="o">.</span><span class="n">SPTree</span><span class="p">(</span>
+            <span class="n">f</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+            <span class="n">ftol</span><span class="o">=</span><span class="n">sptree</span><span class="o">.</span><span class="n">ftol</span><span class="p">,</span>
+            <span class="n">xbounds</span><span class="o">=</span><span class="n">sptree</span><span class="o">.</span><span class="n">xbounds</span><span class="p">,</span>
+            <span class="n">xtols</span><span class="o">=</span><span class="n">sptree</span><span class="o">.</span><span class="n">xtols</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ConfigTypeB</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span>
@@ -2132,6 +2250,9 @@
 
     <span class="k">def</span> <span class="nf">get_receiver_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_source_depths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mins</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
@@ -2190,10 +2311,14 @@
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">OutOfBounds</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">vicinity_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">ig</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">grid_interpolation_coefficients</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
             <span class="n">ias</span> <span class="o">=</span> <span class="n">indi12</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">amin</span><span class="p">)</span> <span class="o">/</span> <span class="n">da</span><span class="p">,</span> <span class="n">na</span><span class="p">)</span>
             <span class="n">ibs</span> <span class="o">=</span> <span class="n">indi12</span><span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="n">bmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">db</span><span class="p">,</span> <span class="n">nb</span><span class="p">)</span>
             <span class="n">ics</span> <span class="o">=</span> <span class="n">indi12</span><span class="p">((</span><span class="n">c</span> <span class="o">-</span> <span class="n">cmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">dc</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ias</span><span class="p">,</span> <span class="n">ibs</span><span class="p">,</span> <span class="n">ics</span>
+
+        <span class="k">def</span> <span class="nf">vicinity_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">ig</span><span class="p">):</span>
+            <span class="n">ias</span><span class="p">,</span> <span class="n">ibs</span><span class="p">,</span> <span class="n">ics</span> <span class="o">=</span> <span class="n">grid_interpolation_coefficients</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">ig</span> <span class="o">&lt;</span> <span class="n">ng</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">OutOfBounds</span><span class="p">()</span>
@@ -2278,6 +2403,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_index_function</span> <span class="o">=</span> <span class="n">index_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_indices_function</span> <span class="o">=</span> <span class="n">indices_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grid_interpolation_coefficients</span> <span class="o">=</span> <span class="n">grid_interpolation_coefficients</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vicinity_function</span> <span class="o">=</span> <span class="n">vicinity_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vicinities_function</span> <span class="o">=</span> <span class="n">vicinities_function</span>
 
@@ -2309,6 +2435,73 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">distance_min</span><span class="o">/</span><span class="n">km</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">distance_max</span><span class="o">/</span><span class="n">km</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">distance_delta</span><span class="o">/</span><span class="n">km</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fix_ttt_holes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sptree</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">eikonal_ext</span><span class="p">,</span> <span class="n">spit</span>
+
+        <span class="n">nodes_sr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">minlevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">num</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">delta</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">deltas</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">nreceivers</span><span class="p">,</span> <span class="n">nsources</span><span class="p">,</span> <span class="n">ndistances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ns</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nodes_sr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">nodes_sr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">nodes_sr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">speeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_material_property</span><span class="p">(</span>
+            <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span>
+            <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;vp&#39;</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">cake</span><span class="o">.</span><span class="n">P</span> <span class="k">else</span> <span class="s1">&#39;vs&#39;</span><span class="p">,</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;multilinear&#39;</span><span class="p">)</span>
+
+        <span class="n">speeds</span> <span class="o">=</span> <span class="n">speeds</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nsources</span><span class="p">,</span> <span class="n">ndistances</span><span class="p">))</span>
+
+        <span class="n">receiver_times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ireceiver</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nreceivers</span><span class="p">):</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span>
+                <span class="n">num</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">nodes_sr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ireceiver</span><span class="p">]),</span>
+                <span class="n">nodes_sr</span><span class="p">])</span>
+
+            <span class="n">times</span> <span class="o">=</span> <span class="n">sptree</span><span class="o">.</span><span class="n">interpolate_many</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+
+            <span class="n">times</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">times</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+
+            <span class="n">times</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">speeds</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">eikonal_ext</span><span class="o">.</span><span class="n">eikonal_solver_fmm_cartesian</span><span class="p">(</span>
+                    <span class="n">speeds</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">eikonal_ext</span><span class="o">.</span><span class="n">EikonalExtError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;please check results&#39;</span><span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s1">&#39;Got a warning from eikonal solver &#39;</span>
+                        <span class="s1">&#39;- may be ok...&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span>
+
+            <span class="n">receiver_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">ias</span><span class="p">,</span> <span class="n">ibs</span><span class="p">,</span> <span class="n">ics</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid_interpolation_coefficients</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="n">va</span> <span class="ow">in</span> <span class="n">ias</span><span class="p">:</span>
+                <span class="n">times</span> <span class="o">=</span> <span class="n">receiver_times</span><span class="p">[</span><span class="n">ia</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">ib</span><span class="p">,</span> <span class="n">vb</span> <span class="ow">in</span> <span class="n">ibs</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">vc</span> <span class="ow">in</span> <span class="n">ics</span><span class="p">:</span>
+                        <span class="n">t</span> <span class="o">+=</span> <span class="n">times</span><span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ic</span><span class="p">]</span> <span class="o">*</span> <span class="n">va</span> <span class="o">*</span> <span class="n">vb</span> <span class="o">*</span> <span class="n">vc</span>
+
+            <span class="k">return</span> <span class="n">t</span>
+
+        <span class="k">return</span> <span class="n">spit</span><span class="o">.</span><span class="n">SPTree</span><span class="p">(</span>
+            <span class="n">f</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+            <span class="n">ftol</span><span class="o">=</span><span class="n">sptree</span><span class="o">.</span><span class="n">ftol</span><span class="p">,</span>
+            <span class="n">xbounds</span><span class="o">=</span><span class="n">sptree</span><span class="o">.</span><span class="n">xbounds</span><span class="p">,</span>
+            <span class="n">xtols</span><span class="o">=</span><span class="n">sptree</span><span class="o">.</span><span class="n">xtols</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ConfigTypeC</span><span class="p">(</span><span class="n">Config</span><span class="p">):</span>
@@ -2388,6 +2581,9 @@
 
     <span class="k">def</span> <span class="nf">get_receiver_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">receivers</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">depth</span>
+
+    <span class="k">def</span> <span class="nf">get_source_depths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mins</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
@@ -2801,6 +2997,20 @@
         <span class="n">x</span><span class="p">,</span> <span class="n">op_axes</span><span class="o">=</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">int</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 
 
+<span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">]</span>
+    <span class="n">nnodes</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
+    <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">nnodes</span><span class="p">,</span> <span class="n">ndim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">xs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="n">idim</span><span class="p">]</span>
+        <span class="n">nrepeat</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ns</span><span class="p">[</span><span class="n">idim</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">ntile</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ns</span><span class="p">[:</span><span class="n">idim</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">nodes</span><span class="p">[:,</span> <span class="n">idim</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ntile</span><span class="p">),</span> <span class="n">nrepeat</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nodes</span>
+
+
 <span class="k">def</span> <span class="nf">filledi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">num</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
     <span class="n">a</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -2872,7 +3082,6 @@
 <h3><a href="../../../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../short_installation.html">Short Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../anaconda_installation.html">Anaconda Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting started with BEAT</a></li>

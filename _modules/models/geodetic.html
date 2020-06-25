@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>models.geodetic &#8212; beat 1.0 documentation</title>
+    <title>models.geodetic &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.0',
+        VERSION:     '1.0beta',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -62,7 +62,7 @@
           </li>
            &#187;
           <li>
-              <a href="../../index.html">beat 1.0 documentation</a> &#187;
+              <a href="../../index.html">beat 1.0beta documentation</a> &#187;
           </li>
             <li><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
         </ul>
@@ -114,6 +114,25 @@
     <span class="s1">&#39;GeodeticDistributerComposite&#39;</span><span class="p">]</span>
 
 
+<span class="k">def</span> <span class="nf">get_ramp_displacement</span><span class="p">(</span><span class="n">locx</span><span class="p">,</span> <span class="n">locy</span><span class="p">,</span> <span class="n">ramp</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get synthetic residual plane in azimuth and range direction of the</span>
+<span class="sd">    satellite.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    slocx : shared array-like :class:`numpy.ndarray`</span>
+<span class="sd">        local coordinates [km] in east direction</span>
+<span class="sd">    slocy : shared array-like :class:`numpy.ndarray`</span>
+<span class="sd">        local coordinates [km] in north direction</span>
+<span class="sd">    ramp : :class:`theano.tensor.Tensor` or :class:`numpy.ndarray`</span>
+<span class="sd">        vector of 2 variables with ramp parameters in azimuth[0] &amp; range[1]</span>
+<span class="sd">    offset : :class:`theano.tensor.Tensor` or :class:`numpy.ndarray`</span>
+<span class="sd">        scalar of offset in [m]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">locy</span> <span class="o">*</span> <span class="n">ramp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">locx</span> <span class="o">*</span> <span class="n">ramp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span>
+
+
 <span class="k">class</span> <span class="nc">GeodeticComposite</span><span class="p">(</span><span class="n">Composite</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Comprises data structure of the geodetic composite.</span>
@@ -130,7 +149,6 @@
 <span class="sd">    hypers : boolean</span>
 <span class="sd">        if true initialise object for hyper parameter optimization</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_hierarchicalnames</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gc</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">hypers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
@@ -185,12 +203,23 @@
                 <span class="n">shared</span><span class="p">(</span><span class="n">choli</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;geo_weight_</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="n">data</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">update_slog_pdet</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">gc</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">has_enabled_corrections</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Initialising corrections ...&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">corr_conf</span> <span class="ow">in</span> <span class="n">gc</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">iter_corrections</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
-                    <span class="n">data</span><span class="o">.</span><span class="n">setup_correction</span><span class="p">(</span>
-                        <span class="n">event</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="n">correction_config</span><span class="o">=</span><span class="n">corr_conf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gc</span><span class="o">.</span><span class="n">fit_plane</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Fit residual ramp selected!&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">heart</span><span class="o">.</span><span class="n">DiffIFG</span><span class="p">):</span>
+                    <span class="n">locy</span><span class="p">,</span> <span class="n">locx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">update_local_coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">shared</span><span class="p">(</span><span class="n">locx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">/</span> <span class="n">km</span><span class="p">,</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;localx_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">shared</span><span class="p">(</span><span class="n">locy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span> <span class="o">/</span> <span class="n">km</span><span class="p">,</span>
+                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;localy_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">borrow</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Appending placeholder for non-SAR data!&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">gc</span>
 
@@ -206,38 +235,20 @@
 
     <span class="k">def</span> <span class="nf">get_all_station_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return unique GNSS stations and radar acquisitions.</span>
+<span class="sd">        Return unique GPS stations and radar acquisitions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">heart</span><span class="o">.</span><span class="n">DiffIFG</span><span class="p">):</span>
                 <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">heart</span><span class="o">.</span><span class="n">GNSSCompoundComponent</span><span class="p">):</span>
-                <span class="n">names</span><span class="o">.</span><span class="n">extent</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">extent</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">station_names</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s1">&#39;Geodetic Dataset of class &quot;</span><span class="si">%s</span><span class="s1">&quot; not &#39;</span>
                     <span class="s1">&#39;supported&#39;</span> <span class="o">%</span> <span class="n">dataset</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">names</span>
-
-    <span class="k">def</span> <span class="nf">get_hypersize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hp_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return size of the hyperparameter</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        hp_name: str</span>
-<span class="sd">            of hyperparameter name</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dataset_specific_residual_noise_estimation</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_all_station_names</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">assemble_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -288,87 +299,92 @@
     <span class="k">def</span> <span class="nf">init_hierarchicals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_config</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize hierarchical parameters.</span>
-<span class="sd">        Ramp estimation in azimuth and range direction of a radar scene and/or</span>
-<span class="sd">        Rotation of GNSS stations around an Euler pole</span>
+<span class="sd">        Ramp estimation in azimuth and range direction of a radar scene.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hierarchicals</span> <span class="o">=</span> <span class="n">problem_config</span><span class="o">.</span><span class="n">hierarchicals</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_hierarchicalnames</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">corr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">iter_corrections</span><span class="p">():</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s1">&#39;Evaluating config for </span><span class="si">%s</span><span class="s1"> corrections &#39;</span>
-                <span class="s1">&#39;for datasets...&#39;</span> <span class="o">%</span> <span class="n">corr</span><span class="o">.</span><span class="n">feature</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">corr</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="n">corr</span><span class="o">.</span><span class="n">for_datatyp</span><span class="p">:</span>
-                        <span class="n">hierarchical_names</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">get_hierarchical_names</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">hierarchical_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fit_plane</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Estimating ramp for each dataset...&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">heart</span><span class="o">.</span><span class="n">DiffIFG</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">hierarchical_name</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">plane_names</span><span class="p">():</span>
 
-                    <span class="k">for</span> <span class="n">hierarchical_name</span> <span class="ow">in</span> <span class="n">hierarchical_names</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="n">corr</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="n">hierarchical_name</span> <span class="ow">in</span> <span class="n">hierarchicals</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fit_plane</span> <span class="ow">and</span> \
+                                <span class="n">hierarchical_name</span> <span class="ow">in</span> <span class="n">hierarchicals</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">ConfigInconsistentError</span><span class="p">(</span>
-                                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> disabled, but they are defined&#39;</span>
+                                <span class="s1">&#39;Plane removal disabled, but they are defined&#39;</span>
                                 <span class="s1">&#39; in the problem configuration&#39;</span>
-                                <span class="s1">&#39; (hierarchicals)!&#39;</span> <span class="o">%</span> <span class="n">corr</span><span class="o">.</span><span class="n">feature</span><span class="p">)</span>
+                                <span class="s1">&#39; (hierarchicals)!&#39;</span><span class="p">)</span>
 
-                        <span class="k">if</span> <span class="n">corr</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="n">hierarchical_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hierarchicals</span> \
-                                <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">corr</span><span class="o">.</span><span class="n">blacklist</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fit_plane</span> <span class="ow">and</span> \
+                                <span class="n">hierarchical_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hierarchicals</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">ConfigInconsistentError</span><span class="p">(</span>
-                                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> corrections enabled, but they are&#39;</span>
+                                <span class="s1">&#39;Plane corrections enabled, but they are&#39;</span>
                                 <span class="s1">&#39; not defined in the problem configuration!&#39;</span>
-                                <span class="s1">&#39; (hierarchicals)&#39;</span> <span class="o">%</span> <span class="n">corr</span><span class="o">.</span><span class="n">feature</span><span class="p">)</span>
+                                <span class="s1">&#39; (hierarchicals)&#39;</span><span class="p">)</span>
 
                         <span class="n">param</span> <span class="o">=</span> <span class="n">hierarchicals</span><span class="p">[</span><span class="n">hierarchical_name</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="n">hierarchical_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="n">num</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span>
-                                    <span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
-                                <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                                    <span class="n">name</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                    <span class="n">shape</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
-                                    <span class="n">lower</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
-                                    <span class="n">upper</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span>
-                                    <span class="n">testval</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">testvalue</span><span class="p">,</span>
-                                    <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
-
-                                <span class="k">try</span><span class="p">:</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span>
-                                        <span class="n">hierarchical_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">_hierarchicalnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                                        <span class="n">hierarchical_name</span><span class="p">)</span>
-                                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                                    <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">hierarchical_name</span><span class="p">]</span> <span class="o">=</span> \
-                                        <span class="n">Uniform</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                                    <span class="s1">&#39;not solving for </span><span class="si">%s</span><span class="s1">, got fixed at </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                                        <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                        <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span>
-                                            <span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">num</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span>
+                                <span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">upper</span><span class="p">):</span>
+                            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                <span class="n">shape</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">dimension</span><span class="p">,</span>
+                                <span class="n">lower</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+                                <span class="n">upper</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span>
+                                <span class="n">testval</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">testvalue</span><span class="p">,</span>
+                                <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">dtype</span><span class="o">=</span><span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+                            <span class="k">try</span><span class="p">:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span>
-                                    <span class="n">hierarchical_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">lower</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;No </span><span class="si">%s</span><span class="s1"> correction!&#39;</span> <span class="o">%</span> <span class="n">corr</span><span class="o">.</span><span class="n">feature</span><span class="p">)</span>
+                                    <span class="n">hierarchical_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                                <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">hierarchical_name</span><span class="p">]</span> <span class="o">=</span> \
+                                    <span class="n">Uniform</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                                <span class="s1">&#39;not solving for </span><span class="si">%s</span><span class="s1">, got fixed at </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                    <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                    <span class="n">utility</span><span class="o">.</span><span class="n">list2string</span><span class="p">(</span>
+                                        <span class="n">param</span><span class="o">.</span><span class="n">lower</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">hierarchical_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">lower</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;No plane for GNSS data.&#39;</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s1">&#39;Initialized </span><span class="si">%i</span><span class="s1"> hierarchical parameters.&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">))</span>
+            <span class="s1">&#39;Initialized </span><span class="si">%i</span><span class="s1"> hierarchical parameters &#39;</span>
+            <span class="s1">&#39;(ramps).&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">apply_corrections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_ramps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Apply all the configured correction terms e.g. SAR orbital ramps,</span>
-<span class="sd">        GNSS Euler pole rotations etc...</span>
+<span class="sd">        Remove an orbital ramp from the residual displacements</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">has_correction</span><span class="p">:</span>
-                <span class="n">correction</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_correction</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">)</span>
-                <span class="c1"># correction = Print(&#39;corr&#39;)(correction)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">heart</span><span class="o">.</span><span class="n">DiffIFG</span><span class="p">):</span>
+                <span class="n">ramp_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">ramp_name</span><span class="p">()</span>
+                <span class="n">offset_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">offset_name</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">point</span><span class="p">:</span>
+                    <span class="n">locx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slocx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">locy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slocy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">ramp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">ramp_name</span><span class="p">]</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">offset_name</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">locx</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">east_shifts</span> <span class="o">/</span> <span class="n">km</span>
+                    <span class="n">locy</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">north_shifts</span> <span class="o">/</span> <span class="n">km</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">ramp</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">ramp_name</span><span class="p">]</span>
+                        <span class="n">offset</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">offset_name</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                        <span class="n">ramp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">ramp_name</span><span class="p">]</span>
+                        <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">[</span><span class="n">offset_name</span><span class="p">]</span>
+
+                <span class="n">ramp_disp</span> <span class="o">=</span> <span class="n">get_ramp_displacement</span><span class="p">(</span>
+                    <span class="n">locx</span><span class="p">,</span> <span class="n">locy</span><span class="p">,</span> <span class="n">ramp</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
-                    <span class="n">residuals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">correction</span>   <span class="c1"># needs explicit assignment!</span>
+                    <span class="n">residuals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">ramp_disp</span>
                 <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
-                    <span class="n">residuals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">correction</span>
+                    <span class="n">residuals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ramp_disp</span>
 
         <span class="k">return</span> <span class="n">residuals</span>
 
@@ -493,9 +509,8 @@
             <span class="n">tt</span><span class="o">.</span><span class="n">cast</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sdata</span> <span class="o">-</span> <span class="n">los_disp</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sodws</span><span class="p">,</span> <span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_hierarchicals</span><span class="p">(</span><span class="n">problem_config</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">has_enabled_corrections</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Applying corrections! ...&#39;</span><span class="p">)</span>
-            <span class="n">residuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_corrections</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">residuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_ramps</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
 
         <span class="n">logpts</span> <span class="o">=</span> <span class="n">multivariate_normal_chol</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span>
@@ -547,8 +562,8 @@
             <span class="n">los_d</span> <span class="o">=</span> <span class="p">(</span><span class="n">disp</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">los_vector</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">synths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">los_d</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">has_enabled_corrections</span><span class="p">:</span>
-            <span class="n">synths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_corrections</span><span class="p">(</span><span class="n">synths</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fit_plane</span><span class="p">:</span>
+            <span class="n">synths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_ramps</span><span class="p">(</span><span class="n">synths</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">synths</span>
 
@@ -777,8 +792,8 @@
             <span class="n">tt</span><span class="o">.</span><span class="n">cast</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sdata</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sodws</span><span class="p">,</span> <span class="n">tconfig</span><span class="o">.</span><span class="n">floatX</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">init_hierarchicals</span><span class="p">(</span><span class="n">problem_config</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">has_enabled_corrections</span><span class="p">:</span>
-            <span class="n">residuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_corrections</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">residuals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_ramps</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
 
         <span class="n">logpts</span> <span class="o">=</span> <span class="n">multivariate_normal_chol</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">,</span> <span class="n">residuals</span><span class="p">,</span>
@@ -829,9 +844,8 @@
             <span class="n">mu</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gfs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">stack_all</span><span class="p">(</span><span class="n">slips</span><span class="o">=</span><span class="n">point</span><span class="p">[</span><span class="n">var</span><span class="p">])</span>
 
         <span class="n">synths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Bij</span><span class="o">.</span><span class="n">a2l</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">corrections_config</span><span class="o">.</span><span class="n">has_enabled_corrections</span><span class="p">:</span>
-            <span class="n">synths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_corrections</span><span class="p">(</span><span class="n">synths</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fit_plane</span><span class="p">:</span>
+            <span class="n">synths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_ramps</span><span class="p">(</span><span class="n">synths</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">point</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">synths</span></div>
 
@@ -905,7 +919,6 @@
 <h3><a href="../../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../short_installation.html">Short Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../anaconda_installation.html">Anaconda Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started with BEAT</a></li>

@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>plotting &#8212; beat 1.0 documentation</title>
+    <title>plotting &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0',
+        VERSION:     '1.0beta',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -62,7 +62,7 @@
           </li>
            &#187;
           <li>
-              <a href="../index.html">beat 1.0 documentation</a> &#187;
+              <a href="../index.html">beat 1.0beta documentation</a> &#187;
           </li>
             <li><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
         </ul>
@@ -81,7 +81,6 @@
 <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">orthodrome</span> <span class="k">as</span> <span class="n">otd</span>
 
 <span class="kn">from</span> <span class="nn">pymc3</span> <span class="k">import</span> <span class="n">plots</span> <span class="k">as</span> <span class="n">pmp</span>
-<span class="kn">from</span> <span class="nn">pymc3</span> <span class="k">import</span> <span class="n">quantiles</span>
 
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -120,14 +119,13 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;PlotOptions&#39;</span><span class="p">,</span> <span class="s1">&#39;correlation_plot&#39;</span><span class="p">,</span> <span class="s1">&#39;correlation_plot_hist&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;get_result_point&#39;</span><span class="p">,</span> <span class="s1">&#39;seismic_fits&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_fits&#39;</span><span class="p">,</span> <span class="s1">&#39;traceplot&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_result_point&#39;</span><span class="p">,</span> <span class="s1">&#39;seismic_fits&#39;</span><span class="p">,</span> <span class="s1">&#39;geodetic_fits&#39;</span><span class="p">,</span> <span class="s1">&#39;traceplot&#39;</span><span class="p">,</span>
     <span class="s1">&#39;select_transform&#39;</span><span class="p">,</span> <span class="s1">&#39;histplot_op&#39;</span><span class="p">]</span>
 
 <span class="n">u_nm</span> <span class="o">=</span> <span class="s1">&#39;$[Nm]$&#39;</span>
 <span class="n">u_km</span> <span class="o">=</span> <span class="s1">&#39;$[km]$&#39;</span>
 <span class="n">u_km_s</span> <span class="o">=</span> <span class="s1">&#39;$[km/s]$&#39;</span>
 <span class="n">u_deg</span> <span class="o">=</span> <span class="s1">&#39;$[^{\circ}]$&#39;</span>
-<span class="n">u_deg_myr</span> <span class="o">=</span> <span class="s1">&#39;$[^{\circ} / myr]$&#39;</span>
 <span class="n">u_m</span> <span class="o">=</span> <span class="s1">&#39;$[m]$&#39;</span>
 <span class="n">u_v</span> <span class="o">=</span> <span class="s1">&#39;$[m^3]$&#39;</span>
 <span class="n">u_s</span> <span class="o">=</span> <span class="s1">&#39;$[s]$&#39;</span>
@@ -179,10 +177,6 @@
     <span class="s1">&#39;med&#39;</span><span class="p">:</span> <span class="n">u_nm</span><span class="p">,</span>
     <span class="s1">&#39;magnitude&#39;</span><span class="p">:</span> <span class="n">u_hyp</span><span class="p">,</span>
 
-    <span class="s1">&#39;pole_lat&#39;</span><span class="p">:</span> <span class="n">u_deg</span><span class="p">,</span>
-    <span class="s1">&#39;pole_lon&#39;</span><span class="p">:</span> <span class="n">u_deg</span><span class="p">,</span>
-    <span class="s1">&#39;omega&#39;</span><span class="p">:</span> <span class="n">u_deg_myr</span><span class="p">,</span>
-
     <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="n">u_rad</span><span class="p">,</span>
     <span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="n">u_rad</span><span class="p">,</span>
     <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="n">u_rad</span><span class="p">,</span>
@@ -199,15 +193,13 @@
     <span class="s1">&#39;like&#39;</span><span class="p">:</span> <span class="n">u_hyp</span><span class="p">}</span>
 
 
-<span class="n">plot_projections</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;individual&#39;</span><span class="p">]</span>
+<span class="n">plot_projections</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">hypername</span><span class="p">(</span><span class="n">varname</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">varname</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">plot_units</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="k">return</span> <span class="n">varname</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">varname</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;h_&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;h_&#39;</span>
-
+    <span class="k">return</span> <span class="n">varname</span>
 
 
 <div class="viewcode-block" id="PlotOptions"><a class="viewcode-back" href="../api.html#plotting.PlotOptions">[docs]</a><span class="k">class</span> <span class="nc">PlotOptions</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
@@ -532,9 +524,8 @@
 
             <span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
                 <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-            <span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-            <span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-
+            <span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
+                <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mf">50.</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">utility</span><span class="o">.</span><span class="n">is_odd</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
                 <span class="n">axs</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">label_pad</span><span class="p">)</span>
 
@@ -735,163 +726,7 @@
         <span class="n">source</span><span class="o">.</span><span class="n">anchor</span> <span class="o">=</span> <span class="n">anchor</span>
 
 
-<span class="k">def</span> <span class="nf">gnss_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">plot_options</span><span class="p">):</span>
-
-    <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">automap</span>
-    <span class="kn">from</span> <span class="nn">pyrocko.model</span> <span class="k">import</span> <span class="n">gnss</span>
-    <span class="kn">from</span> <span class="nn">beat.inputf</span> <span class="k">import</span> <span class="n">load_and_blacklist_gnss</span>
-    <span class="kn">from</span> <span class="nn">beat.sources</span> <span class="k">import</span> <span class="n">RectangularSource</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">automap</span><span class="o">.</span><span class="n">gmtpy</span><span class="o">.</span><span class="n">detect_gmt_installations</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">automap</span><span class="o">.</span><span class="n">gmtpy</span><span class="o">.</span><span class="n">GmtPyError</span><span class="p">(</span>
-            <span class="s1">&#39;GMT needs to be installed for GNSS plot!&#39;</span><span class="p">)</span>
-
-    <span class="n">gc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">geodetic_config</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Trying to load GNSS data from: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gc</span><span class="o">.</span><span class="n">datadir</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">gc</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">campaign</span> <span class="o">=</span> <span class="n">load_and_blacklist_gnss</span><span class="p">(</span>
-                <span class="n">gc</span><span class="o">.</span><span class="n">datadir</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">gc</span><span class="o">.</span><span class="n">blacklist</span><span class="p">,</span> <span class="n">campaign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is no GNSS data, skipping&#39;</span><span class="p">)</span>
-
-    <span class="n">datatype</span> <span class="o">=</span> <span class="s1">&#39;geodetic&#39;</span>
-    <span class="n">mode</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">mode</span>
-    <span class="n">problem</span><span class="o">.</span><span class="n">init_hierarchicals</span><span class="p">()</span>
-
-    <span class="n">figsize</span> <span class="o">=</span> <span class="mf">20.</span>  <span class="c1"># size in cm</span>
-
-    <span class="n">po</span> <span class="o">=</span> <span class="n">plot_options</span>
-
-    <span class="n">composite</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="p">[</span><span class="n">datatype</span><span class="p">]</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">sources</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">sources</span>
-        <span class="n">ref_sources</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;FFI gnss fit, using reference source ...&#39;</span><span class="p">)</span>
-        <span class="n">ref_sources</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gf_config</span><span class="o">.</span><span class="n">reference_sources</span>
-        <span class="n">set_anchor</span><span class="p">(</span><span class="n">ref_sources</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
-        <span class="n">fault</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">load_fault_geometry</span><span class="p">()</span>
-        <span class="n">sources</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_all_subfaults</span><span class="p">(</span>
-            <span class="n">datatype</span><span class="o">=</span><span class="n">datatype</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="n">composite</span><span class="o">.</span><span class="n">slip_varnames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">set_anchor</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">reference</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">!=</span> <span class="n">ffi_mode_str</span><span class="p">:</span>
-            <span class="n">composite</span><span class="o">.</span><span class="n">point2sources</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
-            <span class="n">ref_sources</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">sources</span><span class="p">)</span>
-        <span class="n">point</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">reference</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">point</span> <span class="o">=</span> <span class="n">get_result_point</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">post_llk</span><span class="p">)</span>
-
-    <span class="n">dataset_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">datasets</span><span class="p">))</span>
-
-    <span class="n">results</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
-
-    <span class="n">dataset_to_result</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="s1">&#39;GNSS&#39;</span><span class="p">:</span>
-            <span class="n">dataset_to_result</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-
-    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
-        <span class="n">event</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">event</span>
-        <span class="n">locations</span> <span class="o">=</span> <span class="n">campaign</span><span class="o">.</span><span class="n">stations</span> <span class="o">+</span> <span class="p">[</span><span class="n">event</span><span class="p">]</span>
-
-        <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="n">otd</span><span class="o">.</span><span class="n">geographic_midpoint_locations</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
-
-        <span class="n">coords</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">loc</span><span class="o">.</span><span class="n">effective_latlon</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">])</span>
-
-    <span class="k">elif</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
-        <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="n">otd</span><span class="o">.</span><span class="n">geographic_midpoint_locations</span><span class="p">(</span><span class="n">sources</span><span class="p">)</span>
-        <span class="n">coords</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">outline</span><span class="p">(</span><span class="n">cs</span><span class="o">=</span><span class="s1">&#39;latlon&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> projection not implemented!&#39;</span> <span class="o">%</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span><span class="p">)</span>
-
-    <span class="n">radius</span> <span class="o">=</span> <span class="n">otd</span><span class="o">.</span><span class="n">distance_accurate50m_numpy</span><span class="p">(</span>
-        <span class="n">lat</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">lon</span><span class="p">[</span><span class="n">num</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
-        <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-
-    <span class="n">radius</span> <span class="o">*=</span> <span class="mf">1.1</span>
-
-    <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="mf">30.</span> <span class="o">*</span> <span class="n">km</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s1">&#39;Radius of GNSS campaign </span><span class="si">%s</span><span class="s1"> too small, defaulting&#39;</span>
-            <span class="s1">&#39; to 30 km&#39;</span> <span class="o">%</span> <span class="n">campaign</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">radius</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="n">km</span>
-
-    <span class="n">model_camp</span> <span class="o">=</span> <span class="n">gnss</span><span class="o">.</span><span class="n">GNSSCampaign</span><span class="p">(</span>
-        <span class="n">stations</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">campaign</span><span class="o">.</span><span class="n">stations</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">dataset_to_result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">ista</span><span class="p">,</span> <span class="n">sta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model_camp</span><span class="o">.</span><span class="n">stations</span><span class="p">):</span>
-            <span class="n">comp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sta</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
-            <span class="n">comp</span><span class="o">.</span><span class="n">shift</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">[</span><span class="n">ista</span><span class="p">]</span>
-            <span class="n">comp</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.</span>
-
-    <span class="n">figs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vertical</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">automap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
-            <span class="n">width</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
-            <span class="n">height</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
-            <span class="n">lat</span><span class="o">=</span><span class="n">lat</span><span class="p">,</span>
-            <span class="n">lon</span><span class="o">=</span><span class="n">lon</span><span class="p">,</span>
-            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
-            <span class="n">show_topo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">show_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">show_rivers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">color_wet</span><span class="o">=</span><span class="p">(</span><span class="mi">216</span><span class="p">,</span> <span class="mi">242</span><span class="p">,</span> <span class="mi">254</span><span class="p">),</span>
-            <span class="n">color_dry</span><span class="o">=</span><span class="p">(</span><span class="mi">238</span><span class="p">,</span> <span class="mi">236</span><span class="p">,</span> <span class="mi">230</span><span class="p">))</span>
-
-        <span class="n">all_stations</span> <span class="o">=</span> <span class="n">campaign</span><span class="o">.</span><span class="n">stations</span> <span class="o">+</span> <span class="n">model_camp</span><span class="o">.</span><span class="n">stations</span>
-        <span class="n">offset_scale</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_stations</span><span class="p">))</span>
-
-        <span class="k">for</span> <span class="n">ista</span><span class="p">,</span> <span class="n">sta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_stations</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">sta</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">offset_scale</span><span class="p">[</span><span class="n">ista</span><span class="p">]</span> <span class="o">+=</span> <span class="n">comp</span><span class="o">.</span><span class="n">shift</span>
-
-        <span class="n">offset_scale</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">offset_scale</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-
-        <span class="n">m</span><span class="o">.</span><span class="n">add_gnss_campaign</span><span class="p">(</span>
-            <span class="n">campaign</span><span class="p">,</span>
-            <span class="n">psxy_style</span><span class="o">=</span><span class="p">{</span>
-                <span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="s1">&#39;0.8p,black&#39;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="n">offset_scale</span><span class="o">=</span><span class="n">offset_scale</span><span class="p">,</span>
-            <span class="n">vertical</span><span class="o">=</span><span class="n">vertical</span><span class="p">)</span>
-
-        <span class="n">m</span><span class="o">.</span><span class="n">add_gnss_campaign</span><span class="p">(</span>
-            <span class="n">model_camp</span><span class="p">,</span>
-            <span class="n">psxy_style</span><span class="o">=</span><span class="p">{</span>
-                <span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="s1">&#39;0.8p,red&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="n">offset_scale</span><span class="o">=</span><span class="n">offset_scale</span><span class="p">,</span>
-            <span class="n">vertical</span><span class="o">=</span><span class="n">vertical</span><span class="p">,</span>
-            <span class="n">labels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">RectangularSource</span><span class="p">):</span>
-                <span class="n">m</span><span class="o">.</span><span class="n">gmt</span><span class="o">.</span><span class="n">psxy</span><span class="p">(</span>
-                    <span class="n">in_rows</span><span class="o">=</span><span class="n">source</span><span class="o">.</span><span class="n">outline</span><span class="p">(</span><span class="n">cs</span><span class="o">=</span><span class="s1">&#39;lonlat&#39;</span><span class="p">),</span>
-                    <span class="n">L</span><span class="o">=</span><span class="s1">&#39;+p2p,black&#39;</span><span class="p">,</span>
-                    <span class="n">W</span><span class="o">=</span><span class="s1">&#39;1p,black&#39;</span><span class="p">,</span>
-                    <span class="n">G</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
-                    <span class="n">t</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">jxyr</span><span class="p">)</span>
-
-        <span class="n">figs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">figs</span>
-
-
-<div class="viewcode-block" id="scene_fits"><a class="viewcode-back" href="../api.html#plotting.scene_fits">[docs]</a><span class="k">def</span> <span class="nf">scene_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">plot_options</span><span class="p">):</span>
+<div class="viewcode-block" id="geodetic_fits"><a class="viewcode-back" href="../api.html#plotting.geodetic_fits">[docs]</a><span class="k">def</span> <span class="nf">geodetic_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">plot_options</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot geodetic data, synthetics and residuals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -937,13 +772,12 @@
         <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">datasets</span><span class="p">))</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+    <span class="n">nrmax</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 
     <span class="n">dataset_to_result</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">composite</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="s1">&#39;SAR&#39;</span><span class="p">:</span>
-            <span class="n">dataset_to_result</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="n">dataset_to_result</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
 
-    <span class="n">nrmax</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset_to_result</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="n">fullfig</span><span class="p">,</span> <span class="n">restfig</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">mod_i</span><span class="p">(</span><span class="n">nrmax</span><span class="p">,</span> <span class="n">ndmax</span><span class="p">)</span>
     <span class="n">factors</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">fullfig</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">restfig</span><span class="p">:</span>
@@ -1013,7 +847,8 @@
 
         <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="p">)</span>
         <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="p">)</span>
-        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
+            <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelrotation</span><span class="o">=</span><span class="mf">90.</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">draw_coastlines</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">ylim</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1306,15 +1141,11 @@
     <span class="k">return</span> <span class="n">figures</span></div>
 
 
-<span class="k">def</span> <span class="nf">draw_scene_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">plot_options</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">draw_geodetic_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">plot_options</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="s1">&#39;geodetic&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;No geodetic composite defined in the problem!&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;SAR&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;There is no SAR data in the problem setup!&#39;</span><span class="p">)</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing SAR misfits ...&#39;</span><span class="p">)</span>
     <span class="n">po</span> <span class="o">=</span> <span class="n">plot_options</span>
 
     <span class="n">stage</span> <span class="o">=</span> <span class="n">Stage</span><span class="p">(</span><span class="n">homepath</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">outfolder</span><span class="p">,</span>
@@ -1337,7 +1168,7 @@
             <span class="n">stage</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">llk_str</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
-        <span class="n">figs</span> <span class="o">=</span> <span class="n">scene_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">po</span><span class="p">)</span>
+        <span class="n">figs</span> <span class="o">=</span> <span class="n">geodetic_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">po</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;scene plots exist. Use force=True for replotting!&#39;</span><span class="p">)</span>
         <span class="k">return</span>
@@ -1353,52 +1184,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fig</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">figs</span><span class="p">):</span>
                 <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outpath</span> <span class="o">+</span> <span class="s1">&#39;_</span><span class="si">%i</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">draw_gnss_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">plot_options</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="s1">&#39;geodetic&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;No geodetic composite defined in the problem!&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="s1">&#39;GNSS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">geodetic_config</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;There is no SAR data in the problem setup!&#39;</span><span class="p">)</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing GNSS misfits ...&#39;</span><span class="p">)</span>
-
-    <span class="n">po</span> <span class="o">=</span> <span class="n">plot_options</span>
-
-    <span class="n">stage</span> <span class="o">=</span> <span class="n">Stage</span><span class="p">(</span><span class="n">homepath</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">outfolder</span><span class="p">,</span>
-                  <span class="n">backend</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sampler_config</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">po</span><span class="o">.</span><span class="n">reference</span><span class="p">:</span>
-        <span class="n">stage</span><span class="o">.</span><span class="n">load_results</span><span class="p">(</span>
-            <span class="n">varnames</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">varnames</span><span class="p">,</span>
-            <span class="n">model</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">stage_number</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">load_stage</span><span class="p">,</span>
-            <span class="n">load</span><span class="o">=</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">llk_str</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">post_llk</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">llk_str</span> <span class="o">=</span> <span class="s1">&#39;ref&#39;</span>
-
-    <span class="n">mode</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">problem_config</span><span class="o">.</span><span class="n">mode</span>
-
-    <span class="n">outpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">project_dir</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">figure_dir</span><span class="p">,</span> <span class="s1">&#39;gnss_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="n">stage</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">llk_str</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span><span class="p">))</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
-        <span class="n">figs</span> <span class="o">=</span> <span class="n">gnss_fits</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">po</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;scene plots exist. Use force=True for replotting!&#39;</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span> <span class="o">==</span> <span class="s1">&#39;display&#39;</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;saving figures to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">outpath</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">component</span><span class="p">,</span> <span class="n">fig</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">((</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical&#39;</span><span class="p">),</span> <span class="n">figs</span><span class="p">):</span>
-            <span class="n">fig</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">outpath</span> <span class="o">+</span> <span class="s1">&#39;_</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="n">component</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">),</span> <span class="n">resolution</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">plot_trace</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1462,15 +1247,14 @@
             <span class="n">ens_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">best_point</span><span class="p">:</span>
-        <span class="n">bresults</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span>
-            <span class="n">best_point</span><span class="p">,</span> <span class="n">outmode</span> <span class="o">=</span> <span class="s1">&#39;tapered_data&#39;</span><span class="p">)</span>   <span class="c1"># for source individual contributions</span>
+        <span class="n">bresults</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span><span class="n">best_point</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># get dummy results for data</span>
         <span class="n">bresults</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">assemble_results</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
         <span class="n">best_point</span> <span class="o">=</span> <span class="n">point</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">composite</span><span class="o">.</span><span class="n">point2sources</span><span class="p">(</span><span class="n">best_point</span><span class="p">)</span>
+        <span class="n">composite</span><span class="o">.</span><span class="n">point2sources</span><span class="p">(</span><span class="n">best_point</span><span class="p">,</span> <span class="n">input_depth</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">composite</span><span class="o">.</span><span class="n">sources</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;FFI waveform fit, using reference source ...&#39;</span><span class="p">)</span>
@@ -1486,7 +1270,7 @@
         <span class="n">target_synths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">target_index</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
         <span class="n">target_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">target_synths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">)</span>  <span class="c1"># TODO</span>
+        <span class="n">target_synths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">)</span>
 
         <span class="n">dtraces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bresults</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">processed_res</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">plot_options</span><span class="o">.</span><span class="n">nensemble</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1668,16 +1452,9 @@
                         <span class="n">fc</span><span class="o">=</span><span class="n">light</span><span class="p">(</span><span class="n">misfit_color</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
                         <span class="n">ec</span><span class="o">=</span><span class="n">misfit_color</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-                    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">plot_projection</span> <span class="o">==</span> <span class="s1">&#39;individual&#39;</span><span class="p">:</span>
-                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">source_contributions</span><span class="p">):</span>
-                            <span class="n">plot_trace</span><span class="p">(</span>
-                                <span class="n">axes</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span>
-                                <span class="n">color</span><span class="o">=</span><span class="n">mpl_graph_color</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">plot_trace</span><span class="p">(</span>
-                            <span class="n">axes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">,</span>
-                            <span class="n">color</span><span class="o">=</span><span class="n">syn_color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
+                    <span class="n">plot_trace</span><span class="p">(</span>
+                        <span class="n">axes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_syn</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">syn_color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
                 <span class="n">plot_trace</span><span class="p">(</span>
                     <span class="n">axes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">processed_obs</span><span class="p">,</span>
@@ -2053,6 +1830,18 @@
                     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
                     <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
 
+                <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:03.1f}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+                <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+                    <span class="n">label</span><span class="p">,</span>
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">-</span> <span class="mf">0.65</span><span class="p">),</span>
+                    <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">ops</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
                     <span class="n">ops</span><span class="p">,</span>
@@ -2229,15 +2018,15 @@
 
 <div class="viewcode-block" id="histplot_op"><a class="viewcode-back" href="../api.html#plotting.histplot_op">[docs]</a><span class="k">def</span> <span class="nf">histplot_op</span><span class="p">(</span>
         <span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">35</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">ntickmarks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">tstd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">99.99</span><span class="p">],</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="n">tstd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modified from pymc3. Additional color argument.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
-        <span class="n">quants</span> <span class="o">=</span> <span class="n">quantiles</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="n">qlist</span><span class="p">)</span>
-        <span class="n">mind</span> <span class="o">=</span> <span class="n">quants</span><span class="p">[</span><span class="n">qlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-        <span class="n">maxd</span> <span class="o">=</span> <span class="n">quants</span><span class="p">[</span><span class="n">qlist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">mind</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">maxd</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="c1"># bins, mind, maxd = pmp.artists.fast_kde(data[:,i])</span>
 
         <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mind</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">mind</span><span class="p">,</span> <span class="n">reference</span><span class="p">)</span>
@@ -2365,7 +2154,7 @@
               <span class="n">varbins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">priors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prior_alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prior_style</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
               <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">posterior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_style</span><span class="o">=</span><span class="s1">&#39;kde&#39;</span><span class="p">,</span>
-              <span class="n">prior_bounds</span><span class="o">=</span><span class="p">{},</span> <span class="n">unify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">99.9</span><span class="p">],</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{}):</span>
+              <span class="n">prior_bounds</span><span class="o">=</span><span class="p">{},</span> <span class="n">unify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots posterior pdfs as histograms from multiple mtrace objects.</span>
 
@@ -2414,8 +2203,6 @@
 <span class="sd">        have common axis increments</span>
 <span class="sd">    kwargs : dict</span>
 <span class="sd">        for histplot op</span>
-<span class="sd">    qlist : list</span>
-<span class="sd">        of quantiles to plot. Default: (all, 0., 100.)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2429,15 +2216,10 @@
 
     <span class="n">num</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">make_bins</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">make_bins</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">qlist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">qu</span> <span class="o">=</span> <span class="n">quantiles</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="n">qlist</span><span class="p">)</span>
-            <span class="n">mind</span> <span class="o">=</span> <span class="n">qu</span><span class="p">[</span><span class="n">qlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="n">maxd</span> <span class="o">=</span> <span class="n">qu</span><span class="p">[</span><span class="n">qlist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">mind</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-            <span class="n">maxd</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">mind</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">maxd</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">num</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">mind</span><span class="p">,</span> <span class="n">maxd</span><span class="p">,</span> <span class="n">nbins</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">remove_var</span><span class="p">(</span><span class="n">varnames</span><span class="p">,</span> <span class="n">varname</span><span class="p">):</span>
@@ -2532,7 +2314,7 @@
                 <span class="k">for</span> <span class="n">isource</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">selected</span><span class="p">):</span>
                     <span class="n">e</span> <span class="o">=</span> <span class="n">pmp</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">make_2d</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">make_bins_flag</span><span class="p">:</span>
-                        <span class="n">varbin</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="n">nbins</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="n">qlist</span><span class="p">)</span>
+                        <span class="n">varbin</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="n">nbins</span><span class="p">)</span>
                         <span class="n">varbins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">varbin</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">varbin</span> <span class="o">=</span> <span class="n">varbins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -2565,7 +2347,7 @@
                     <span class="k">elif</span> <span class="n">plot_style</span> <span class="o">==</span> <span class="s1">&#39;hist&#39;</span><span class="p">:</span>
                         <span class="n">histplot_op</span><span class="p">(</span>
                             <span class="n">axs</span><span class="p">[</span><span class="n">rowi</span><span class="p">,</span> <span class="n">coli</span><span class="p">],</span> <span class="n">e</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
-                            <span class="n">bins</span><span class="o">=</span><span class="n">varbin</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pcolor</span><span class="p">,</span> <span class="n">qlist</span><span class="o">=</span><span class="n">qlist</span><span class="p">,</span>
+                            <span class="n">bins</span><span class="o">=</span><span class="n">varbin</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pcolor</span><span class="p">,</span>
                             <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
@@ -2714,8 +2496,7 @@
         <span class="n">varnames</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">hypernames</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;like&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sampler_config</span>
-        <span class="n">varnames</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">varnames</span> <span class="o">+</span> <span class="n">problem</span><span class="o">.</span><span class="n">hypernames</span> <span class="o">+</span> \
-                   <span class="n">problem</span><span class="o">.</span><span class="n">hierarchicalnames</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;like&#39;</span><span class="p">]</span>
+        <span class="n">varnames</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">varnames</span> <span class="o">+</span> <span class="n">problem</span><span class="o">.</span><span class="n">hypernames</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;like&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">varnames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">varnames</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">varnames</span>
@@ -2760,7 +2541,6 @@
 
             <span class="n">prior_bounds</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">prior_bounds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">pc</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">)</span>
-            <span class="n">prior_bounds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">pc</span><span class="o">.</span><span class="n">hierarchicals</span><span class="p">)</span>
             <span class="n">prior_bounds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">pc</span><span class="o">.</span><span class="n">priors</span><span class="p">)</span>
 
             <span class="n">fig</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">traceplot</span><span class="p">(</span>
@@ -2786,7 +2566,7 @@
                 <span class="s1">&#39;plot for stage </span><span class="si">%s</span><span class="s1"> exists. Use force=True for&#39;</span>
                 <span class="s1">&#39; replotting!&#39;</span> <span class="o">%</span> <span class="n">s</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span> <span class="o">==</span> <span class="s1">&#39;display&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;display&#39;</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
@@ -3174,26 +2954,28 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    fault : :class:`ffi.fault.FaultGeometry`</span>
+
+<span class="sd">    TODO: 0,0 is now ll of fault at depth, need to turn around axis that</span>
+<span class="sd">        origin is top-left</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">draw_quivers</span><span class="p">(</span>
             <span class="n">ax</span><span class="p">,</span> <span class="n">uperp</span><span class="p">,</span> <span class="n">uparr</span><span class="p">,</span> <span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span><span class="p">,</span> <span class="n">rake</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
             <span class="n">draw_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalisation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 
-        <span class="c1"># positive uperp is always dip-normal- have to multiply -1</span>
-        <span class="n">angles</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="o">-</span><span class="n">uperp</span><span class="p">,</span> <span class="n">uparr</span><span class="p">)</span> <span class="o">*</span> <span class="n">mt</span><span class="o">.</span><span class="n">r2d</span> <span class="o">+</span> <span class="n">rake</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="o">-</span><span class="n">uperp</span><span class="p">,</span> <span class="n">uparr</span><span class="p">)</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="mf">180.</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="n">rake</span>
+
         <span class="n">slips</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">uperp</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">uparr</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">normalisation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">beat.models.laplacian</span> <span class="k">import</span> <span class="n">distances</span>
-            <span class="n">centers</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
-            <span class="c1">#interpatch_dists = distances(centers, centers)</span>
-            <span class="n">normalisation</span> <span class="o">=</span> <span class="n">slips</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="c1">#/ interpatch_dists.min()</span>
+            <span class="n">normalisation</span> <span class="o">=</span> <span class="n">slips</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+                <span class="n">ygr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ygr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span>
 
         <span class="n">slips</span> <span class="o">/=</span> <span class="n">normalisation</span>
 
-        <span class="n">slipsx</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span> <span class="o">*</span> <span class="n">mt</span><span class="o">.</span><span class="n">d2r</span><span class="p">)</span> <span class="o">*</span> <span class="n">slips</span>
-        <span class="n">slipsy</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span> <span class="o">*</span> <span class="n">mt</span><span class="o">.</span><span class="n">d2r</span><span class="p">)</span> <span class="o">*</span> <span class="n">slips</span>
+        <span class="n">slipsx</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">*</span> <span class="n">slips</span>
+        <span class="n">slipsy</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.</span><span class="p">)</span> <span class="o">*</span> <span class="n">slips</span>
 
         <span class="c1"># slip arrows of slip on patches</span>
         <span class="n">quivers</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span>
@@ -3212,44 +2994,31 @@
 
         <span class="k">return</span> <span class="n">quivers</span><span class="p">,</span> <span class="n">normalisation</span>
 
-    <span class="k">def</span> <span class="nf">rotate_coords_plane_normal</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">sf</span><span class="p">):</span>
-
-        <span class="n">coords</span> <span class="o">-=</span> <span class="n">sf</span><span class="o">.</span><span class="n">bottom_left</span> <span class="o">/</span> <span class="n">km</span>
-
-        <span class="n">rots</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">get_rotation_matrix</span><span class="p">()</span>
-        <span class="n">rotz</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rots</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">](</span><span class="n">mt</span><span class="o">.</span><span class="n">d2r</span> <span class="o">*</span> <span class="o">-</span><span class="n">sf</span><span class="o">.</span><span class="n">strike</span><span class="p">))</span>
-        <span class="n">roty</span> <span class="o">=</span> <span class="n">rotz</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rots</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">](</span><span class="n">mt</span><span class="o">.</span><span class="n">d2r</span> <span class="o">*</span> <span class="o">-</span><span class="n">sf</span><span class="o">.</span><span class="n">dip</span><span class="p">))</span>
-
-        <span class="n">roty</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span> <span class="mf">1.</span>
-        <span class="k">return</span> <span class="n">roty</span>
-
     <span class="k">def</span> <span class="nf">draw_patches</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span> <span class="n">subfault_idx</span><span class="p">,</span> <span class="n">patch_values</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
-
-        <span class="n">lls</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_patch_attributes</span><span class="p">(</span>
-            <span class="n">subfault_idx</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bottom_left&#39;</span><span class="p">])</span>
-        <span class="n">widths</span><span class="p">,</span> <span class="n">lengths</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_patch_attributes</span><span class="p">(</span>
-            <span class="n">subfault_idx</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;length&#39;</span><span class="p">])</span>
-        <span class="n">sf</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault</span><span class="p">(</span><span class="n">subfault_idx</span><span class="p">)</span>
-
-        <span class="c1"># subtract reference fault lower left and rotate</span>
-        <span class="n">rot_lls</span> <span class="o">=</span> <span class="n">rotate_coords_plane_normal</span><span class="p">(</span><span class="n">lls</span><span class="p">,</span> <span class="n">sf</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">subfault_idx</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">patch_sizes_dip</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">patch_sizes_strike</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
         <span class="n">d_patches</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">ll</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rot_lls</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">lengths</span><span class="p">):</span>
-            <span class="n">d_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">Rectangle</span><span class="p">(</span>
-                    <span class="n">ll</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">length</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">))</span>
+        <span class="n">lls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">patch_dip_ll</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np_h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">patch_strike_ll</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np_w</span><span class="p">):</span>
+                <span class="n">ll</span> <span class="o">=</span> <span class="p">[</span><span class="n">patch_strike_ll</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="n">patch_dip_ll</span> <span class="o">*</span> <span class="n">height</span> <span class="o">-</span> <span class="n">height</span><span class="p">]</span>
+                <span class="n">d_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">Rectangle</span><span class="p">(</span>
+                        <span class="n">ll</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">))</span>
+                <span class="n">lls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ll</span><span class="p">)</span>
 
-        <span class="n">lower</span> <span class="o">=</span> <span class="n">rot_lls</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">pad</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">km</span> <span class="o">*</span> <span class="mf">0.05</span>
-
-        <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">sf</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">km</span> <span class="o">+</span> <span class="n">pad</span><span class="p">]</span>
-        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">sf</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="n">km</span> <span class="o">+</span> <span class="n">pad</span><span class="p">]</span>
+        <span class="n">llsa</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">lls</span><span class="p">)</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="n">llsa</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="n">llsa</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span><span class="p">]</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height</span><span class="p">]</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">xlim</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">ylim</span><span class="p">)</span>
 
-        <span class="n">scale_y</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">sf</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="n">km</span><span class="p">)}</span>
+        <span class="n">scale_y</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
         <span class="n">scale_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="p">,</span> <span class="o">**</span><span class="n">scale_y</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;strike-direction [km]&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
@@ -3268,12 +3037,10 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">pa_col</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pa_col</span>
 
-    <span class="k">def</span> <span class="nf">draw_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cb_related</span><span class="p">,</span> <span class="n">labeltext</span><span class="p">,</span> <span class="n">ntickmarks</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cb_related</span><span class="p">,</span> <span class="n">labeltext</span><span class="p">):</span>
         <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.88</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
         <span class="n">cb</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cb_related</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbaxes</span><span class="p">)</span>
         <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">labeltext</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-        <span class="n">cb</span><span class="o">.</span><span class="n">locator</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="n">ntickmarks</span><span class="p">)</span>
-        <span class="n">cb</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_values_from_trace</span><span class="p">(</span><span class="n">mtrace</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
@@ -3297,20 +3064,25 @@
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
             <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">mpl_papersize</span><span class="p">(</span><span class="s1">&#39;a5&#39;</span><span class="p">,</span> <span class="s1">&#39;landscape&#39;</span><span class="p">))</span>
 
+        <span class="n">np_h</span><span class="p">,</span> <span class="n">np_w</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_discretization</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
+
         <span class="c1"># alphas = alpha * num.ones(np_h * np_w, dtype=&#39;int8&#39;)</span>
-
-        <span class="n">ext_source</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault</span><span class="p">(</span><span class="n">ns</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;uparr&#39;</span><span class="p">)</span>
-        <span class="n">patch_idxs</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_patch_indexes</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
-
         <span class="n">pa_col</span> <span class="o">=</span> <span class="n">draw_patches</span><span class="p">(</span>
-            <span class="n">ax</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span> <span class="n">subfault_idx</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">patch_values</span><span class="o">=</span><span class="n">reference_slip</span><span class="p">[</span><span class="n">patch_idxs</span><span class="p">],</span>
+            <span class="n">ax</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span> <span class="n">subfault_idx</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">patch_values</span><span class="o">=</span><span class="n">reference_slip</span><span class="p">,</span>
             <span class="n">cmap</span><span class="o">=</span><span class="n">slip_colormap</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.65</span><span class="p">)</span>
 
-        <span class="c1"># patch central locations</span>
-        <span class="n">centers</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_patch_attributes</span><span class="p">(</span><span class="n">ns</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;center&#39;</span><span class="p">])</span>
-        <span class="n">rot_centers</span> <span class="o">=</span> <span class="n">rotate_coords_plane_normal</span><span class="p">(</span><span class="n">centers</span><span class="p">,</span> <span class="n">ext_source</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ext_source</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
+        <span class="n">patch_idxs</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_patch_indexes</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
 
-        <span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span> <span class="o">=</span> <span class="n">rot_centers</span><span class="o">.</span><span class="n">T</span>
+        <span class="c1"># patch central locations</span>
+        <span class="n">hpd</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">patch_sizes_dip</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span>
+        <span class="n">hps</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">ordering</span><span class="o">.</span><span class="n">patch_sizes_strike</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span>
+
+        <span class="n">xvec</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">hps</span><span class="p">,</span> <span class="n">ext_source</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">km</span> <span class="o">-</span> <span class="n">hps</span><span class="p">,</span> <span class="n">np_w</span><span class="p">)</span>
+        <span class="n">yvec</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ext_source</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="n">km</span> <span class="o">-</span> <span class="n">hpd</span><span class="p">,</span> <span class="n">hpd</span><span class="p">,</span> <span class="n">np_h</span><span class="p">)</span>
+
+        <span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="s1">&#39;seismic&#39;</span> <span class="ow">in</span> <span class="n">fault</span><span class="o">.</span><span class="n">datatypes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">mtrace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
@@ -3320,7 +3092,8 @@
                     <span class="s1">&#39;nucleation_strike&#39;</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                 <span class="n">velocities</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">mtrace</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span>
                     <span class="s1">&#39;velocities&#39;</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-                <span class="n">nchains</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mtrace</span><span class="p">)</span>
+
+                <span class="n">nchains</span> <span class="o">=</span> <span class="n">nuc_dip</span><span class="o">.</span><span class="n">size</span>
                 <span class="n">csteps</span> <span class="o">=</span> <span class="mi">6</span>
                 <span class="n">rupture_fronts</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">dummy_fig</span><span class="p">,</span> <span class="n">dummy_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
@@ -3331,15 +3104,10 @@
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Rendering rupture fronts ...&#39;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">idxs</span><span class="p">):</span>
                     <span class="n">nuc_dip_idx</span><span class="p">,</span> <span class="n">nuc_strike_idx</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">fault_locations2idxs</span><span class="p">(</span>
-                        <span class="n">ns</span><span class="p">,</span> <span class="n">nuc_dip</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nuc_strike</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">nuc_dip_idx</span><span class="p">,</span> <span class="n">nuc_strike_idx</span><span class="p">,</span> <span class="n">nuc_strike</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nuc_dip</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                    <span class="n">veloc_ns</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">vector2subfault</span><span class="p">(</span>
-                        <span class="n">index</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="n">velocities</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                        <span class="mi">0</span><span class="p">,</span> <span class="n">nuc_dip</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nuc_strike</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
                     <span class="n">sts</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_starttimes</span><span class="p">(</span>
-                        <span class="n">ns</span><span class="p">,</span> <span class="n">veloc_ns</span><span class="p">,</span> <span class="n">nuc_dip_idx</span><span class="p">[</span><span class="n">ns</span><span class="p">],</span> <span class="n">nuc_strike_idx</span><span class="p">[</span><span class="n">ns</span><span class="p">])</span>
-                    
-                    <span class="n">xgr</span> <span class="o">=</span> <span class="n">xgr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sts</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-                    <span class="n">ygr</span> <span class="o">=</span> <span class="n">ygr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sts</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                        <span class="mi">0</span><span class="p">,</span> <span class="n">velocities</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">nuc_dip_idx</span><span class="p">,</span> <span class="n">nuc_strike_idx</span><span class="p">)</span>
+
                     <span class="n">contours</span> <span class="o">=</span> <span class="n">dummy_ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span><span class="p">,</span> <span class="n">sts</span><span class="p">)</span>
                     <span class="n">rupture_fronts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">contours</span><span class="o">.</span><span class="n">allsegs</span><span class="p">)</span>
 
@@ -3356,7 +3124,7 @@
             <span class="n">fig2</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
                 <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">mpl_papersize</span><span class="p">(</span><span class="s1">&#39;a5&#39;</span><span class="p">,</span> <span class="s1">&#39;landscape&#39;</span><span class="p">))</span>
 
-            <span class="n">reference_durations</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;durations&#39;</span><span class="p">][</span><span class="n">patch_idxs</span><span class="p">]</span>
+            <span class="n">reference_durations</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;durations&#39;</span><span class="p">]</span>
 
             <span class="n">pa_col2</span> <span class="o">=</span> <span class="n">draw_patches</span><span class="p">(</span>
                 <span class="n">ax2</span><span class="p">,</span> <span class="n">fault</span><span class="p">,</span> <span class="n">subfault_idx</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">patch_values</span><span class="o">=</span><span class="n">reference_durations</span><span class="p">,</span>
@@ -3366,13 +3134,13 @@
             <span class="n">figs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig2</span><span class="p">)</span>
             <span class="n">axs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
 
-            <span class="n">ref_starttimes</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">point2starttimes</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">ns</span><span class="p">)</span>
+            <span class="n">ref_starttimes</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">point2starttimes</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
             <span class="n">contours</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span>
                 <span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span><span class="p">,</span> <span class="n">ref_starttimes</span><span class="p">,</span>
                 <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;nucleation_strike&#39;</span><span class="p">][</span><span class="n">ns</span><span class="p">],</span>
-                <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;nucleation_dip&#39;</span><span class="p">][</span><span class="n">ns</span><span class="p">],</span>
+                <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;nucleation_strike&#39;</span><span class="p">],</span>
+                <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;nucleation_dip&#39;</span><span class="p">],</span>
                 <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
@@ -3413,17 +3181,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">normalisation</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">uperp</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;uperp&#39;</span><span class="p">][</span><span class="n">patch_idxs</span><span class="p">]</span>
-        <span class="n">uparr</span> <span class="o">=</span> <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;uparr&#39;</span><span class="p">][</span><span class="n">patch_idxs</span><span class="p">]</span>
-
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing slip vectors ...&#39;</span><span class="p">)</span>
         <span class="n">draw_quivers</span><span class="p">(</span>
-            <span class="n">ax</span><span class="p">,</span> <span class="n">uperp</span><span class="p">,</span> <span class="n">uparr</span><span class="p">,</span>
+            <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;uperp&#39;</span><span class="p">][</span><span class="n">patch_idxs</span><span class="p">],</span> <span class="n">reference</span><span class="p">[</span><span class="s1">&#39;uparr&#39;</span><span class="p">][</span><span class="n">patch_idxs</span><span class="p">],</span>
             <span class="n">xgr</span><span class="p">,</span> <span class="n">ygr</span><span class="p">,</span> <span class="n">ext_source</span><span class="o">.</span><span class="n">rake</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">draw_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">normalisation</span><span class="o">=</span><span class="n">normalisation</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
         <span class="n">draw_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">pa_col</span><span class="p">,</span> <span class="n">labeltext</span><span class="o">=</span><span class="s1">&#39;slip [m]&#39;</span><span class="p">)</span>
-        <span class="n">format_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">])</span>
 
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
         <span class="n">figs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -3733,8 +3497,7 @@
     <span class="n">sc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="p">[</span><span class="s1">&#39;seismic&#39;</span><span class="p">]</span>
     <span class="n">fault</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">load_fault_geometry</span><span class="p">()</span>
 
-    <span class="n">stage</span> <span class="o">=</span> <span class="n">load_stage</span><span class="p">(</span>
-        <span class="n">problem</span><span class="p">,</span> <span class="n">stage_number</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">load_stage</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">stage</span> <span class="o">=</span> <span class="n">load_stage</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">stage_number</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">load_stage</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">po</span><span class="o">.</span><span class="n">reference</span><span class="p">:</span>
         <span class="n">reference</span> <span class="o">=</span> <span class="n">get_result_point</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">post_llk</span><span class="p">)</span>
@@ -3748,6 +3511,9 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="s1">&#39;Drawing ensemble of </span><span class="si">%i</span><span class="s1"> moment rate functions ...&#39;</span> <span class="o">%</span> <span class="n">po</span><span class="o">.</span><span class="n">nensemble</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ref_mrf_rates</span><span class="p">,</span> <span class="n">ref_mrf_times</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_moment_rate_function</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+        <span class="n">store</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">get_store</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">store_id</span><span class="p">))</span>
 
     <span class="n">mpl_init</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ns</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">nsubfaults</span><span class="p">):</span>
@@ -3755,10 +3521,6 @@
             <span class="n">problem</span><span class="o">.</span><span class="n">outfolder</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">figure_dir</span><span class="p">,</span>
             <span class="s1">&#39;moment_rate_</span><span class="si">%i</span><span class="s1">_</span><span class="si">%i</span><span class="s1">_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%i</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">stage</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">llk_str</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">nensemble</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">))</span>
-
-        <span class="n">ref_mrf_rates</span><span class="p">,</span> <span class="n">ref_mrf_times</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_moment_rate_function</span><span class="p">(</span>
-            <span class="n">index</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
-            <span class="n">store</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">get_store</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">store_id</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
             <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
@@ -3799,8 +3561,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Plot exists! Use --force to overwrite!&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">source_geometry</span><span class="p">(</span><span class="n">fault</span><span class="p">,</span> <span class="n">ref_sources</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">datasets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">source_geometry</span><span class="p">(</span><span class="n">fault</span><span class="p">,</span> <span class="n">ref_sources</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot source geometry in 3d rotatable view</span>
 
@@ -3813,15 +3574,11 @@
 
     <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
     <span class="kn">from</span> <span class="nn">beat.utility</span> <span class="k">import</span> <span class="n">RS_center</span>
-    <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d.art3d</span> <span class="k">import</span> <span class="n">Poly3DCollection</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.7</span>
 
-    <span class="k">def</span> <span class="nf">plot_subfault</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">refloc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_subfault</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
         <span class="n">source</span><span class="o">.</span><span class="n">anchor</span> <span class="o">=</span> <span class="s1">&#39;top&#39;</span>
-        <span class="n">shift_ne</span> <span class="o">=</span> <span class="n">otd</span><span class="o">.</span><span class="n">latlon_to_ne</span><span class="p">(</span>
-            <span class="n">refloc</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">refloc</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
         <span class="n">coords</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">outline</span><span class="p">()</span>
-        <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">shift_ne</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
@@ -3829,88 +3586,26 @@
             <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>
             <span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
         <span class="n">center</span> <span class="o">=</span> <span class="n">RS_center</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-        <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">shift_ne</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-            <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">set_axes_radius</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xyz&#39;</span><span class="p">]):</span>
-        <span class="k">if</span> <span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim3d</span><span class="p">([</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="s1">&#39;y&#39;</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim3d</span><span class="p">([</span><span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim3d</span><span class="p">([</span><span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span><span class="p">])</span>
-
-
-    <span class="k">def</span> <span class="nf">set_axes_equal</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;xyz&#39;</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Make axes of 3D plot have equal scale so that spheres appear as spheres,</span>
-<span class="sd">        cubes as cubes, etc..  This is one possible solution to Matplotlib&#39;s</span>
-<span class="sd">        ax.set_aspect(&#39;equal&#39;) and ax.axis(&#39;equal&#39;) not working for 3D.</span>
-
-<span class="sd">        Input</span>
-<span class="sd">          ax: a matplotlib axis, e.g., as output from plt.gca().</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-
-        <span class="n">limits</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim3d</span><span class="p">(),</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim3d</span><span class="p">(),</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">get_zlim3d</span><span class="p">(),</span>
-        <span class="p">])</span>
-
-        <span class="n">origin</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">limits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">radius</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">num</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">limits</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">limits</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
-        <span class="n">set_axes_radius</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
-
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">mpl_papersize</span><span class="p">(</span><span class="s1">&#39;a4&#39;</span><span class="p">,</span> <span class="s1">&#39;landscape&#39;</span><span class="p">))</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
     <span class="n">extfs</span> <span class="o">=</span> <span class="n">fault</span><span class="o">.</span><span class="n">get_all_subfaults</span><span class="p">()</span>
-
-    <span class="n">arr_coords</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">refs</span><span class="p">,</span> <span class="n">exts</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ref_sources</span><span class="p">,</span> <span class="n">extfs</span><span class="p">)):</span>
 
-        <span class="n">plot_subfault</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">exts</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mpl_graph_color</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">refloc</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">plot_subfault</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">scolor</span><span class="p">(</span><span class="s1">&#39;aluminium4&#39;</span><span class="p">),</span> <span class="n">refloc</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">plot_subfault</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">exts</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mpl_graph_color</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+        <span class="n">plot_subfault</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">scolor</span><span class="p">(</span><span class="s1">&#39;aluminium4&#39;</span><span class="p">))</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">patch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">get_subfault_patches</span><span class="p">(</span><span class="n">idx</span><span class="p">)):</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">patch</span><span class="o">.</span><span class="n">outline</span><span class="p">()</span>
-            <span class="n">shift_ne</span> <span class="o">=</span> <span class="n">otd</span><span class="o">.</span><span class="n">latlon_to_ne</span><span class="p">(</span>
-                <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">patch</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">patch</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
-            <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">shift_ne</span>
-            <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.</span>
-            <span class="n">coords</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>  <span class="c1"># swap columns to [E, N, Z] (X, Y, Z)</span>
-            <span class="n">arr_coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>
                 <span class="n">color</span><span class="o">=</span><span class="n">mpl_graph_color</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
-                <span class="n">patch</span><span class="o">.</span><span class="n">east_shift</span> <span class="o">+</span> <span class="n">shift_ne</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">patch</span><span class="o">.</span><span class="n">north_shift</span> <span class="o">+</span> <span class="n">shift_ne</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">patch</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>
-                <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">fault</span><span class="o">.</span><span class="n">cum_subfault_npatches</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="n">patch</span><span class="o">.</span><span class="n">east_shift</span><span class="p">,</span> <span class="n">patch</span><span class="o">.</span><span class="n">north_shift</span><span class="p">,</span> <span class="n">patch</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
                 <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
-        <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span>
-
-        <span class="n">poly_patches</span> <span class="o">=</span> <span class="n">Poly3DCollection</span><span class="p">(</span>
-            <span class="n">verts</span><span class="o">=</span><span class="n">arr_coords</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-        <span class="n">poly_patches</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">poly_patches</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-        <span class="n">poly_patches</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span>
-        <span class="n">poly_patches</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">poly_patches</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">poly_patches</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">datasets</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
-            <span class="c1">#print(dataset.east_shifts, dataset.north_shifts)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-                <span class="n">dataset</span><span class="o">.</span><span class="n">east_shifts</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">north_shifts</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">coords5</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">],</span>
-                <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
 
     <span class="n">scale</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">km</span><span class="p">}</span>
     <span class="n">scale_axes</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="o">**</span><span class="n">scale</span><span class="p">)</span>
@@ -3919,177 +3614,10 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Depth [km]&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;North_shift [km]&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;East_shift [km]&#39;</span><span class="p">)</span>
-    <span class="n">set_axes_equal</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">draw_station_map_gmt</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
-
-    <span class="kn">from</span> <span class="nn">pyrocko</span> <span class="k">import</span> <span class="n">gmtpy</span>
-
-    <span class="n">installations</span> <span class="o">=</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">detect_gmt_installations</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span> <span class="o">==</span> <span class="s1">&#39;svg&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;SVG format is not supported for this plot!&#39;</span><span class="p">)</span>
-
-    <span class="n">ts</span> <span class="o">=</span> <span class="s1">&#39;time_shift&#39;</span>
-    <span class="k">if</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">po</span><span class="o">.</span><span class="n">varnames</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Plotting time-shifts on station locations&#39;</span><span class="p">)</span>
-        <span class="n">stage</span> <span class="o">=</span> <span class="n">load_stage</span><span class="p">(</span>
-            <span class="n">problem</span><span class="p">,</span> <span class="n">stage_number</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">load_stage</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-        <span class="n">point</span> <span class="o">=</span> <span class="n">get_result_point</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">post_llk</span><span class="p">)</span>
-        <span class="n">value_string</span> <span class="o">=</span> <span class="s1">&#39;timeshifts&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">point</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">value_string</span> <span class="o">=</span> <span class="s1">&#39;location&#39;</span>
-
-    <span class="n">font_size</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">font</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
-    <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># major grid and tick increment in [deg]</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># outsize in cm</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="n">h</span> <span class="o">-</span> <span class="mi">5</span>
-
-    <span class="k">if</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">is_gmt5</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;newest&#39;</span><span class="p">):</span>
-        <span class="n">gmtconfig</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;MAP_GRID_PEN_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.1p&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;MAP_GRID_PEN_SECONDARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.1p&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;MAP_FRAME_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;fancy&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;FONT_ANNOT_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;FONT_ANNOT_SECONDARY&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;FONT_LABEL&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;FORMAT_GEO_MAP&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;PS_MEDIA&#39;</span><span class="p">:</span> <span class="s1">&#39;Custom_</span><span class="si">%i</span><span class="s1">x</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">),</span>
-        <span class="p">}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">gmtconfig</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;MAP_FRAME_TYPE&#39;</span><span class="p">:</span> <span class="s1">&#39;fancy&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;GRID_PEN_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01p&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;ANNOT_FONT_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;ANNOT_FONT_SIZE_PRIMARY&#39;</span><span class="p">:</span> <span class="s1">&#39;12p&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;PLOT_DEGREE_FORMAT&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;GRID_PEN_SECONDARY&#39;</span><span class="p">:</span> <span class="s1">&#39;0.01p&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;FONT_LABEL&#39;</span><span class="p">:</span> <span class="s1">&#39;14p,Helvetica,black&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;PS_MEDIA&#39;</span><span class="p">:</span> <span class="s1">&#39;Custom_</span><span class="si">%i</span><span class="s1">x</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">h</span> <span class="o">*</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">cm</span><span class="p">),</span>
-        <span class="p">}</span>
-
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing Station Map ...&#39;</span><span class="p">)</span>
-    <span class="n">sc</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">composites</span><span class="p">[</span><span class="s1">&#39;seismic&#39;</span><span class="p">]</span>
-    <span class="n">event</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">event</span>
-
-    <span class="k">for</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="n">sc</span><span class="o">.</span><span class="n">wavemaps</span><span class="p">:</span>
-        <span class="n">outpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">problem</span><span class="o">.</span><span class="n">outfolder</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">figure_dir</span><span class="p">,</span> <span class="s1">&#39;station_map_</span><span class="si">%s</span><span class="s1">_</span><span class="si">%i</span><span class="s1">_</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="n">wmap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">wmap</span><span class="o">.</span><span class="n">mapnumber</span><span class="p">,</span> <span class="n">value_string</span><span class="p">,</span> <span class="n">po</span><span class="o">.</span><span class="n">outformat</span><span class="p">))</span>
-
-        <span class="n">dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">wmap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">distances</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span> <span class="c1"># add interval to have bound</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outpath</span><span class="p">)</span> <span class="ow">or</span> <span class="n">po</span><span class="o">.</span><span class="n">force</span><span class="p">:</span>
-
-            <span class="n">st_lons</span> <span class="o">=</span> <span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">lon</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">]</span>
-            <span class="n">st_lats</span> <span class="o">=</span> <span class="p">[</span><span class="n">station</span><span class="o">.</span><span class="n">lat</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">]</span>
-
-            <span class="n">J_basemap</span> <span class="o">=</span> <span class="s1">&#39;E0/-90/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-            <span class="n">J_location</span> <span class="o">=</span> <span class="s1">&#39;E</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-            <span class="n">R_location</span> <span class="o">=</span> <span class="s1">&#39;0/360/-90/0&#39;</span>
-
-            <span class="n">gmt</span> <span class="o">=</span> <span class="n">gmtpy</span><span class="o">.</span><span class="n">GMT</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">gmtconfig</span><span class="p">)</span>
-            <span class="n">gmt</span><span class="o">.</span><span class="n">psbasemap</span><span class="p">(</span>
-                <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
-                <span class="n">J</span><span class="o">=</span><span class="s1">&#39;S0/-90/90/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">w</span><span class="p">,</span>
-                <span class="n">B</span><span class="o">=</span><span class="s1">&#39;xa</span><span class="si">%s</span><span class="s1">f</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bin_width</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">))</span>
-            <span class="n">gmt</span><span class="o">.</span><span class="n">pscoast</span><span class="p">(</span>
-                <span class="n">R</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span>
-                <span class="n">J</span><span class="o">=</span><span class="s1">&#39;E</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span>
-                <span class="n">D</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span>
-                <span class="n">G</span><span class="o">=</span><span class="s1">&#39;darkgrey&#39;</span><span class="p">)</span>
-            <span class="n">gmt</span><span class="o">.</span><span class="n">psbasemap</span><span class="p">(</span>
-                <span class="n">R</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span>
-                <span class="n">J</span><span class="o">=</span><span class="n">J_basemap</span><span class="p">,</span>
-                <span class="n">B</span><span class="o">=</span><span class="s1">&#39;xg</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">bin_width</span><span class="p">)</span>
-            <span class="n">gmt</span><span class="o">.</span><span class="n">psbasemap</span><span class="p">(</span>
-                <span class="n">R</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span>
-                <span class="n">J</span><span class="o">=</span><span class="n">J_basemap</span><span class="p">,</span>
-                <span class="n">B</span><span class="o">=</span><span class="s1">&#39;yg</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bin_width</span><span class="p">))</span>
-
-            <span class="k">if</span> <span class="n">point</span><span class="p">:</span>
-                <span class="c1"># Draw MAP time-shifts at station locations as colored triangles</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">time_shifts</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="n">wmap</span><span class="o">.</span><span class="n">time_shifts_id</span><span class="p">][</span>
-                        <span class="n">wmap</span><span class="o">.</span><span class="n">station_correction_idxs</span><span class="p">]</span>
-                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="s1">&#39;Sampling results do not contain time-shifts for wmap&#39;</span>
-                        <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="n">wmap</span><span class="o">.</span><span class="n">time_shifts_id</span><span class="p">)</span>
-
-                <span class="n">cptfilepath</span> <span class="o">=</span> <span class="s1">&#39;/tmp/tempfile.cpt&#39;</span>
-                <span class="n">miny</span> <span class="o">=</span> <span class="n">time_shifts</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-                <span class="n">maxy</span> <span class="o">=</span> <span class="n">time_shifts</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-                <span class="n">bound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">miny</span><span class="p">),</span> <span class="n">maxy</span><span class="p">)</span>
-
-                <span class="n">gmt</span><span class="o">.</span><span class="n">makecpt</span><span class="p">(</span>
-                    <span class="n">C</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span><span class="p">,</span>
-                    <span class="n">T</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%g</span><span class="s1">/</span><span class="si">%g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">),</span>
-                    <span class="n">Q</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">out_filename</span><span class="o">=</span><span class="n">cptfilepath</span><span class="p">,</span> <span class="n">suppress_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-                <span class="n">gmt</span><span class="o">.</span><span class="n">psxy</span><span class="p">(</span>
-                    <span class="n">in_columns</span><span class="o">=</span><span class="p">(</span><span class="n">st_lons</span><span class="p">,</span> <span class="n">st_lats</span><span class="p">,</span> <span class="n">time_shifts</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
-                    <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
-                    <span class="n">C</span><span class="o">=</span><span class="n">cptfilepath</span><span class="p">,</span>
-                    <span class="n">S</span><span class="o">=</span><span class="s1">&#39;t14p&#39;</span><span class="p">,</span>
-                    <span class="n">J</span><span class="o">=</span><span class="n">J_location</span><span class="p">)</span>
-
-                <span class="c1"># add a colorbar</span>
-                <span class="n">gmt</span><span class="o">.</span><span class="n">psscale</span><span class="p">(</span>
-                    <span class="n">B</span><span class="o">=</span><span class="s1">&#39;xa</span><span class="si">%s</span><span class="s1"> +l time shifts [s]&#39;</span> <span class="o">%</span> <span class="n">num</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">bound</span><span class="p">),</span>
-                    <span class="n">D</span><span class="o">=</span><span class="s1">&#39;x1.5c/0c+w6c/0.5c+jMC+h&#39;</span><span class="p">,</span>
-                    <span class="n">C</span><span class="o">=</span><span class="n">cptfilepath</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">gmt</span><span class="o">.</span><span class="n">psxy</span><span class="p">(</span>
-                    <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
-                    <span class="n">J</span><span class="o">=</span><span class="n">J_location</span><span class="p">,</span>
-                    <span class="n">in_columns</span><span class="o">=</span><span class="p">(</span><span class="n">st_lons</span><span class="p">,</span> <span class="n">st_lats</span><span class="p">),</span>
-                    <span class="n">G</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
-                    <span class="n">S</span><span class="o">=</span><span class="s1">&#39;t14p&#39;</span><span class="p">)</span>
-
-            <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">alignment</span> <span class="o">=</span> <span class="s1">&#39;TC&#39;</span>
-            <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">wmap</span><span class="o">.</span><span class="n">stations</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">gmt</span><span class="o">.</span><span class="n">is_gmt5</span><span class="p">():</span>
-                    <span class="n">row</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="n">st</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
-                        <span class="s1">&#39;</span><span class="si">%i</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">font_size</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">),</span>
-                        <span class="n">alignment</span><span class="p">,</span>
-                        <span class="n">st</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
-                    <span class="n">farg</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-F+f+j&#39;</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">row</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="n">st</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
-                        <span class="n">font_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">alignment</span><span class="p">,</span>
-                        <span class="n">st</span><span class="o">.</span><span class="n">station</span><span class="p">)</span>
-                    <span class="n">farg</span> <span class="o">=</span> <span class="p">[]</span>
-
-                <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-
-            <span class="n">gmt</span><span class="o">.</span><span class="n">pstext</span><span class="p">(</span>
-                <span class="n">in_rows</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span>
-                <span class="n">R</span><span class="o">=</span><span class="n">R_location</span><span class="p">,</span>
-                <span class="n">J</span><span class="o">=</span><span class="n">J_location</span><span class="p">,</span>
-                <span class="n">N</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">farg</span><span class="p">)</span>
-
-            <span class="n">gmt</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">po</span><span class="o">.</span><span class="n">dpi</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;saving figure to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">outpath</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Plot exists! Use --force to overwrite!&#39;</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">draw_station_map_cartopy</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">draw_station_map</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">po</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Drawing Station Map ...&#39;</span><span class="p">)</span>
@@ -4208,15 +3736,14 @@
     <span class="s1">&#39;correlation_hist&#39;</span><span class="p">:</span> <span class="n">draw_correlation_hist</span><span class="p">,</span>
     <span class="s1">&#39;stage_posteriors&#39;</span><span class="p">:</span> <span class="n">draw_posteriors</span><span class="p">,</span>
     <span class="s1">&#39;waveform_fits&#39;</span><span class="p">:</span> <span class="n">draw_seismic_fits</span><span class="p">,</span>
-    <span class="s1">&#39;scene_fits&#39;</span><span class="p">:</span> <span class="n">draw_scene_fits</span><span class="p">,</span>
-    <span class="s1">&#39;gnss_fits&#39;</span><span class="p">:</span> <span class="n">draw_gnss_fits</span><span class="p">,</span>
+    <span class="s1">&#39;scene_fits&#39;</span><span class="p">:</span> <span class="n">draw_geodetic_fits</span><span class="p">,</span>
     <span class="s1">&#39;velocity_models&#39;</span><span class="p">:</span> <span class="n">draw_earthmodels</span><span class="p">,</span>
     <span class="s1">&#39;slip_distribution&#39;</span><span class="p">:</span> <span class="n">draw_slip_dist</span><span class="p">,</span>
     <span class="s1">&#39;hudson&#39;</span><span class="p">:</span> <span class="n">draw_hudson</span><span class="p">,</span>
     <span class="s1">&#39;fuzzy_beachball&#39;</span><span class="p">:</span> <span class="n">draw_fuzzy_beachball</span><span class="p">,</span>
     <span class="s1">&#39;fuzzy_mt_decomp&#39;</span><span class="p">:</span> <span class="n">draw_fuzzy_mt_decomposition</span><span class="p">,</span>
     <span class="s1">&#39;moment_rate&#39;</span><span class="p">:</span> <span class="n">draw_moment_rate</span><span class="p">,</span>
-    <span class="s1">&#39;station_map&#39;</span><span class="p">:</span> <span class="n">draw_station_map_gmt</span><span class="p">}</span>
+    <span class="s1">&#39;station_map&#39;</span><span class="p">:</span> <span class="n">draw_station_map</span><span class="p">}</span>
 
 
 <span class="n">common_plots</span> <span class="o">=</span> <span class="p">[</span>
@@ -4230,8 +3757,7 @@
 
 
 <span class="n">geodetic_plots</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;scene_fits&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;gnss_fits&#39;</span><span class="p">]</span>
+    <span class="s1">&#39;scene_fits&#39;</span><span class="p">]</span>
 
 
 <span class="n">geometry_plots</span> <span class="o">=</span> <span class="p">[</span>
@@ -4277,7 +3803,6 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../short_installation.html">Short Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../anaconda_installation.html">Anaconda Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../updating.html">Updating beat</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started with BEAT</a></li>

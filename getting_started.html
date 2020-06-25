@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Getting started with BEAT &#8212; beat 1.0 documentation</title>
+    <title>Getting started with BEAT &#8212; beat 1.0beta documentation</title>
     <link rel="stylesheet" href="_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0',
+        VERSION:     '1.0beta',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -64,7 +64,7 @@
           </li>
            &#187;
           <li>
-              <a href="index.html">beat 1.0 documentation</a> &#187;
+              <a href="index.html">beat 1.0beta documentation</a> &#187;
           </li> 
         </ul>
     </div>
@@ -139,10 +139,12 @@ Options:
 </div>
 <p>This will create project directory called LandersEQ in the current directory.
 Within the directoy you will see that there have been two files created:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>BEAT_log.txt</li>
 <li>geometry_config.yaml</li>
 </ul>
+</div></blockquote>
 <p>The first file is a logging file where all the executed comments and outputs are written to. In case something goes wrong this log file helps to find the error.
 For now it contains:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>2018-01-04 16:15:06,696 - utility - INFO - Getting relevant events from the gCMT catalog for the dates:1992-06-27 00:00:00.000 - 1992-06-29 00:00:00.000
@@ -507,7 +509,9 @@ before the actual update what is going to change. These changes can be displayed
 </pre></div>
 </div>
 <p>An update screen that appears may look like this.</p>
-<img alt="_images/beat_update_cut.png" src="_images/beat_update_cut.png" />
+<blockquote>
+<div><img alt="_images/beat_update_cut.png" src="_images/beat_update_cut.png" />
+</div></blockquote>
 <p>Where omitting the “–diff” option will update the configuration file right away.</p>
 <p>An update of the configuration file is also necessary, if some of the hierarchical parameters are affected by some changes in the configuration file. For example by enabling temporal “station_corrections” in seismic setups or enabling “fit_ramp”
 for residual ramp estimation in the InSAR data.:</p>
@@ -551,9 +555,7 @@ In lines 4-6 we find the reference event:</p>
 </pre></div>
 </div>
 <p>The distance between these two locations determines the center point of the grid of Greens Functions that we want to calculate.
-The following image (contributed by So-Young Baag) sketches the geometry of an example setup.</p>
-<img alt="_images/custom_gf_store_setup.png" src="_images/custom_gf_store_setup.png" />
-<p>For our example we set the reference location close to Vancouver, Canada as we want to study the Cascadia subduction zone.
+For our example we set the reference location close to Vancouver, Canada as we want to study the Cascadia subduction zone.
 We ignore the ‘elevation’ and ‘depth’ attributes but we set the ‘station’ attribute, which determines the prefix of the name of the
 Greens Function store.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>reference_location: !beat.heart.ReferenceLocation
@@ -865,7 +867,6 @@ The hypocentral location bounds have been adjusted to be within the bounds of th
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="short_installation.html">Short Installation instructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="anaconda_installation.html">Anaconda Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Detailed Installation instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="updating.html">Updating beat</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started with BEAT</a><ul>
